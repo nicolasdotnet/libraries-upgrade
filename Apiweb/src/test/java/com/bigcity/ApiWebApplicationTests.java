@@ -1,4 +1,4 @@
-package com.bigcity.apiweb;
+package com.bigcity;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
