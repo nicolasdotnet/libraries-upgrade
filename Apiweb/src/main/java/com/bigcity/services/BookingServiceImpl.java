@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.bigcity.specifications.BookingSpecification;
 import com.bigcity.services.interfaces.IBookingService;
+import java.time.Instant;
 import java.time.ZoneId;
 
 /**
@@ -197,15 +198,40 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
-        LocalDate bookingEndDateOld = bookingFind.get().getBookingEndDate().toInstant()
+        if (!bookingFind.get().getCounterExtension().equals("0")) {
+
+            log.error("Une prolongation du prêt a déjà été réalisée !");
+
+            throw new Exception("Une prolongation du prêt a déjà été réalisée !");
+
+        }
+
+        System.out.println("TEST 1");
+
+        System.out.println("old date : )" + bookingFind.get().getBookingEndDate());
+
+        LocalDate bookingEndDateOld = Instant.ofEpochMilli(bookingFind.get().getBookingEndDate().getTime())
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
+
+        // ne marche pas avec un date sans le time !
         
+//                bookingFind.get().getBookingEndDate().toInstant()
+//                .atZone(ZoneId.systemDefault())
+//                .toLocalDate();
+
+        System.out.println("old date : 2 " + bookingEndDateOld.toString());
+
         LocalDate bookingEndDateNew = bookingEndDateOld.plusWeeks(4);
-        
-       bookingFind.get().setBookingEndDate(java.sql.Date.valueOf(bookingEndDateNew));
-       
-       return bookingRepository.saveAndFlush(bookingFind.get());
+
+        System.out.println("TEST 2");
+        System.out.println("new date : " + bookingEndDateNew);
+
+        bookingFind.get().setBookingEndDate(java.sql.Date.valueOf(bookingEndDateNew));
+
+        bookingFind.get().setCounterExtension("1");
+
+        return bookingRepository.saveAndFlush(bookingFind.get());
     }
 
 }

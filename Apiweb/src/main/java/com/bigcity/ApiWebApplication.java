@@ -192,6 +192,29 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
             System.out.println("com.bigcity.ApiWebApplication.run() : " + e.getMessage());
 
         }
+        
+        try {
+            System.out.println("com.bigcity.ApiWebApplication.run() EXTEND 1");
+            iBookingService.extendBooking(r.getBookingId());
+        } catch (Exception e) {
 
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+            System.out.println("error 1: " + e.getMessage());
+
+        }
+
+        try {
+            System.out.println("com.bigcity.ApiWebApplication.run() EXTEND 2");
+            iBookingService.extendBooking(r.getBookingId());
+        } catch (Exception e) {
+
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+            System.out.println("error 2 : " + e.getMessage());
+
+        }
+
+        r = iBookingService.getBooking(r.getBookingId());
+        
+        System.out.println("PRET -> extension :"+r.getCounterExtension()+" date de fin : "+r.getBookingEndDate());
     }
 }
