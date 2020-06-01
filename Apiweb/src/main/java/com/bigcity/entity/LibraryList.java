@@ -3,19 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.bigcity.exceptions;
+package com.bigcity.entity;
 
 /**
  *
  * @author nicolasdotnet
  */
-
-//@ResponseStatus(HttpStatus.NOT_FOUND)
-public class UserNoFindException extends LibraryException {
-
-    public UserNoFindException(String message) {
-        
-        super(message);
-    }
+public enum LibraryList {
+    
+    Arras, Paris, Lille
     
 }

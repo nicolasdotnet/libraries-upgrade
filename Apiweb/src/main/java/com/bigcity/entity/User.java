@@ -1,14 +1,16 @@
 package com.bigcity.entity;
 
-import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  * @author nicolasdotnet
@@ -16,17 +18,13 @@ import javax.persistence.ManyToOne;
  * User is the registration entity of a user.
  *
  */
-
 @Entity
-//@JsonFilter("monFiltreDynamique")
-public class User implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class User {
 
     @Id
     @GeneratedValue
     private Long userId;
-    
+
     @JoinColumn(nullable = false)
     private Date userDate;
 
@@ -48,6 +46,15 @@ public class User implements Serializable {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "bookingUser", fetch = FetchType.LAZY)
+    private Collection<Booking> bookings;
+
+    @OneToMany(mappedBy = "librarian", fetch = FetchType.LAZY)
+    private Collection<Booking> librarianTasks;
+
+//    @OneToMany(mappedBy = "librarian", fetch = FetchType.LAZY)
+//    private Collection<Book> books;
 
     public User() {
     }
@@ -116,11 +123,35 @@ public class User implements Serializable {
         this.role = role;
     }
 
+    public Collection<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(Collection<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+    public Collection<Booking> getLibrarianTasks() {
+        return librarianTasks;
+    }
+
+    public void setLibrarianTasks(Collection<Booking> librarianTasks) {
+        this.librarianTasks = librarianTasks;
+    }
+
+//    public Collection<Book> getBooks() {
+//        return books;
+//    }
+//
+//    public void setBooks(Collection<Book> books) {
+//        this.books = books;
+//    }
+
     @Override
     public String toString() {
         return "User{" + "userId=" + userId + ", userDate=" + userDate + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", username=" + username + ", password=" + password + ", role=" + role + '}';
     }
+    
+    
 
-    
-    
 }

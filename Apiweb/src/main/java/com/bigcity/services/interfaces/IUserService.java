@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.domain.Specification;
 
-
 public interface IUserService {
 
     /**
@@ -17,7 +16,7 @@ public interface IUserService {
      * @return user object saved
      * @throws Exception
      */
-        User registerByDefault(UserDTO userDTO)throws Exception;
+    User registerByDefault(UserDTO userDTO) throws Exception;
 
     /**
      * method to register a membre user by default
@@ -44,7 +43,7 @@ public interface IUserService {
      * @return user object find
      * @throws Exception
      */
-    UserDTO getUser(Long userId) throws Exception;
+    User getUser(Long userId) throws Exception;
 
     /**
      * method to get all users
@@ -52,7 +51,7 @@ public interface IUserService {
      * @return the users list
      * @throws java.lang.Exception
      */
-    List<UserDTO> getAllUsers()throws Exception;
+    List<UserDTO> getAllUsers() throws Exception;
 
     /**
      * method to get all users for a role
@@ -100,7 +99,7 @@ public interface IUserService {
 
     /**
      * method to get all really old users
-     * 
+     *
      * @param reallyOld
      * @return
      */

@@ -18,9 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class RoleImpl implements IRoleService {
+public class RoleServiceImpl implements IRoleService {
 
-    private static final Logger log = LogManager.getLogger(RoleImpl.class);
+    private static final Logger log = LogManager.getLogger(RoleServiceImpl.class);
 
     @Autowired
     private RoleRepository userCategoryRepository;

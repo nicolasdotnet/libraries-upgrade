@@ -66,7 +66,7 @@ public class UserController {
 
         log.debug("showUser() id: {}", id);
 
-        UserDTO userFind = null;
+        User userFind = null;
 
         try {
             userFind = iUserService.getUser(Long.valueOf(id));

@@ -9,13 +9,12 @@ package com.bigcity.exceptions;
  *
  * @author nicolasdotnet
  */
+public class BookingNoFindException extends LibraryException  {
 
-//@ResponseStatus(HttpStatus.NOT_FOUND)
-public class UserNoFindException extends LibraryException {
-
-    public UserNoFindException(String message) {
+    public BookingNoFindException(String message) {
         
         super(message);
+        
     }
     
 }

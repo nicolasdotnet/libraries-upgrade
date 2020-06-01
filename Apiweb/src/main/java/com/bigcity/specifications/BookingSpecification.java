@@ -5,24 +5,21 @@
  */
 package com.bigcity.specifications;
 
-import com.bigcity.entity.User;
-
+import com.bigcity.entity.Booking;
+import java.util.Date;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
  *
  * @author nicolasdotnet
  */
-public class UserSpecification {
+public class BookingSpecification {
 
-    public static Specification<User> isReallyOld() {
+    public static Specification<Booking> isExpired(Date dateNow) {
         return (root, query, cb) -> {
-
-            return cb.equal(root.get("userDate"), root.get("userDate"));
+            
+            return cb.equal(root.get("bookingEndDate"), dateNow);
         };
     }
 
 }
-
-
-

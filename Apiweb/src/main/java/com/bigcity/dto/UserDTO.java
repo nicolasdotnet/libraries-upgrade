@@ -15,20 +15,23 @@ import javax.validation.constraints.Size;
  */
 public class UserDTO {
 
+    @NotEmpty(message = "le prénom n'est pas renseigné.")
     @Size(min = 3, max = 10, message = "Nom trop long ou trop court. Et oui messages sont plus stylés que ceux de Spring")
     private String firstname;
     
+    @NotEmpty(message = "le nom n'est pas renseigné.")
     @Size(min = 3, max = 10, message = "La taille doit etre entre 3 et 10.")
     private String lastname;
 
-    @Email(message = "votre email est erroné.")
+    @NotEmpty(message = "l'email n'est pas renseigné.")
+    @Email(message = "l'email est erroné.")
     private String email;
 
-    @NotEmpty(message = "votre identifiant n'est pas renseigné.")
+    @NotEmpty(message = "l'identifiant n'est pas renseigné.")
     @Size(min = 3, max = 10, message = "La taille doit etre entre 3 et 10.")
     private String username;
 
-    @NotEmpty(message = "votre mot de passe n'est pas renseigné.")
+    @NotEmpty(message = "le mot de passe n'est pas renseigné.")
     private String password;
 
     public UserDTO() {

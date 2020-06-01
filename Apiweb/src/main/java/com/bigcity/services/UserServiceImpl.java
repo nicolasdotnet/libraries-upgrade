@@ -102,7 +102,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserDTO getUser(Long id) throws UserNoFindException {
+    public User getUser(Long id) throws UserNoFindException {
 
         Optional<User> userFind = userRepository.findById(id);
 
@@ -113,11 +113,8 @@ public class UserServiceImpl implements IUserService {
             throw new UserNoFindException("Utilisateur  n'existe pas !");
 
         }
-        
 
-        UserDTO userDto = entityToDto(userFind.get());
-
-        return userDto;
+        return userFind.get();
     }
 
     @Override
@@ -160,7 +157,7 @@ public class UserServiceImpl implements IUserService {
 
             log.error("L'utilisateur n'existe pas dans la base.");
 
-            throw new Exception("Utilisateur n'existe pas !");
+            throw new Exception("L'utilisateur n'existe pas !");
 
         }
 
@@ -202,6 +199,7 @@ public class UserServiceImpl implements IUserService {
         }
 
         userFind.get().setPassword(encrytePassword(passwordNew));
+        
         return userRepository.saveAndFlush(userFind.get());
 
     }
