@@ -13,6 +13,8 @@ import javax.validation.constraints.NotEmpty;
  */
 public class BookingDTO {
 
+    
+    // doc swager
     @NotEmpty(message = "la réference bibliothécaire n'est pas renseigné.")
     private Long librarianId;
     @NotEmpty(message = "la réference usagé n'est pas renseigné.")

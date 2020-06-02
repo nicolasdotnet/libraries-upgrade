@@ -39,7 +39,7 @@ public interface IBookService {
      * @return the book list
      * @throws java.lang.Exception
      */
-    List<BookDTO> getAllBooks() throws Exception;
+    List<Book> getAllBooks() throws Exception;
 
     /**
      * method to get a book
@@ -57,7 +57,7 @@ public interface IBookService {
      * @return book object list find by title
      * @throws java.lang.Exception
      */
-    List<BookDTO> getBookByTitle(String title) throws Exception;
+    List<Book> getBookByTitle(String title) throws Exception;
 
 
 }

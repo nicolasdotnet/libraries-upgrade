@@ -7,52 +7,52 @@ import java.util.List;
 public interface IRoleService {
 
     /**
-     * method to register a userCategory
+     * method to register a role
      *
-     * @param category
-     * @return userCategory object saved
+     * @param role
+     * @return role object saved
      * @throws Exception
      */
-    Role register(String category) throws Exception;
+    Role register(String role) throws Exception;
 
     /**
-     * method to modify a userCategory
+     * method to modify a role
      *
-     * @param userCategory
-     * @return userCategory object modified
+     * @param role
+     * @return role object modified
      * @throws Exception
      */
-    Role edit(Role userCategory) throws Exception;
+    Role edit(Role role) throws Exception;
 
     /**
-     * method to get all user category
+     * method to get all user role
      *
-     * @return the user category list
+     * @return the user role list
      */
-    List<Role> getAllUserCategory();
+    List<Role> getAllRole();
 
     /**
-     * method to get a user category
+     * method to get a user role
      *
      * @param id
-     * @return userCategory object find
+     * @return role object find
      * @throws Exception
      */
-    Role getUserCategory(Long id) throws Exception;
+    Role getRole(Long id) throws Exception;
 
     /**
-     * method to get a user category list by label
+     * method to get a user role list by label
      *
      * @param label
-     * @return userCategory object list find by label
+     * @return role object list find by label
      */
-    List<Role> getUserCategoryByLabel(String label);
+    List<Role> getRoleByLabel(String label);
 
     /**
-     * method to get the default user category
+     * method to get the default user role
      *
-     * @return default category for a user
+     * @return default role for a user
      * @throws Exception
      */
-    Role getDefaultUserCategory() throws Exception;
+    Role getDefaultRole() throws Exception;
 }

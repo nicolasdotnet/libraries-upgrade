@@ -30,15 +30,12 @@ public class Book {
     private String isbn;
 
     @Column(length = 100, nullable = false)
-    private String authorFirstname;
-
-    @Column(length = 100, nullable = false)
-    private String authorLastname;
+    private String author;
 
     @Column(length = 100, nullable = false)
     private String bookTitle;
 
-    @Column(length = 2, nullable = false)
+    //@Column(length = 2, nullable = false)
     private int copiesAvailable;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
@@ -67,20 +64,12 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public String getAuthorFirstname() {
-        return authorFirstname;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setAuthorFirstname(String authorFirstname) {
-        this.authorFirstname = authorFirstname;
-    }
-
-    public String getAuthorLastname() {
-        return authorLastname;
-    }
-
-    public void setAuthorLastname(String authorLastname) {
-        this.authorLastname = authorLastname;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getBookTitle() {
@@ -117,7 +106,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" + "bookId=" + bookId + ", isbn=" + isbn + ", authorFirstname=" + authorFirstname + ", authorLastname=" + authorLastname + ", bookTitle=" + bookTitle + ", copiesAvailable=" + copiesAvailable + '}';
+        return "Book{" + "bookId=" + bookId + ", isbn=" + isbn + ", authorFirstname=" + author + ", bookTitle=" + bookTitle + ", copiesAvailable=" + copiesAvailable + '}';
     }
 
 

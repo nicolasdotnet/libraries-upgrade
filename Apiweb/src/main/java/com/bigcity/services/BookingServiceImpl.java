@@ -5,13 +5,12 @@
  */
 package com.bigcity.services;
 
-import com.bigcity.exceptions.BookingsNoFindException;
-import com.bigcity.exceptions.BookingNoFindException;
+import com.bigcity.exceptions.BookingsNoFoundException;
+import com.bigcity.exceptions.BookingNoFoundException;
 import com.bigcity.dao.BookingRepository;
 import com.bigcity.entity.Book;
 import com.bigcity.entity.Booking;
 import com.bigcity.entity.BookingStatus;
-import com.bigcity.entity.LibraryList;
 import com.bigcity.entity.User;
 import com.bigcity.services.interfaces.IBookService;
 import com.bigcity.services.interfaces.IUserService;
@@ -48,12 +47,15 @@ public class BookingServiceImpl implements IBookingService {
     @Autowired
     private IUserService iUserService;
 
+    // pas de dto
     @Override
     public Booking register(Long librarianId, Long bookingUserId, Long bookId) throws Exception {
 
         Book book = iBookService.getBook(bookId);
 
         User bookingUser = iUserService.getUser(bookingUserId);
+        
+        User librarian = iUserService.getUser(librarianId);
 
         Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUser(book, bookingUser);
 
@@ -75,9 +77,10 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
+        // vérifié ? -1 
         book.setCopiesAvailable(copiesAvailable--);
-
-        User librarian = iUserService.getUser(librarianId);
+        
+        // save ne base => transaction
 
         // TODO : calcul en fonction du param week + TimeZone ?
 //        Date bookingEndDate = java.sql.Date.valueOf(LocalDate.now().plusWeeks(4));
@@ -89,11 +92,11 @@ public class BookingServiceImpl implements IBookingService {
         booking.setBookingDurationWeek("2");
         booking.setBookingStartDate(new Date());
         booking.setBookingEndDate(bookingEndDate);
-        booking.setBookingStatus(BookingStatus.encours);
+        booking.setBookingStatus(BookingStatus.ENCOURS);
         booking.setBookingUser(bookingUser);
         booking.setCounterExtension("0");
         booking.setLibrarian(librarian);
-        booking.setLibrary(LibraryList.Arras);
+//        booking.setLibrary(LibraryList.Arras);
 
         return bookingRepository.save(booking);
     }
@@ -107,12 +110,12 @@ public class BookingServiceImpl implements IBookingService {
 
             log.error("La réservation n'existe pas dans la base.");
 
-            throw new BookingNoFindException("La réservation n'existe pas !");
+            throw new BookingNoFoundException("La réservation n'existe pas !");
 
         }
 
         bookingFind.get().setBackBookDate(new Date());
-        bookingFind.get().setBookingStatus(BookingStatus.fini);
+        bookingFind.get().setBookingStatus(BookingStatus.TERMINE);
 
         int copiesAvailable = bookingFind.get().getBook().getCopiesAvailable();
         bookingFind.get().getBook().setCopiesAvailable(copiesAvailable++);
@@ -128,7 +131,7 @@ public class BookingServiceImpl implements IBookingService {
 
         if (bookings.isEmpty()) {
 
-            throw new BookingsNoFindException("Il n'y a pas de réservations dépassées dans la base.");
+            throw new BookingsNoFoundException("Il n'y a pas de réservations dépassées dans la base.");
         }
 
         return bookings;
@@ -144,7 +147,7 @@ public class BookingServiceImpl implements IBookingService {
 
             log.error("La réservation n'existe pas dans la base.");
 
-            throw new BookingNoFindException("la réservation n'existe pas !");
+            throw new BookingNoFoundException("la réservation n'existe pas !");
 
         }
 
@@ -157,15 +160,15 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public List<Booking> getAllBookingByUser(String username) throws Exception {
+    public List<Booking> getAllBookingByUser(String email) throws Exception {
 
-        Optional<User> userFind = iUserService.getUserByUsername(username);
+        Optional<User> userFind = iUserService.getUserByEmail(email);
 
         List<Booking> bookings = bookingRepository.findByBookingUser(userFind.get());
 
         if (bookings.isEmpty()) {
 
-            throw new BookingsNoFindException("Il n'y a pas de réservations pour ce usagé dans la base.");
+            throw new BookingsNoFoundException("Il n'y a pas de réservations pour ce usagé dans la base.");
         }
 
         return bookings;
@@ -179,7 +182,7 @@ public class BookingServiceImpl implements IBookingService {
 
         if (bookings.isEmpty()) {
 
-            throw new BookingsNoFindException("Il n'y a pas de réservations dans la base.");
+            throw new BookingsNoFoundException("Il n'y a pas de réservations dans la base.");
         }
 
         return bookings;
@@ -194,7 +197,7 @@ public class BookingServiceImpl implements IBookingService {
 
             log.error("La réservation n'existe pas dans la base.");
 
-            throw new BookingNoFindException("la réservation n'existe pas !");
+            throw new BookingNoFoundException("la réservation n'existe pas !");
 
         }
 

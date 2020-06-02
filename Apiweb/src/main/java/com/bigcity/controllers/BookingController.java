@@ -90,13 +90,13 @@ public class BookingController {
 
     @ApiOperation("Récupère l'ensemble des prêts de la base ou récupèrer une liste de prêt a partir d'un mot clé sur le identifiant de l'usagé")
     @GetMapping("/api/bookings")
-    public ResponseEntity showAllBookings(@RequestParam(defaultValue = " ") String username) {
+    public ResponseEntity showAllBookings(@RequestParam(defaultValue = " ") String email) {
 
-        log.debug("showBookings()", username);
+        log.debug("showBookings()", email);
 
         List<Booking> bookings = null;
 
-        if (username.equals(" ")) {
+        if (email.equals(" ")) {
 
             try {
 
@@ -112,7 +112,7 @@ public class BookingController {
         }
 
         try {
-            bookings = iBookingService.getAllBookingByUser(username);
+            bookings = iBookingService.getAllBookingByUser(email);
         } catch (Exception ex) {
 
             return ResponseEntity.badRequest().body(ex.getMessage());

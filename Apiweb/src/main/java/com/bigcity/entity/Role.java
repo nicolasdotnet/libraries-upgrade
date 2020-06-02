@@ -24,8 +24,7 @@ public class Role implements Serializable {
     @Id
     @GeneratedValue
     private Long roleId;
-    @Column(nullable = false)
-    private Date roleDate;
+
     @Column(length = 100, nullable = false)
     private String roleName;
 
@@ -42,14 +41,6 @@ public class Role implements Serializable {
 
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
-    }
-
-    public Date getRoleDate() {
-        return roleDate;
-    }
-
-    public void setRoleDate(Date roleDate) {
-        this.roleDate = roleDate;
     }
 
     public String getRoleName() {

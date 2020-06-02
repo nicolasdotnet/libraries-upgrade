@@ -33,20 +33,20 @@ public class UserController {
 
     @ApiOperation("Enregister un nouveau utilisateur")
     @PostMapping("/api/users")
-    public ResponseEntity saveUser(@Valid @RequestBody UserDTO userDto) {
+    public ResponseEntity<User> saveUser(@Valid @RequestBody UserDTO userDto) throws Exception {
 
         log.debug("saveUser()");
 
         // TODO ajouter securité
         User userSave = null;
-
-        try {
+//
+//        try {
             userSave = iUserService.registerByDefault(userDto);
-        } catch (Exception ex) {
-
-            return ResponseEntity.badRequest().body(ex.getMessage());
-
-        }
+//        } catch (Exception ex) {
+//
+//            return ResponseEntity.badRequest().body(ex.getMessage());
+//
+//        }
 
 //code 201, ajouter l'URI 
         URI location = ServletUriComponentsBuilder
@@ -85,7 +85,7 @@ public class UserController {
 
         log.debug("showAllUsers()");
 
-        List<UserDTO> users = null;
+        List<User> users = null;
         
         try {
             users = iUserService.getAllUsers();

@@ -93,7 +93,7 @@ public class BookController {
 
         log.debug("showBookByTitle()", title);
 
-        List<BookDTO> books = null;
+        List<Book> books = null;
 
         if (title.equals(" ")) {
 

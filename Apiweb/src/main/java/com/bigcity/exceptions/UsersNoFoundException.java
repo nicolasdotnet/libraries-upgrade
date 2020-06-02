@@ -5,15 +5,17 @@
  */
 package com.bigcity.exceptions;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 /**
  *
  * @author nicolasdotnet
  */
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class UsersNoFoundException extends LibraryException {
 
-//@ResponseStatus(HttpStatus.NOT_FOUND)
-public class UserNoFindException extends LibraryException {
-
-    public UserNoFindException(String message) {
+    public UsersNoFoundException(String message) {
         
         super(message);
     }

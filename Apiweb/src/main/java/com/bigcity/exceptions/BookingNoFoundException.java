@@ -9,9 +9,9 @@ package com.bigcity.exceptions;
  *
  * @author nicolasdotnet
  */
-public class BookingNoFindException extends LibraryException  {
+public class BookingNoFoundException extends LibraryException  {
 
-    public BookingNoFindException(String message) {
+    public BookingNoFoundException(String message) {
         
         super(message);
         

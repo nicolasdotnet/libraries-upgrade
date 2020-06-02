@@ -5,11 +5,11 @@
  */
 package com.bigcity.services;
 
-import com.bigcity.exceptions.BooksNoFindException;
+import com.bigcity.exceptions.BooksNoFoundException;
 import com.bigcity.dao.BookRepository;
 import com.bigcity.dto.BookDTO;
 import com.bigcity.entity.Book;
-import com.bigcity.exceptions.BookNoFindException;
+import com.bigcity.exceptions.BookNoFoundException;
 import com.bigcity.services.interfaces.IBookService;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,8 +66,7 @@ public class BookServiceImpl implements IBookService {
        
 
         bookFind.get().setIsbn(bookDTO.getIsbn());
-        bookFind.get().setAuthorFirstname(bookDTO.getAuthorFirstname());
-        bookFind.get().setAuthorLastname(bookDTO.getAuthorLastname());
+        bookFind.get().setAuthor(bookDTO.getAuthor());
         bookFind.get().setBookTitle(bookDTO.getBookTitle());
         bookFind.get().setCopiesAvailable(bookDTO.getCopiesAvailable());
         
@@ -75,26 +74,9 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public List<BookDTO> getAllBooks() throws Exception {
+    public List<Book> getAllBooks() throws Exception {
 
-        List<Book> books = bookRepository.findAll();
-
-        List<BookDTO> bookDTOs = new ArrayList<>();
-
-        if (books.isEmpty()) {
-
-            throw new BooksNoFindException("Il n'y a pas de livre dans la base.");
-        }
-
-        for (Book book : books) {
-
-            BookDTO n = entityToDto(book);
-
-            bookDTOs.add(n);
-
-        }
-
-        return bookDTOs;
+        return bookRepository.findAll();
     }
 
     @Override
@@ -106,7 +88,7 @@ public class BookServiceImpl implements IBookService {
 
             log.error("Le livre n'existe pas dans la base.");
 
-            throw new BookNoFindException("Le livre n'existe pas !");
+            throw new BookNoFoundException("Le livre n'existe pas !");
 
         }
 
@@ -114,29 +96,9 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public List<BookDTO> getBookByTitle(String title) throws Exception {
-
-        List<Book> bookFind = bookRepository.findByBookTitleContainingIgnoreCase(title);
-
-        if (bookFind.isEmpty()) {
-
-            log.error("Il n'ya pas de livre avec ce mot clès.");
-
-            throw new BooksNoFindException("Il n'ya pas de livre avec ce mot clès.");
-
-        }
-
-        List<BookDTO> bookDTOs = new ArrayList<>();
-
-        for (Book book : bookFind) {
-
-            BookDTO n = entityToDto(book);
-
-            bookDTOs.add(n);
-
-        }
-
-        return bookDTOs;
+    public List<Book> getBookByTitle(String title) throws Exception {
+        
+        return bookRepository.findByBookTitleContainingIgnoreCase(title);
     }
 
     public BookDTO entityToDto(Book book) {
@@ -144,8 +106,7 @@ public class BookServiceImpl implements IBookService {
         BookDTO bookDTO = new BookDTO();
 
         bookDTO.setIsbn(book.getIsbn());
-        bookDTO.setAuthorFirstname(book.getAuthorFirstname());
-        bookDTO.setAuthorLastname(book.getAuthorLastname());
+        bookDTO.setAuthor(book.getAuthor());
         bookDTO.setBookTitle(book.getBookTitle());
         bookDTO.setCopiesAvailable(book.getCopiesAvailable());
 
@@ -158,8 +119,7 @@ public class BookServiceImpl implements IBookService {
         Book book = new Book();
 
         book.setIsbn(bookDTO.getIsbn());
-        book.setAuthorFirstname(bookDTO.getAuthorFirstname());
-        book.setAuthorLastname(bookDTO.getAuthorLastname());
+        book.setAuthor(bookDTO.getAuthor());
         book.setBookTitle(bookDTO.getBookTitle());
         book.setCopiesAvailable(bookDTO.getCopiesAvailable());
 

@@ -1,6 +1,5 @@
 package com.bigcity.services;
 
-
 import com.bigcity.dao.RoleRepository;
 import com.bigcity.entity.Role;
 import com.bigcity.services.interfaces.IRoleService;
@@ -8,13 +7,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 @Service
 @Transactional
@@ -23,77 +20,77 @@ public class RoleServiceImpl implements IRoleService {
     private static final Logger log = LogManager.getLogger(RoleServiceImpl.class);
 
     @Autowired
-    private RoleRepository userCategoryRepository;
+    private RoleRepository roleRepository;
+    
 
     @Override
-    public Role register(String category) throws Exception {
+    public Role register(String roleName) throws Exception {
 
-        if (userCategoryRepository.findByRoleNameIgnoreCase(category) != null) {
+        Optional<Role> roleFind = roleRepository.findByRoleName(roleName);
+
+        if (roleFind.isPresent()) {
 
             log.error("Le role existe déjà !");
 
-            throw new Exception("La catégorie "+ category+" existe déjà !");
+            throw new Exception("La role existe déjà !");
 
         }
 
-        Role userCategory = new Role();
+        Role role = new Role();
 
-        userCategory.setRoleName(category);
-        userCategory.setRoleDate(new Date());
+        role.setRoleName(roleName);
 
-        return userCategoryRepository.save(userCategory);
+        return roleRepository.save(role);
     }
 
     @Override
-    public Role edit(Role userCategory) throws Exception {
+    public Role edit(Role role) throws Exception {
 
-        Optional<Role> categoryFind = userCategoryRepository.findById(userCategory.getRoleId());
+        Optional<Role> roleFind = roleRepository.findById(role.getRoleId());
 
-        if (!categoryFind.isPresent()) {
+        if (!roleFind.isPresent()) {
 
-            log.error("Modification Impossible ! le role " + userCategory.getRoleId()
-                    + " n'existe pas dans la base.");
+            log.error("Modification Impossible ! le role n'existe pas dans la base.");
 
-            throw new Exception("La catégorie " + userCategory.getRoleId()
-                    + " n'existe pas !");
+            throw new Exception("La role n'existe pas !");
 
         }
 
-        return userCategoryRepository.saveAndFlush(userCategory);
+        return roleRepository.saveAndFlush(role);
     }
 
     @Override
-    public List<Role> getAllUserCategory() {
+    public List<Role> getAllRole() {
 
-        return userCategoryRepository.findAll();
+        return roleRepository.findAll();
     }
 
     @Override
-    public Role getUserCategory(Long id) throws Exception {
+    public Role getRole(Long id) throws Exception {
 
-        Optional<Role> categoryFind = userCategoryRepository.findById(id);
+        Optional<Role> roleFind = roleRepository.findById(id);
 
-        if (!categoryFind.isPresent()) {
+        if (!roleFind.isPresent()) {
 
             log.error("Le role " + id
                     + " n'existe pas dans la base.");
 
-            throw new Exception("La catégorie "+ id+" n'existe pas !");
+            throw new Exception("La role n'existe pas !");
 
         }
-        return categoryFind.get();
+        return roleFind.get();
     }
 
     @Override
-    public Role getDefaultUserCategory() throws Exception {
+    public Role getDefaultRole() throws Exception {
 
-        Optional<Role> defaultCategory = userCategoryRepository.findById(1L);
+        Optional<Role> defaultCategory = roleRepository.findById(1L);
 
         if (!defaultCategory.isPresent()) {
 
             log.error("Le role par défault n'existe pas dans la base.");
 
-            throw new Exception("La catégorie par défault n'existe pas !");
+            throw new Exception("La role par défault n'existe pas !");
 
         }
 
@@ -101,9 +98,10 @@ public class RoleServiceImpl implements IRoleService {
     }
 
     @Override
-    public List<Role> getUserCategoryByLabel(String label) {
+    public List<Role> getRoleByLabel(String roleName
+    ) {
 
-        return userCategoryRepository.findByRoleNameContainingIgnoreCase(label);
+        return roleRepository.findByRoleNameContainingIgnoreCase(roleName);
     }
 
 }

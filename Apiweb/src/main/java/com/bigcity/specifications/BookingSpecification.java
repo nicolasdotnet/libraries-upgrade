@@ -21,5 +21,8 @@ public class BookingSpecification {
             return cb.equal(root.get("bookingEndDate"), dateNow);
         };
     }
+    
+    
+    // objet en paramatre valeur critéria retours des pages
 
 }

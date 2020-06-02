@@ -6,8 +6,8 @@
 package com.bigcity.controllers;
 
 import com.bigcity.exceptions.ResourceException;
-import com.bigcity.exceptions.UserNoFindException;
-import com.bigcity.exceptions.UsersNoFindException;
+import com.bigcity.exceptions.UserNoFoundException;
+import com.bigcity.exceptions.UsersNoFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionHandlerControllerAdvice {
 
-//    @ExceptionHandler(UserNoFindException.class)
-//    public ResponseEntity<ExceptionMessage> userNoFindHandler(HttpServletRequest request, UserNoFindException exception) {
+//    @ExceptionHandler(UserNoFoundException.class)
+//    public ResponseEntity<ExceptionMessage> userNoFindHandler(HttpServletRequest request, UserNoFoundException exception) {
 //        ExceptionMessage message = ExceptionMessage.builder()
 //                .date(LocalDateTime.now().format(formatter))
 //                .path(request.getRequestURI().toString() + "?" + request.getQueryString())
@@ -34,16 +34,16 @@ public class ExceptionHandlerControllerAdvice {
 //                .build();
 //        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 //    }
-    @ExceptionHandler(UserNoFindException.class)
-    public ResponseEntity handleException(UserNoFindException e) {
+    @ExceptionHandler(UserNoFoundException.class)
+    public ResponseEntity handleException(UserNoFoundException e) {
         // log exception
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body("Error Message");
     }
 
-    @ExceptionHandler(UsersNoFindException.class)
-    public ResponseEntity handleException(UsersNoFindException e) {
+    @ExceptionHandler(UsersNoFoundException.class)
+    public ResponseEntity handleException(UsersNoFoundException e) {
         // log exception 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }

@@ -51,7 +51,7 @@ public interface IUserService {
      * @return the users list
      * @throws java.lang.Exception
      */
-    List<UserDTO> getAllUsers() throws Exception;
+    List<User> getAllUsers() throws Exception;
 
     /**
      * method to get all users for a role
@@ -63,39 +63,39 @@ public interface IUserService {
     List<User> getUsersByRole(Role UserCategory) throws Exception;
 
     /**
-     * method to get a user by his username
+     * method to get a user by his email
      *
      * @param userName
      * @return the list users from Role label
      * @throws Exception
      */
-    Optional<User> getUserByUsername(String userName) throws Exception;
+    Optional<User> getUserByEmail(String userName) throws Exception;
 
     /**
      * method to remove a user
      *
-     * @param username
+     * @param email
      * @throws Exception
      */
-    void delete(String username) throws Exception;
+    void delete(String email) throws Exception;
 
     /**
-     * method to get all users by username
+     * method to get all users by email
      *
      * @param userName
-     * @return the list users with the username
+     * @return the list users with the email
      */
-    List<User> getAllUserByUsername(String userName);
+    List<User> getAllUserByEmail(String userName);
 
     /**
      * method to update password
      *
      * @param passwordNew
-     * @param username
+     * @param email
      * @return user objet update
      * @throws Exception
      */
-    User updatePassword(String passwordNew, String username) throws Exception;
+    User updatePassword(String passwordNew, String email) throws Exception;
 
     /**
      * method to get all really old users

@@ -11,6 +11,6 @@ package com.bigcity.entity;
  */
 public enum BookingStatus {
     
-    encours, prolongé, fini
+   ENCOURS, PROLONGE, TERMINE
     
 }

@@ -18,13 +18,9 @@ public class BookDTO {
     @Size(min = 3, max = 10, message = "ISBN trop long ou trop court.")
     private String isbn;
     
-    @NotEmpty(message = "le prénom de l'auteur n'est pas renseigné.")
+    @NotEmpty(message = "l'autheur de l'auteur n'est pas renseigné.")
     @Size(min = 3, max = 10, message = "Prénom trop long ou trop court.")
-    private String authorFirstname;
-
-    @NotEmpty(message = "le nom de l'auteur n'est pas renseigné.")
-    @Size(min = 3, max = 10, message = "Nom trop long ou trop court.")
-    private String authorLastname;
+    private String author;
     
     @NotEmpty(message = "le titre du livre n'est pas renseigné.")
     @Size(min = 1, max = 10, message = "Titre du livre trop long ou trop court.")
@@ -44,20 +40,12 @@ public class BookDTO {
         this.isbn = isbn;
     }
 
-    public String getAuthorFirstname() {
-        return authorFirstname;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setAuthorFirstname(String authorFirstname) {
-        this.authorFirstname = authorFirstname;
-    }
-
-    public String getAuthorLastname() {
-        return authorLastname;
-    }
-
-    public void setAuthorLastname(String authorLastname) {
-        this.authorLastname = authorLastname;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getBookTitle() {
@@ -78,7 +66,7 @@ public class BookDTO {
 
     @Override
     public String toString() {
-        return "BookDTO{" + "isbn=" + isbn + ", authorFirstname=" + authorFirstname + ", authorLastname=" + authorLastname + ", bookTitle=" + bookTitle + ", copiesAvailable=" + copiesAvailable + '}';
+        return "BookDTO{" + "isbn=" + isbn + ", authorFirstname=" + author + ", bookTitle=" + bookTitle + ", copiesAvailable=" + copiesAvailable + '}';
     }
     
     

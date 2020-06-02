@@ -11,10 +11,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface UserRepository extends JpaRepository<User, Long>,JpaSpecificationExecutor<User> {
 
-    Optional<User> findByUsername(String username);
+    List<User> findByRole(Role roleName);
 
-    List<User> findAllByUsernameContainingIgnoreCase(String username);
+    Optional<User> findByEmail(String email);
 
-    List<User> findByRole(Role userCategory);
+    List<User> findAllByEmail(String email);
 
 }

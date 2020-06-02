@@ -65,7 +65,6 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         // register membre User
         String firstname = "nicolas";
         String lastname = "desdevises";
-        String username = "nico";
         String password = "123";
         String email = "nicolas.desdevises@yahoo.com";
 
@@ -73,7 +72,6 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         uV1.setFirstname(firstname);
         uV1.setLastname(lastname);
-        uV1.setUsername(username);
         uV1.setPassword(password);
         uV1.setEmail(email);
 
@@ -86,7 +84,6 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         // register default User
         firstname = "laure";
         lastname = "desdevises";
-        username = "laure";
         password = "123";
         email = "laure@yahoo.com";
 
@@ -94,7 +91,6 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         uV2.setFirstname(firstname);
         uV2.setLastname(lastname);
-        uV2.setUsername(username);
         uV2.setPassword(password);
         uV2.setEmail(email);
 
@@ -106,16 +102,14 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         // register one book
         String isbn = "561352";
-        String authorFirstname = "Rowston";
-        String authorLastname = "Thebest";
+        String author = "Rowston Thebest";
         String bookTitle = "Java pour les nuls";
         int copiesAvailable = 5;
 
         BookDTO bookDTO = new BookDTO();
 
         bookDTO.setIsbn(isbn);
-        bookDTO.setAuthorFirstname(authorFirstname);
-        bookDTO.setAuthorLastname(authorLastname);
+        bookDTO.setAuthor(author);
         bookDTO.setBookTitle(bookTitle);
         bookDTO.setCopiesAvailable(copiesAvailable);
 
@@ -180,7 +174,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         System.out.println("equal date ? booking : " + r.getBookingEndDate() + "/ datenow : " + LocalDate.now());
 
         try {
-            List userBookings = iBookingService.getAllBookingByUser(u2.getUsername());
+            List userBookings = iBookingService.getAllBookingByUser(u2.getEmail());
 
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
 

@@ -1,11 +1,11 @@
 package com.bigcity.services;
 
-import com.bigcity.exceptions.UserNoFindException;
+import com.bigcity.exceptions.UserNoFoundException;
 import com.bigcity.dao.UserRepository;
 import com.bigcity.dto.UserDTO;
 import com.bigcity.entity.Role;
 import com.bigcity.entity.User;
-import com.bigcity.exceptions.UsersNoFindException;
+import com.bigcity.exceptions.UsersNoFoundException;
 import static com.bigcity.security.EncrytedPasswordUtils.encrytePassword;
 import com.bigcity.services.interfaces.IRoleService;
 import com.bigcity.services.interfaces.IUserService;
@@ -36,7 +36,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User registerByDefault(UserDTO userDTO) throws Exception {
 
-        Optional<User> userFind = userRepository.findByUsername(userDTO.getUsername());
+        Optional<User> userFind = userRepository.findByEmail(userDTO.getEmail());
 
         if (userFind.isPresent()) {
 
@@ -46,10 +46,10 @@ public class UserServiceImpl implements IUserService {
 
         }
 
-        Role role = iRoleService.getUserCategory(2L);
+        Role role = iRoleService.getRole(2L);
 
         User user = dtoToEntity(userDTO);
-      
+
         user.setRole(role);
         user.setUserDate(new Date());
 
@@ -60,7 +60,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User registerForMembre(UserDTO userDTO) throws Exception {
 
-        Optional<User> userFind = userRepository.findByUsername(userDTO.getUsername());
+        Optional<User> userFind = userRepository.findByEmail(userDTO.getEmail());
 
         if (userFind.isPresent()) {
 
@@ -70,9 +70,8 @@ public class UserServiceImpl implements IUserService {
 
         }
 
-        Role role = iRoleService.getUserCategory(1L);
-        
-        
+        Role role = iRoleService.getRole(1L);
+
         User user = dtoToEntity(userDTO);
 
         user.setRole(role);
@@ -85,7 +84,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User edit(UserDTO userDTO) throws Exception {
 
-        Optional<User> userFind = userRepository.findByUsername(userDTO.getUsername());
+        Optional<User> userFind = userRepository.findByEmail(userDTO.getEmail());
 
         if (!userFind.isPresent()) {
 
@@ -102,7 +101,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User getUser(Long id) throws UserNoFindException {
+    public User getUser(Long id) throws UserNoFoundException {
 
         Optional<User> userFind = userRepository.findById(id);
 
@@ -110,7 +109,7 @@ public class UserServiceImpl implements IUserService {
 
             log.error("L'utilisateur  n'existe pas dans la base.");
 
-            throw new UserNoFindException("Utilisateur  n'existe pas !");
+            throw new UserNoFoundException("Utilisateur  n'existe pas !");
 
         }
 
@@ -118,40 +117,23 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<UserDTO> getAllUsers() throws Exception{
+    public List<User> getAllUsers() throws Exception {
 
-        List<User> users = userRepository.findAll();
-        
-        List<UserDTO> userDTOs = new ArrayList<>();
-
-        if (users.isEmpty()) {
-
-            throw new UsersNoFindException("Il n'y a pas d'utilisateurs dans la base.");
-        }
-        
-        for (User user : users) {
-            
-            UserDTO n = entityToDto(user);
-            
-            userDTOs.add(n);
-            
-        }
-
-        return userDTOs;
+        return userRepository.findAll();
     }
 
     @Override
-    public List<User> getUsersByRole(Role userCategory) throws Exception {
+    public List<User> getUsersByRole(Role role) throws Exception {
 
-        iRoleService.getUserCategory(userCategory.getRoleId());
+        iRoleService.getRole(role.getRoleId());
 
-        return userRepository.findByRole(userCategory);
+        return userRepository.findByRole(role);
     }
 
     @Override
-    public Optional<User> getUserByUsername(String username) throws Exception {
+    public Optional<User> getUserByEmail(String email) throws Exception {
 
-        Optional<User> userFind = userRepository.findByUsername(username);
+        Optional<User> userFind = userRepository.findByEmail(email);
 
         if (!userFind.isPresent()) {
 
@@ -165,9 +147,9 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public void delete(String username) throws Exception {
+    public void delete(String email) throws Exception {
 
-        Optional<User> userFind = userRepository.findByUsername(username);
+        Optional<User> userFind = userRepository.findByEmail(email);
 
         if (!userFind.isPresent()) {
 
@@ -181,14 +163,14 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<User> getAllUserByUsername(String userName) {
-        return userRepository.findAllByUsernameContainingIgnoreCase(userName);
+    public List<User> getAllUserByEmail(String email) {
+        return userRepository.findAllByEmail(email);
     }
 
     @Override
-    public User updatePassword(String passwordNew, String username) throws Exception {
+    public User updatePassword(String passwordNew, String email) throws Exception {
 
-        Optional<User> userFind = userRepository.findByUsername(username);
+        Optional<User> userFind = userRepository.findByEmail(email);
 
         if (!userFind.isPresent()) {
 
@@ -199,7 +181,7 @@ public class UserServiceImpl implements IUserService {
         }
 
         userFind.get().setPassword(encrytePassword(passwordNew));
-        
+
         return userRepository.saveAndFlush(userFind.get());
 
     }
@@ -216,7 +198,6 @@ public class UserServiceImpl implements IUserService {
 
         userDTO.setFirstname(user.getFirstname());
         userDTO.setLastname(user.getLastname());
-        userDTO.setUsername(user.getUsername());
         userDTO.setEmail(user.getEmail());
         userDTO.setPassword(user.getPassword());
 //        userDTO.setRole(user.getRole());
@@ -231,7 +212,6 @@ public class UserServiceImpl implements IUserService {
 
         user.setFirstname(userDTO.getFirstname());
         user.setLastname(userDTO.getLastname());
-        user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
 //        user.setRole(userDTO.getRole());

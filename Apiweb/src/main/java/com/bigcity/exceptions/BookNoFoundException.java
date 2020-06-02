@@ -3,14 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.bigcity.entity;
+package com.bigcity.exceptions;
 
 /**
  *
  * @author nicolasdotnet
  */
-public enum LibraryList {
-    
-    Arras, Paris, Lille
+public class BookNoFoundException extends LibraryException {
+
+    public BookNoFoundException(String message) {
+
+        super(message);
+    }
     
 }

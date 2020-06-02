@@ -59,9 +59,6 @@ public class Booking {
     @JoinColumn(nullable = false)
     @JsonIgnore
     private Book book;
-    
-    @Column(length = 100, nullable = false)
-    private LibraryList library;
 
     public Booking() {
     }
@@ -146,17 +143,9 @@ public class Booking {
         this.book = book;
     }
 
-    public LibraryList getLibrary() {
-        return library;
-    }
-
-    public void setLibrary(LibraryList library) {
-        this.library = library;
-    }
-
     @Override
     public String toString() {
-        return "Booking{" + "bookingId=" + bookingId + ", bookingStartDate=" + bookingStartDate + ", BookingDurationWeek=" + BookingDurationWeek + ", bookingEndDate=" + bookingEndDate + ", backBookDate=" + backBookDate + ", counterExtension=" + counterExtension + ", bookingStatus=" + bookingStatus + ", librarian=" + librarian + ", bookingUser=" + bookingUser + ", book=" + book + ", library=" + library + '}';
+        return "Booking{" + "bookingId=" + bookingId + ", bookingStartDate=" + bookingStartDate + ", BookingDurationWeek=" + BookingDurationWeek + ", bookingEndDate=" + bookingEndDate + ", backBookDate=" + backBookDate + ", counterExtension=" + counterExtension + ", bookingStatus=" + bookingStatus + ", librarian=" + librarian + ", bookingUser=" + bookingUser + ", book=" + book + '}';
     }
     
     
