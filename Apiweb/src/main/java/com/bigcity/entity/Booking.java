@@ -30,8 +30,8 @@ public class Booking {
     @Column(nullable = false)
     private Date bookingStartDate;
     
-    @Column(length = 2, nullable = false)
-    private String BookingDurationWeek; // constance ? param ?
+    @Column(length = 3, nullable = false)
+    private String BookingDurationDay; // constance ? param ?
     
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
@@ -79,12 +79,12 @@ public class Booking {
         this.bookingStartDate = bookingStartDate;
     }
 
-    public String getBookingDurationWeek() {
-        return BookingDurationWeek;
+    public String getBookingDurationDay() {
+        return BookingDurationDay;
     }
 
-    public void setBookingDurationWeek(String BookingDurationWeek) {
-        this.BookingDurationWeek = BookingDurationWeek;
+    public void setBookingDurationDay(String BookingDurationDay) {
+        this.BookingDurationDay = BookingDurationDay;
     }
 
     public Date getBookingEndDate() {
@@ -145,7 +145,7 @@ public class Booking {
 
     @Override
     public String toString() {
-        return "Booking{" + "bookingId=" + bookingId + ", bookingStartDate=" + bookingStartDate + ", BookingDurationWeek=" + BookingDurationWeek + ", bookingEndDate=" + bookingEndDate + ", backBookDate=" + backBookDate + ", counterExtension=" + counterExtension + ", bookingStatus=" + bookingStatus + ", librarian=" + librarian + ", bookingUser=" + bookingUser + ", book=" + book + '}';
+        return "Booking{" + "bookingId=" + bookingId + ", bookingStartDate=" + bookingStartDate + ", BookingDurationWeek=" + BookingDurationDay + ", bookingEndDate=" + bookingEndDate + ", backBookDate=" + backBookDate + ", counterExtension=" + counterExtension + ", bookingStatus=" + bookingStatus + ", librarian=" + librarian + ", bookingUser=" + bookingUser + ", book=" + book + '}';
     }
     
     

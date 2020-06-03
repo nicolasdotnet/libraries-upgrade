@@ -27,6 +27,7 @@ import com.bigcity.specifications.BookingSpecification;
 import com.bigcity.services.interfaces.IBookingService;
 import java.time.Instant;
 import java.time.ZoneId;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  *
@@ -47,6 +48,12 @@ public class BookingServiceImpl implements IBookingService {
     @Autowired
     private IUserService iUserService;
 
+    @Value("${bookingDuration}")
+    String bookingDuration;
+    
+    @Value("${counterExtension}")
+    String counterExtension;
+
     // pas de dto
     @Override
     public Booking register(Long librarianId, Long bookingUserId, Long bookId) throws Exception {
@@ -54,7 +61,7 @@ public class BookingServiceImpl implements IBookingService {
         Book book = iBookService.getBook(bookId);
 
         User bookingUser = iUserService.getUser(bookingUserId);
-        
+
         User librarian = iUserService.getUser(librarianId);
 
         Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUser(book, bookingUser);
@@ -77,11 +84,10 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
-        // vérifié ? -1 
-        book.setCopiesAvailable(copiesAvailable--);
-        
-        // save ne base => transaction
+        // TODO POURQUOI CA MARCHE ?
+        book.setCopiesAvailable(--copiesAvailable);
 
+        // save en base => transaction
         // TODO : calcul en fonction du param week + TimeZone ?
 //        Date bookingEndDate = java.sql.Date.valueOf(LocalDate.now().plusWeeks(4));
         Date bookingEndDate = java.sql.Date.valueOf(LocalDate.now());
@@ -89,14 +95,13 @@ public class BookingServiceImpl implements IBookingService {
         Booking booking = new Booking();
 
         booking.setBook(book);
-        booking.setBookingDurationWeek("2");
+        booking.setBookingDurationDay(bookingDuration);
         booking.setBookingStartDate(new Date());
         booking.setBookingEndDate(bookingEndDate);
         booking.setBookingStatus(BookingStatus.ENCOURS);
         booking.setBookingUser(bookingUser);
-        booking.setCounterExtension("0");
+        booking.setCounterExtension(counterExtension);
         booking.setLibrarian(librarian);
-//        booking.setLibrary(LibraryList.Arras);
 
         return bookingRepository.save(booking);
     }
@@ -218,14 +223,12 @@ public class BookingServiceImpl implements IBookingService {
                 .toLocalDate();
 
         // ne marche pas avec un date sans le time !
-        
 //                bookingFind.get().getBookingEndDate().toInstant()
 //                .atZone(ZoneId.systemDefault())
 //                .toLocalDate();
-
         System.out.println("old date : 2 " + bookingEndDateOld.toString());
 
-        LocalDate bookingEndDateNew = bookingEndDateOld.plusWeeks(4);
+        LocalDate bookingEndDateNew = bookingEndDateOld.plusDays(28);
 
         System.out.println("TEST 2");
         System.out.println("new date : " + bookingEndDateNew);

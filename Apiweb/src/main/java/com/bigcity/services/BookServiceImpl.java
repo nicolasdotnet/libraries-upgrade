@@ -36,7 +36,7 @@ public class BookServiceImpl implements IBookService {
     @Override
     public Book register(BookDTO bookDTO) throws Exception {
 
-        Optional<Book> bookFind = bookRepository.findByIsbn(bookDTO.getIsbn());
+        Optional<Book> bookFind = bookRepository.findByIsbnAndTitleAndAuthor(bookDTO.getIsbn(), bookDTO.getBookTitle(), bookDTO.getAuthor());
 
         if (bookFind.isPresent()) {
 
@@ -67,7 +67,7 @@ public class BookServiceImpl implements IBookService {
 
         bookFind.get().setIsbn(bookDTO.getIsbn());
         bookFind.get().setAuthor(bookDTO.getAuthor());
-        bookFind.get().setBookTitle(bookDTO.getBookTitle());
+        bookFind.get().setTitle(bookDTO.getBookTitle());
         bookFind.get().setCopiesAvailable(bookDTO.getCopiesAvailable());
         
         return bookRepository.saveAndFlush(bookFind.get());
@@ -98,7 +98,7 @@ public class BookServiceImpl implements IBookService {
     @Override
     public List<Book> getBookByTitle(String title) throws Exception {
         
-        return bookRepository.findByBookTitleContainingIgnoreCase(title);
+        return bookRepository.findByTitleContainingIgnoreCase(title);
     }
 
     public BookDTO entityToDto(Book book) {
@@ -107,7 +107,7 @@ public class BookServiceImpl implements IBookService {
 
         bookDTO.setIsbn(book.getIsbn());
         bookDTO.setAuthor(book.getAuthor());
-        bookDTO.setBookTitle(book.getBookTitle());
+        bookDTO.setBookTitle(book.getTitle());
         bookDTO.setCopiesAvailable(book.getCopiesAvailable());
 
         return bookDTO;
@@ -120,7 +120,7 @@ public class BookServiceImpl implements IBookService {
 
         book.setIsbn(bookDTO.getIsbn());
         book.setAuthor(bookDTO.getAuthor());
-        book.setBookTitle(bookDTO.getBookTitle());
+        book.setTitle(bookDTO.getBookTitle());
         book.setCopiesAvailable(bookDTO.getCopiesAvailable());
 
         return book;

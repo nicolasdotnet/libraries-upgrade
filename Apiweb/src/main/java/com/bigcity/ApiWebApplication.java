@@ -79,7 +79,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
 
-        System.out.println("\n register : " + u.toString() + "\n");
+        System.out.println("\n register admin : " + u.toString() + "\n");
 
         // register default User
         firstname = "laure";
@@ -98,7 +98,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
 
-        System.out.println("\n register : " + u2.toString() + "\n");
+        System.out.println("\n register usagé : " + u2.toString() + "\n");
 
         // register one book
         String isbn = "561352";
@@ -117,7 +117,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
 
-        System.out.println("\n register : " + b.toString() + "\n");
+        System.out.println("\n register book : " + b.toString() + "\n");
 
         // get book
         Book getbook = null;
@@ -128,9 +128,34 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
 
-            System.out.println("\n get ID : " + getbook.toString() + "\n");
+            System.out.println("\n get book ID : " + getbook.toString() + "\n");
 
         } catch (Exception e) {
+
+        }
+
+        // register seconde book => error
+        isbn = "561352";
+        author = "Rowston Thebest";
+        bookTitle = "Java pour les nuls";
+        copiesAvailable = 5;
+
+        BookDTO bookDTO2 = new BookDTO();
+        Book b2;
+
+        bookDTO2.setIsbn(isbn);
+        bookDTO2.setAuthor(author);
+        bookDTO2.setBookTitle(bookTitle);
+        bookDTO2.setCopiesAvailable(copiesAvailable);
+
+        try {
+
+            b2 = iBookService.register(bookDTO2);
+
+        } catch (Exception e) {
+
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+            System.out.println("book 2 : " + e.getMessage());
 
         }
 
@@ -139,30 +164,36 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         Long bookingUserId = u2.getUserId();
         Long bookId = b.getBookId();
 
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+        System.out.println(">>>>>>>>>>>>>>>Book avant booking -> : " + b.getCopiesAvailable());
+
         Booking r = iBookingService.register(librarianId, bookingUserId, bookId);
 
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
 
-        System.out.println("\n get ID : " + r.toString() + "\n");
+        System.out.println("\n AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA get booking ID : " + r.toString() + "\n");
 
-        // register one booking => error
+        // register second booking => error
         try {
             iBookingService.register(librarianId, bookingUserId, bookId);
 
         } catch (Exception e) {
 
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+            System.out.println("booking 2 : " + e.getMessage());
+
         }
 
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
 
-        System.out.println("\n get ID : " + r.toString() + "\n");
+        System.out.println("\n get booking ID : " + r.toString() + "\n");
 
         try {
             List<Booking> l = iBookingService.getOutdatedBookingList();
 
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
 
-            System.out.println("\n get ID : " + l.toString() + "\n");
+            System.out.println("\n get booking ID : " + l.toString() + "\n");
 
         } catch (Exception e) {
 
@@ -186,7 +217,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
             System.out.println("com.bigcity.ApiWebApplication.run() : " + e.getMessage());
 
         }
-        
+
         try {
             System.out.println("com.bigcity.ApiWebApplication.run() EXTEND 1");
             iBookingService.extendBooking(r.getBookingId());
@@ -208,7 +239,9 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         }
 
         r = iBookingService.getBooking(r.getBookingId());
-        
-        System.out.println("PRET -> extension :"+r.getCounterExtension()+" date de fin : "+r.getBookingEndDate());
+
+        System.out.println("PRET -> extension :" + r.getCounterExtension() + " date de fin : " + r.getBookingEndDate());
+
+        System.out.println("Book après booking -> : " + iBookService.getBook(bookId).getCopiesAvailable());
     }
 }

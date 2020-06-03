@@ -11,8 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
@@ -33,17 +31,13 @@ public class Book {
     private String author;
 
     @Column(length = 100, nullable = false)
-    private String bookTitle;
+    private String title;
 
     //@Column(length = 2, nullable = false)
     private int copiesAvailable;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private Collection<Booking> bookings;
-
-//    @ManyToOne
-//    @JoinColumn(nullable = false)
-//    private User librarian;
 
     public Book() {
     }
@@ -72,12 +66,12 @@ public class Book {
         this.author = author;
     }
 
-    public String getBookTitle() {
-        return bookTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setBookTitle(String bookTitle) {
-        this.bookTitle = bookTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getCopiesAvailable() {
@@ -96,17 +90,9 @@ public class Book {
         this.bookings = bookings;
     }
 
-//    public User getLibrarian() {
-//        return librarian;
-//    }
-//
-//    public void setLibrarian(User librarian) {
-//        this.librarian = librarian;
-//    }
-
     @Override
     public String toString() {
-        return "Book{" + "bookId=" + bookId + ", isbn=" + isbn + ", authorFirstname=" + author + ", bookTitle=" + bookTitle + ", copiesAvailable=" + copiesAvailable + '}';
+        return "Book{" + "bookId=" + bookId + ", isbn=" + isbn + ", authorFirstname=" + author + ", bookTitle=" + title + ", copiesAvailable=" + copiesAvailable + '}';
     }
 
 
