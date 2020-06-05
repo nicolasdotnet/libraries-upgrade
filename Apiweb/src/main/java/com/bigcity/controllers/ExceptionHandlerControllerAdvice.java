@@ -5,9 +5,9 @@
  */
 package com.bigcity.controllers;
 
-import com.bigcity.exceptions.ResourceException;
-import com.bigcity.exceptions.UserNoFoundException;
-import com.bigcity.exceptions.UsersNoFoundException;
+import com.bigcity.exceptions.EntityAlreadyExistsException;
+import com.bigcity.exceptions.EntityNoFoundException;
+import com.bigcity.exceptions.BookingNotPossibleException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionHandlerControllerAdvice {
 
-//    @ExceptionHandler(UserNoFoundException.class)
-//    public ResponseEntity<ExceptionMessage> userNoFindHandler(HttpServletRequest request, UserNoFoundException exception) {
+//    @ExceptionHandler(EntityNoFoundException.class)
+//    public ResponseEntity<ExceptionMessage> userNoFindHandler(HttpServletRequest request, EntityNoFoundException exception) {
 //        ExceptionMessage message = ExceptionMessage.builder()
 //                .date(LocalDateTime.now().format(formatter))
 //                .path(request.getRequestURI().toString() + "?" + request.getQueryString())
@@ -34,22 +34,27 @@ public class ExceptionHandlerControllerAdvice {
 //                .build();
 //        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 //    }
-    @ExceptionHandler(UserNoFoundException.class)
-    public ResponseEntity handleException(UserNoFoundException e) {
-        // log exception
-        return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body("Error Message");
-    }
-
-    @ExceptionHandler(UsersNoFoundException.class)
-    public ResponseEntity handleException(UsersNoFoundException e) {
+//    @ExceptionHandler(EntityNoFoundException.class)
+//    public ResponseEntity handleException(EntityNoFoundException e) {
+//        // log exception
+//        return ResponseEntity
+//                .status(HttpStatus.FORBIDDEN)
+//                .body("Error Message");
+//    }
+    @ExceptionHandler(EntityNoFoundException.class)
+    public ResponseEntity handleException(EntityNoFoundException e) {
         // log exception 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
-    @ExceptionHandler(ResourceException.class)
-    public ResponseEntity handleException(ResourceException e) {
+    @ExceptionHandler(EntityAlreadyExistsException.class)
+    public ResponseEntity handleException(EntityAlreadyExistsException e) {
+        // log exception 
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(BookingNotPossibleException.class)
+    public ResponseEntity handleException(BookingNotPossibleException e) {
         // log exception 
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }

@@ -9,15 +9,13 @@ package com.bigcity.exceptions;
  *
  * @author nicolasdotnet
  */
-//@ResponseStatus(HttpStatus.NOT_FOUND)
-public class UserNoFoundException extends LibraryException {
 
-    public UserNoFoundException() {
+public class EntityAlreadyExistsException extends LibraryException {
 
-        super();
+    public EntityAlreadyExistsException() {
     }
 
-    public UserNoFoundException(String message) {
+    public EntityAlreadyExistsException(String message) {
 
         super(message);
     }

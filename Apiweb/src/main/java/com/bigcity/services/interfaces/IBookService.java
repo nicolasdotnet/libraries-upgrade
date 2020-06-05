@@ -7,6 +7,7 @@ package com.bigcity.services.interfaces;
 
 import com.bigcity.dto.BookDTO;
 import com.bigcity.entity.Book;
+import com.bigcity.entity.BookCategory;
 import java.util.List;
 
 /**
@@ -37,27 +38,32 @@ public interface IBookService {
      * method to get all book
      *
      * @return the book list
-     * @throws java.lang.Exception
      */
-    List<Book> getAllBooks() throws Exception;
+    List<Book> getAllBooks();
 
     /**
      * method to get a book
      *
      * @param id
      * @return book object find
-     * @throws Exception
      */
-    Book getBook(Long id) throws Exception;
+    Book getBook(Long id);
 
     /**
      * method to get a book list by title
      *
      * @param title
      * @return book object list find by title
+     */
+    List<Book> getBookByTitle(String title);
+
+    /**
+     * method to get a book list by book category
+     *
+     * @param bookCategory
+     * @return book object list find by title
      * @throws java.lang.Exception
      */
-    List<Book> getBookByTitle(String title) throws Exception;
-
+    List<Book> getBookByBookCategory(BookCategory bookCategory) throws Exception;
 
 }

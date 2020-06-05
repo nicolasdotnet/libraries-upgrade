@@ -30,7 +30,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  *
  * @author nicolasdotnet
  */
-@Api("API pour les opérations CRUD sur les livres.")
+@Api(tags = "API pour les opérations CRUD sur les livres par un bibliothécaire.")
 @RestController
 public class BookController {
 
@@ -41,20 +41,12 @@ public class BookController {
 
     @ApiOperation("Enregister un nouveau livre")
     @PostMapping("/api/books")
-    public ResponseEntity saveBook(@Valid @RequestBody BookDTO bookDto) {
+    public ResponseEntity saveBook(@Valid @RequestBody BookDTO bookDto) throws Exception {
 
         log.debug("saveBook()");
 
         // TODO ajouter securité
-        Book bookSave = null;
-
-        try {
-            bookSave = iBookService.register(bookDto);
-        } catch (Exception ex) {
-
-            return ResponseEntity.badRequest().body(ex.getMessage());
-
-        }
+        Book bookSave = iBookService.register(bookDto);
 
 //code 201, ajouter l'URI 
         URI location = ServletUriComponentsBuilder
@@ -74,51 +66,28 @@ public class BookController {
 
         log.debug("showBook() id: {}", id);
 
-        Book bookFind = null;
-
-        try {
-            bookFind = iBookService.getBook(Long.valueOf(id));
-        } catch (Exception ex) {
-
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
-
-        return ResponseEntity.ok(bookFind);
+        return ResponseEntity.ok(iBookService.getBook(Long.valueOf(id)));
 
     }
 
     @ApiOperation("Récupère l'ensemble des livres de la base ou récupèrer une liste de livre a partir d'un mot clé sur le titre")
     @GetMapping("/api/books")
-    public ResponseEntity showAllBooks(@RequestParam(defaultValue = " ") String title) {
+    public ResponseEntity showAllBooks(@RequestParam(defaultValue = " ") String title) throws Exception {
 
         // RequestBody DTO Search
-        
-        
-        log.debug("showBookByTitle()", title);
+        log.debug("showAllBooks()", title);
 
         List<Book> books = null;
 
         if (title.equals(" ")) {
 
-            try {
-
-                books = iBookService.getAllBooks();
-
-            } catch (Exception ex) {
-
-                return ResponseEntity.ok().body(ex.getMessage());
-            }
+            books = iBookService.getAllBooks();
 
             return ResponseEntity.ok(books);
 
         }
 
-        try {
-            books = iBookService.getBookByTitle(title);
-        } catch (Exception ex) {
-
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
+        books = iBookService.getBookByTitle(title);
 
         return ResponseEntity.ok(books);
 
@@ -127,21 +96,11 @@ public class BookController {
     @ApiOperation("Mettre à jour un livre à partir de son ID présent dans la base")
     @PutMapping("/api/book/{id}")
     public ResponseEntity updateBook(@PathVariable("id") int id, @Valid
-            @RequestBody BookDTO bookDTO) {
+            @RequestBody BookDTO bookDTO) throws Exception {
 
         log.debug("updateBook()");
 
-        Book bookNew = null;
-
-        try {
-            bookNew = iBookService.edit(bookDTO);
-        } catch (Exception ex) {
-
-            return ResponseEntity.badRequest().body(ex.getMessage());
-
-        }
-
-        return ResponseEntity.ok().body(bookNew);
+        return ResponseEntity.ok().body(iBookService.edit(bookDTO));
 
     }
 

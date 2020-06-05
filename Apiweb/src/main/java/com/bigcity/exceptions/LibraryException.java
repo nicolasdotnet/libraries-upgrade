@@ -16,8 +16,8 @@ public class LibraryException extends Exception{
         super();
     }
 
-    public LibraryException(String string) {
-        super(string);
+    public LibraryException(String message) {
+        super(message);
     }
     
     

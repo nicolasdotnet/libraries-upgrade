@@ -1,5 +1,6 @@
 package com.bigcity.entity;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
@@ -19,7 +20,7 @@ import javax.persistence.OneToMany;
  *
  */
 @Entity
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue
@@ -47,8 +48,8 @@ public class User {
     @OneToMany(mappedBy = "bookingUser", fetch = FetchType.LAZY)
     private Collection<Booking> bookings;
 
-    @OneToMany(mappedBy = "librarian", fetch = FetchType.LAZY)
-    private Collection<Booking> librarianTasks;
+//    @OneToMany(mappedBy = "librarian", fetch = FetchType.LAZY)
+//    private Collection<Booking> librarianTasks;
 
 //    @OneToMany(mappedBy = "librarian", fetch = FetchType.LAZY)
 //    private Collection<Book> books;
@@ -120,13 +121,13 @@ public class User {
         this.bookings = bookings;
     }
 
-    public Collection<Booking> getLibrarianTasks() {
-        return librarianTasks;
-    }
-
-    public void setLibrarianTasks(Collection<Booking> librarianTasks) {
-        this.librarianTasks = librarianTasks;
-    }
+//    public Collection<Booking> getLibrarianTasks() {
+//        return librarianTasks;
+//    }
+//
+//    public void setLibrarianTasks(Collection<Booking> librarianTasks) {
+//        this.librarianTasks = librarianTasks;
+//    }
 
 //    public Collection<Book> getBooks() {
 //        return books;
@@ -138,7 +139,9 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" + "userId=" + userId + ", userDate=" + userDate + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password=" + password + ", role=" + role + '}';
+        return "User{" + "userId=" + userId + ", userDate=" + userDate +
+                ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email +
+                ", password=" + password + ", role=" + role + '}';
     }
     
     

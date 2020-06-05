@@ -60,7 +60,7 @@ public interface IBookingService {
      * @return
      * @throws Exception
      */
-    Booking getBooking(Long bookingId) throws Exception;
+    Booking getBooking(Long bookingId);
 
     /**
      * method to get all bookings 
@@ -68,7 +68,7 @@ public interface IBookingService {
      * @return
      * @throws Exception
      */
-    List<Booking> getAllBookings() throws Exception;
+    List<Booking> getAllBookings();
 
     /**
      * method to get all bookings by ask user

@@ -8,6 +8,9 @@ package com.bigcity.entity;
 /**
  *
  * @author nicolasdotnet
+ * 
+ * BookingStatus is the enum class to which booking can belong.
+ * 
  */
 public enum BookingStatus {
     

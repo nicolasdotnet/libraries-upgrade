@@ -5,13 +5,14 @@
  */
 package com.bigcity.services;
 
-import com.bigcity.exceptions.BooksNoFoundException;
 import com.bigcity.dao.BookRepository;
 import com.bigcity.dto.BookDTO;
 import com.bigcity.entity.Book;
-import com.bigcity.exceptions.BookNoFoundException;
+import com.bigcity.entity.BookCategory;
+import com.bigcity.exceptions.EntityAlreadyExistsException;
+import com.bigcity.exceptions.EntityNoFoundException;
+import com.bigcity.services.interfaces.IBookCategoryService;
 import com.bigcity.services.interfaces.IBookService;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +34,9 @@ public class BookServiceImpl implements IBookService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private IBookCategoryService iBookCategoryService;
+
     @Override
     public Book register(BookDTO bookDTO) throws Exception {
 
@@ -42,11 +46,22 @@ public class BookServiceImpl implements IBookService {
 
             log.error("Le livre existe déjà !");
 
-            throw new Exception("Le livre existe déjà !");
+            throw new EntityAlreadyExistsException("Le livre existe déjà !");
 
         }
+        
+        System.out.println("bc = "+bookDTO.getBookCategoryLabel());
 
-        Book book = dtoToEntity(bookDTO);
+        BookCategory bookCategoryFind = iBookCategoryService.getBookCategoryByLabel(bookDTO.getBookCategoryLabel());
+
+        if (bookCategoryFind == null) {
+
+            log.error("la catégorie n'existe pas dans la base.");
+
+            throw new EntityNoFoundException("la catégorie n'existe pas !");
+        }
+
+        Book book = dtoToEntity(bookDTO, bookCategoryFind);
 
         return bookRepository.save(book);
     }
@@ -60,61 +75,62 @@ public class BookServiceImpl implements IBookService {
 
             log.error("Modification Impossible ! le livre n'existe pas dans la base.");
 
-            throw new Exception("Le livre n'existe pas !");
+            throw new EntityNoFoundException("Le livre n'existe pas !");
 
         }
-       
+
+        BookCategory bookCategoryFind = iBookCategoryService.getBookCategoryByLabel(bookDTO.getBookCategoryLabel());
+
+        if (bookCategoryFind == null) {
+
+            log.error("la catégorie n'existe pas dans la base.");
+
+            throw new EntityNoFoundException("la catégorie n'existe pas !");
+        }
 
         bookFind.get().setIsbn(bookDTO.getIsbn());
         bookFind.get().setAuthor(bookDTO.getAuthor());
         bookFind.get().setTitle(bookDTO.getBookTitle());
         bookFind.get().setCopiesAvailable(bookDTO.getCopiesAvailable());
-        
+        bookFind.get().setBookCategory(bookCategoryFind);
+
         return bookRepository.saveAndFlush(bookFind.get());
     }
 
     @Override
-    public List<Book> getAllBooks() throws Exception {
+    public List<Book> getAllBooks() {
 
         return bookRepository.findAll();
     }
 
     @Override
-    public Book getBook(Long id) throws Exception {
+    public Book getBook(Long id) {
 
-        Optional<Book> bookFind = bookRepository.findById(id);
-
-        if (!bookFind.isPresent()) {
-
-            log.error("Le livre n'existe pas dans la base.");
-
-            throw new BookNoFoundException("Le livre n'existe pas !");
-
-        }
-
-        return bookFind.get();
+        return bookRepository.findById(id).get();
     }
 
     @Override
-    public List<Book> getBookByTitle(String title) throws Exception {
-        
-        return bookRepository.findByTitleContainingIgnoreCase(title);
+    public List<Book> getBookByTitle(String title) {
+
+        return bookRepository.findAllByTitleContainingIgnoreCase(title);
     }
 
-    public BookDTO entityToDto(Book book) {
+    @Override
+    public List<Book> getBookByBookCategory(BookCategory bookCategory) throws Exception {
 
-        BookDTO bookDTO = new BookDTO();
+        BookCategory bookCategoryFind = iBookCategoryService.getBookCategory(bookCategory.getBookCategoryId());
 
-        bookDTO.setIsbn(book.getIsbn());
-        bookDTO.setAuthor(book.getAuthor());
-        bookDTO.setBookTitle(book.getTitle());
-        bookDTO.setCopiesAvailable(book.getCopiesAvailable());
+        if (bookCategoryFind == null) {
 
-        return bookDTO;
+            log.error("la catégorie n'existe pas dans la base.");
 
+            throw new EntityNoFoundException("la categorie n'existe pas !");
+        }
+
+        return bookRepository.findAllByBookCategory(bookCategoryFind);
     }
 
-    public Book dtoToEntity(BookDTO bookDTO) {
+    public Book dtoToEntity(BookDTO bookDTO, BookCategory bookCategoryFind) {
 
         Book book = new Book();
 
@@ -122,6 +138,7 @@ public class BookServiceImpl implements IBookService {
         book.setAuthor(bookDTO.getAuthor());
         book.setTitle(bookDTO.getBookTitle());
         book.setCopiesAvailable(bookDTO.getCopiesAvailable());
+        book.setBookCategory(bookCategoryFind);
 
         return book;
 

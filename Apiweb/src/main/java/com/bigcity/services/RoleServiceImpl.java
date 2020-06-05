@@ -2,6 +2,8 @@ package com.bigcity.services;
 
 import com.bigcity.dao.RoleRepository;
 import com.bigcity.entity.Role;
+import com.bigcity.exceptions.EntityAlreadyExistsException;
+import com.bigcity.exceptions.EntityNoFoundException;
 import com.bigcity.services.interfaces.IRoleService;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +34,7 @@ public class RoleServiceImpl implements IRoleService {
 
             log.error("Le role existe déjà !");
 
-            throw new Exception("La role existe déjà !");
+            throw new EntityAlreadyExistsException("La role existe déjà !");
 
         }
 
@@ -52,7 +54,7 @@ public class RoleServiceImpl implements IRoleService {
 
             log.error("Modification Impossible ! le role n'existe pas dans la base.");
 
-            throw new Exception("La role n'existe pas !");
+            throw new EntityNoFoundException("La role n'existe pas !");
 
         }
 
@@ -66,19 +68,9 @@ public class RoleServiceImpl implements IRoleService {
     }
 
     @Override
-    public Role getRole(Long id) throws Exception {
-
-        Optional<Role> roleFind = roleRepository.findById(id);
-
-        if (!roleFind.isPresent()) {
-
-            log.error("Le role " + id
-                    + " n'existe pas dans la base.");
-
-            throw new Exception("La role n'existe pas !");
-
-        }
-        return roleFind.get();
+    public Role getRole(Long id){
+        
+        return roleRepository.findById(id).get();
     }
 
     @Override
@@ -90,7 +82,7 @@ public class RoleServiceImpl implements IRoleService {
 
             log.error("Le role par défault n'existe pas dans la base.");
 
-            throw new Exception("La role par défault n'existe pas !");
+            throw new EntityNoFoundException("La role par défault n'existe pas !");
 
         }
 
@@ -101,7 +93,7 @@ public class RoleServiceImpl implements IRoleService {
     public List<Role> getRoleByLabel(String roleName
     ) {
 
-        return roleRepository.findByRoleNameContainingIgnoreCase(roleName);
+        return roleRepository.findAllByRoleNameContainingIgnoreCase(roleName);
     }
 
 }

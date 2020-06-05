@@ -21,6 +21,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
 
     Optional<Booking> findByBookAndBookingUser(Book book, User bookingUser);
 
-    List<Booking> findByBookingUser(User userFind);
+    List<Booking> findAllByBookingUser(User userFind);
 
 }

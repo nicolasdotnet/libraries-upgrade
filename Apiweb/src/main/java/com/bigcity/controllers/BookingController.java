@@ -30,8 +30,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  *
  * @author nicolasdotnet
  */
-
-@Api("API pour les opérations CRUD sur les prêts.")
+@Api(tags = "API pour les opérations sur les prêts de livre par un usagé.")
 @RestController
 public class BookingController {
 
@@ -42,20 +41,13 @@ public class BookingController {
 
     @ApiOperation("Enregister un nouveau prêt")
     @PostMapping("/api/bookings")
-    public ResponseEntity saveBooking(@Valid @RequestBody BookingDTO bookingDto) {
+    public ResponseEntity saveBooking(@Valid @RequestBody BookingDTO bookingDto) throws Exception {
 
-        log.debug("saveBook()");
+        log.debug("saveBooking()");
 
         // TODO ajouter securité
-        Booking bookingSave = null;
 
-        try {
-            bookingSave = iBookingService.register(bookingDto.getLibrarianId(), bookingDto.getBookingUserId(), bookingDto.getBookId());
-        } catch (Exception ex) {
-
-            return ResponseEntity.badRequest().body(ex.getMessage());
-
-        }
+        Booking bookingSave = iBookingService.register(bookingDto.getLibrarianId(), bookingDto.getBookingUserId(), bookingDto.getBookId());
 
 //code 201, ajouter l'URI 
         URI location = ServletUriComponentsBuilder
@@ -73,24 +65,15 @@ public class BookingController {
     @GetMapping("/api/booking/{id}")
     public ResponseEntity showBooking(@PathVariable("id") int id) {
 
-        log.debug("showBook() id: {}", id);
+        log.debug("showBooking() id: {}", id);
 
-        Booking bookingFind = null;
-
-        try {
-            bookingFind = iBookingService.getBooking(Long.valueOf(id));
-        } catch (Exception ex) {
-
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
-
-        return ResponseEntity.ok(bookingFind);
+        return ResponseEntity.ok(iBookingService.getBooking(Long.valueOf(id)));
 
     }
 
     @ApiOperation("Récupère l'ensemble des prêts de la base ou récupèrer une liste de prêt a partir d'un mot clé sur le identifiant de l'usagé")
     @GetMapping("/api/bookings")
-    public ResponseEntity showAllBookings(@RequestParam(defaultValue = " ") String email) {
+    public ResponseEntity showAllBookings(@RequestParam(defaultValue = " ") String email) throws Exception {
 
         log.debug("showBookings()", email);
 
@@ -98,25 +81,13 @@ public class BookingController {
 
         if (email.equals(" ")) {
 
-            try {
-
-                bookings = iBookingService.getAllBookings();
-
-            } catch (Exception ex) {
-
-                return ResponseEntity.ok().body(ex.getMessage());
-            }
+            bookings = iBookingService.getAllBookings();
 
             return ResponseEntity.ok(bookings);
 
         }
 
-        try {
-            bookings = iBookingService.getAllBookingByUser(email);
-        } catch (Exception ex) {
-
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
+        bookings = iBookingService.getAllBookingByUser(email);
 
         return ResponseEntity.ok(bookings);
 
@@ -124,25 +95,15 @@ public class BookingController {
 
     @ApiOperation("Récupère l'ensemble des prêts dont la date est dépasée")
     @GetMapping("/api/bookings/outdate")
-    public ResponseEntity showAllBookingsOutDate() {
+    public ResponseEntity showAllBookingsOutDate() throws Exception {
 
         log.debug("showBookingsOutDate");
 
-        List<Booking> bookings = null;
-
-        try {
-            bookings = iBookingService.getOutdatedBookingList();
-        } catch (Exception ex) {
-
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
-
-        return ResponseEntity.ok(bookings);
+        return ResponseEntity.ok(iBookingService.getOutdatedBookingList());
 
     }
-    
-    //TODO : comment construire les url pour action prolonger booking et action retour du libre ?
 
+    //TODO : comment construire les url pour action prolonger booking et action retour du libre ?
     @ApiOperation("Mettre à jour un prêt à partir de son ID présent dans la base")
     @PutMapping("/api/booking/{id}")
     public ResponseEntity updateBooking(@PathVariable("id") int id) {

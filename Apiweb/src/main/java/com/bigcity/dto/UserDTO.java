@@ -5,6 +5,7 @@
  */
 package com.bigcity.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -17,21 +18,21 @@ public class UserDTO {
 
     @NotEmpty(message = "le prénom n'est pas renseigné.")
     @Size(min = 3, max = 10, message = "Nom trop long ou trop court. Et oui messages sont plus stylés que ceux de Spring")
+    @ApiModelProperty(notes = "firstname for a user")
     private String firstname;
     
     @NotEmpty(message = "le nom n'est pas renseigné.")
     @Size(min = 3, max = 10, message = "La taille doit etre entre 3 et 10.")
+    @ApiModelProperty(notes = "lastname for a user")
     private String lastname;
 
     @NotEmpty(message = "l'email n'est pas renseigné.")
     @Email(message = "l'email est erroné.")
+    @ApiModelProperty(notes = "email for a user : user id")
     private String email;
 
-    @NotEmpty(message = "l'identifiant n'est pas renseigné.")
-    @Size(min = 3, max = 10, message = "La taille doit etre entre 3 et 10.")
-    private String username;
-
     @NotEmpty(message = "le mot de passe n'est pas renseigné.")
+    @ApiModelProperty(notes = "password for a user")
     private String password;
 
     public UserDTO() {
@@ -61,14 +62,6 @@ public class UserDTO {
         this.email = email;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -79,7 +72,7 @@ public class UserDTO {
 
     @Override
     public String toString() {
-        return "UserDTO{" + "firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", username=" + username + ", password=" + password + '}';
+        return "UserDTO{" + "firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password=" + password + '}';
     }
     
     

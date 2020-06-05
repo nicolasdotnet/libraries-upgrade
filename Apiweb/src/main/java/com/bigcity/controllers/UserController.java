@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@Api("API pour les opérations CRUD sur les utilisateurs.")
+@Api(tags = "API pour les opérations CRUD sur les utilisateurs par un bibliothécaire.")
 @RestController
 public class UserController {
 
@@ -38,15 +38,7 @@ public class UserController {
         log.debug("saveUser()");
 
         // TODO ajouter securité
-        User userSave = null;
-//
-//        try {
-            userSave = iUserService.registerByDefault(userDto);
-//        } catch (Exception ex) {
-//
-//            return ResponseEntity.badRequest().body(ex.getMessage());
-//
-//        }
+        User userSave = iUserService.registerByDefault(userDto);
 
 //code 201, ajouter l'URI 
         URI location = ServletUriComponentsBuilder
@@ -66,16 +58,7 @@ public class UserController {
 
         log.debug("showUser() id: {}", id);
 
-        User userFind = null;
-
-        try {
-            userFind = iUserService.getUser(Long.valueOf(id));
-        } catch (Exception ex) {
-
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
-
-        return ResponseEntity.ok(userFind);
+        return ResponseEntity.ok(iUserService.getUser(Long.valueOf(id)));
 
     }
 
@@ -85,35 +68,16 @@ public class UserController {
 
         log.debug("showAllUsers()");
 
-        List<User> users = null;
-        
-        try {
-            users = iUserService.getAllUsers();
-        } catch (Exception ex) {
-
-            return ResponseEntity.ok().body(ex.getMessage());
-        }
-
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(iUserService.getAllUsers());
     }
 
     @ApiOperation("Mettre à jour un utilisateur à partir de son ID présent dans la base")
     @PutMapping("/api/user/{id}")
-    public ResponseEntity updateUser(@PathVariable("id") int id, @Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity updateUser(@PathVariable("id") int id, @Valid @RequestBody UserDTO userDTO) throws Exception {
 
         log.debug("updateUser()");
 
-        User userNew = null;
-
-        try {
-            userNew = iUserService.edit(userDTO);
-        } catch (Exception ex) {
-
-            return ResponseEntity.badRequest().body(ex.getMessage());
-
-        }
-
-        return ResponseEntity.ok().body(userNew);
+        return ResponseEntity.ok().body(iUserService.edit(userDTO));
 
     }
 

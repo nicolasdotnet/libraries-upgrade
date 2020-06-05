@@ -5,6 +5,7 @@
  */
 package com.bigcity.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotEmpty;
 
 /**
@@ -14,12 +15,16 @@ import javax.validation.constraints.NotEmpty;
 public class BookingDTO {
 
     
-    // doc swager
     @NotEmpty(message = "la réference bibliothécaire n'est pas renseigné.")
+    @ApiModelProperty(notes = "librarian id")
     private Long librarianId;
+    
     @NotEmpty(message = "la réference usagé n'est pas renseigné.")
+    @ApiModelProperty(notes = "booking user id")
     private Long bookingUserId;
+    
     @NotEmpty(message = "la réference livre n'est pas renseigné.")
+    @ApiModelProperty(notes = "book id")
     private Long bookId;
 
     public BookingDTO() {

@@ -5,13 +5,14 @@
  */
 package com.bigcity.services;
 
-import com.bigcity.exceptions.BookingsNoFoundException;
-import com.bigcity.exceptions.BookingNoFoundException;
 import com.bigcity.dao.BookingRepository;
 import com.bigcity.entity.Book;
 import com.bigcity.entity.Booking;
 import com.bigcity.entity.BookingStatus;
 import com.bigcity.entity.User;
+import com.bigcity.exceptions.EntityAlreadyExistsException;
+import com.bigcity.exceptions.EntityNoFoundException;
+import com.bigcity.exceptions.BookingNotPossibleException;
 import com.bigcity.services.interfaces.IBookService;
 import com.bigcity.services.interfaces.IUserService;
 import java.time.LocalDate;
@@ -49,12 +50,11 @@ public class BookingServiceImpl implements IBookingService {
     private IUserService iUserService;
 
     @Value("${bookingDuration}")
-    String bookingDuration;
+    private String bookingDuration;
     
     @Value("${counterExtension}")
-    String counterExtension;
+    private String counterExtension;
 
-    // pas de dto
     @Override
     public Booking register(Long librarianId, Long bookingUserId, Long bookId) throws Exception {
 
@@ -70,7 +70,7 @@ public class BookingServiceImpl implements IBookingService {
 
             log.error("La réservation existe déjà !");
 
-            throw new Exception("la réservation existe déjà !");
+            throw new EntityAlreadyExistsException("la réservation existe déjà !");
 
         }
 
@@ -80,7 +80,7 @@ public class BookingServiceImpl implements IBookingService {
 
             log.error("Il n'y a plus d'exemplaire disponible !");
 
-            throw new Exception("Il n'y a plus d'exemplaire disponible !");
+            throw new BookingNotPossibleException("Il n'y a plus d'exemplaire disponible !");
 
         }
 
@@ -101,7 +101,7 @@ public class BookingServiceImpl implements IBookingService {
         booking.setBookingStatus(BookingStatus.ENCOURS);
         booking.setBookingUser(bookingUser);
         booking.setCounterExtension(counterExtension);
-        booking.setLibrarian(librarian);
+//        booking.setLibrarian(librarian);
 
         return bookingRepository.save(booking);
     }
@@ -115,7 +115,7 @@ public class BookingServiceImpl implements IBookingService {
 
             log.error("La réservation n'existe pas dans la base.");
 
-            throw new BookingNoFoundException("La réservation n'existe pas !");
+            throw new EntityNoFoundException("La réservation n'existe pas !");
 
         }
 
@@ -136,7 +136,7 @@ public class BookingServiceImpl implements IBookingService {
 
         if (bookings.isEmpty()) {
 
-            throw new BookingsNoFoundException("Il n'y a pas de réservations dépassées dans la base.");
+            throw new EntityNoFoundException("Il n'y a pas de réservations dépassées dans la base.");
         }
 
         return bookings;
@@ -144,19 +144,9 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public Booking getBooking(Long bookingId) throws Exception {
+    public Booking getBooking(Long bookingId){
 
-        Optional<Booking> bookingFind = bookingRepository.findById(bookingId);
-
-        if (!bookingFind.isPresent()) {
-
-            log.error("La réservation n'existe pas dans la base.");
-
-            throw new BookingNoFoundException("la réservation n'existe pas !");
-
-        }
-
-        return bookingFind.get();
+        return bookingRepository.findById(bookingId).get();
     }
 
     @Override
@@ -169,11 +159,11 @@ public class BookingServiceImpl implements IBookingService {
 
         Optional<User> userFind = iUserService.getUserByEmail(email);
 
-        List<Booking> bookings = bookingRepository.findByBookingUser(userFind.get());
+        List<Booking> bookings = bookingRepository.findAllByBookingUser(userFind.get());
 
         if (bookings.isEmpty()) {
 
-            throw new BookingsNoFoundException("Il n'y a pas de réservations pour ce usagé dans la base.");
+            throw new EntityNoFoundException("Il n'y a pas de réservations pour ce usagé dans la base.");
         }
 
         return bookings;
@@ -181,16 +171,9 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public List<Booking> getAllBookings() throws Exception {
+    public List<Booking> getAllBookings(){
 
-        List<Booking> bookings = bookingRepository.findAll();
-
-        if (bookings.isEmpty()) {
-
-            throw new BookingsNoFoundException("Il n'y a pas de réservations dans la base.");
-        }
-
-        return bookings;
+        return bookingRepository.findAll();
     }
 
     @Override
@@ -202,7 +185,7 @@ public class BookingServiceImpl implements IBookingService {
 
             log.error("La réservation n'existe pas dans la base.");
 
-            throw new BookingNoFoundException("la réservation n'existe pas !");
+            throw new EntityNoFoundException("la réservation n'existe pas !");
 
         }
 
@@ -210,7 +193,7 @@ public class BookingServiceImpl implements IBookingService {
 
             log.error("Une prolongation du prêt a déjà été réalisée !");
 
-            throw new Exception("Une prolongation du prêt a déjà été réalisée !");
+            throw new BookingNotPossibleException("Une prolongation du prêt a déjà été réalisée !");
 
         }
 

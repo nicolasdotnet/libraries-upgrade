@@ -6,6 +6,7 @@
 package com.bigcity.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,9 +20,12 @@ import javax.persistence.TemporalType;
 /**
  *
  * @author nicolasdotnet
+ * 
+ * Booking is the registration entity of a booking.
+ * 
  */
 @Entity
-public class Booking {
+public class Booking implements Serializable {
 
     @Id
     @GeneratedValue
@@ -31,7 +35,7 @@ public class Booking {
     private Date bookingStartDate;
     
     @Column(length = 3, nullable = false)
-    private String BookingDurationDay; // constance ? param ?
+    private String BookingDurationDay;
     
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
@@ -45,10 +49,10 @@ public class Booking {
     @Column(nullable = false)
     private BookingStatus bookingStatus;
     
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    @JsonIgnore
-    private User librarian;
+//    @ManyToOne
+//    @JoinColumn(nullable = false)
+//    @JsonIgnore
+//    private User librarian;
     
     @ManyToOne
     @JoinColumn(nullable = false)
@@ -119,13 +123,13 @@ public class Booking {
         this.bookingStatus = bookingStatus;
     }
 
-    public User getLibrarian() {
-        return librarian;
-    }
-
-    public void setLibrarian(User librarian) {
-        this.librarian = librarian;
-    }
+//    public User getLibrarian() {
+//        return librarian;
+//    }
+//
+//    public void setLibrarian(User librarian) {
+//        this.librarian = librarian;
+//    }
 
     public User getBookingUser() {
         return bookingUser;
@@ -145,7 +149,10 @@ public class Booking {
 
     @Override
     public String toString() {
-        return "Booking{" + "bookingId=" + bookingId + ", bookingStartDate=" + bookingStartDate + ", BookingDurationWeek=" + BookingDurationDay + ", bookingEndDate=" + bookingEndDate + ", backBookDate=" + backBookDate + ", counterExtension=" + counterExtension + ", bookingStatus=" + bookingStatus + ", librarian=" + librarian + ", bookingUser=" + bookingUser + ", book=" + book + '}';
+        return "Booking{" + "bookingId=" + bookingId + ", bookingStartDate=" + bookingStartDate +
+                ", BookingDurationWeek=" + BookingDurationDay + ", bookingEndDate=" + bookingEndDate + ", backBookDate="
+                + backBookDate + ", counterExtension=" + counterExtension + ", bookingStatus=" +
+                bookingStatus + ", bookingUser=" + bookingUser + ", book=" + book + '}';
     }
     
     

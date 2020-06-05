@@ -9,12 +9,15 @@ package com.bigcity.exceptions;
  *
  * @author nicolasdotnet
  */
-public class BookingNoFoundException extends LibraryException  {
 
-    public BookingNoFoundException(String message) {
-        
+public class EntityNoFoundException extends LibraryException {
+
+    public EntityNoFoundException() {
+    }
+
+    public EntityNoFoundException(String message) {
+
         super(message);
-        
     }
     
 }

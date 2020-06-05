@@ -43,7 +43,7 @@ public interface IUserService {
      * @return user object find
      * @throws Exception
      */
-    User getUser(Long userId) throws Exception;
+    User getUser(Long userId);
 
     /**
      * method to get all users
@@ -51,7 +51,7 @@ public interface IUserService {
      * @return the users list
      * @throws java.lang.Exception
      */
-    List<User> getAllUsers() throws Exception;
+    List<User> getAllUsers();
 
     /**
      * method to get all users for a role
@@ -69,7 +69,7 @@ public interface IUserService {
      * @return the list users from Role label
      * @throws Exception
      */
-    Optional<User> getUserByEmail(String userName) throws Exception;
+    Optional<User> getUserByEmail(String userName);
 
     /**
      * method to remove a user

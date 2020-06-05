@@ -1,11 +1,14 @@
 package com.bigcity;
 
+import com.bigcity.dto.BookCategoryDTO;
 import com.bigcity.dto.BookDTO;
 import com.bigcity.dto.UserDTO;
 import com.bigcity.entity.Book;
+import com.bigcity.entity.BookCategory;
 import com.bigcity.entity.Booking;
 import com.bigcity.entity.Role;
 import com.bigcity.entity.User;
+import com.bigcity.services.interfaces.IBookCategoryService;
 import com.bigcity.services.interfaces.IBookService;
 import com.bigcity.services.interfaces.IRoleService;
 import com.bigcity.services.interfaces.IUserService;
@@ -15,7 +18,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-import com.bigcity.specifications.BookingSpecification;
 import java.time.LocalDate;
 import java.util.List;
 import com.bigcity.services.interfaces.IBookingService;
@@ -33,6 +35,9 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
     @Autowired
     private IBookService iBookService;
+
+    @Autowired
+    private IBookCategoryService iBookCategoryService;
 
     @Autowired
     private IBookingService iBookingService;
@@ -100,11 +105,25 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         System.out.println("\n register usagé : " + u2.toString() + "\n");
 
+        // register one bookCategory
+        String bookCategoryLabel = "Polar";
+
+        BookCategoryDTO bookCategoryDTO = new BookCategoryDTO();
+
+        bookCategoryDTO.setLabel(bookCategoryLabel);
+
+        BookCategory bc = iBookCategoryService.register(bookCategoryDTO);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+
+        System.out.println("\n register bookCategory : " + bc.toString() + "\n");
+
         // register one book
         String isbn = "561352";
         String author = "Rowston Thebest";
         String bookTitle = "Java pour les nuls";
         int copiesAvailable = 5;
+        String bcLabel = "Polar";
 
         BookDTO bookDTO = new BookDTO();
 
@@ -112,6 +131,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         bookDTO.setAuthor(author);
         bookDTO.setBookTitle(bookTitle);
         bookDTO.setCopiesAvailable(copiesAvailable);
+        bookDTO.setBookCategoryLabel(bcLabel);
 
         Book b = iBookService.register(bookDTO);
 

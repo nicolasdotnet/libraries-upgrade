@@ -5,25 +5,31 @@
  */
 package com.bigcity.entity;
 
+import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
  *
  * @author nicolasdotnet
+ * 
+ *  Book is the registration entity of a book.
+ * 
  */
 @Entity
-public class Book {
+public class Book implements Serializable {
 
     @Id
     @GeneratedValue
     private Long bookId;
-    
+
     @Column(length = 100, nullable = false)
     private String isbn;
 
@@ -33,8 +39,11 @@ public class Book {
     @Column(length = 100, nullable = false)
     private String title;
 
-    //@Column(length = 2, nullable = false)
     private int copiesAvailable;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private BookCategory bookCategory;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private Collection<Booking> bookings;
@@ -82,6 +91,14 @@ public class Book {
         this.copiesAvailable = copiesAvailable;
     }
 
+    public BookCategory getBookCategory() {
+        return bookCategory;
+    }
+
+    public void setBookCategory(BookCategory bookCategory) {
+        this.bookCategory = bookCategory;
+    }
+
     public Collection<Booking> getBookings() {
         return bookings;
     }
@@ -92,11 +109,10 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" + "bookId=" + bookId + ", isbn=" + isbn + ", authorFirstname=" + author + ", bookTitle=" + title + ", copiesAvailable=" + copiesAvailable + '}';
+        return "Book{" + "bookId=" + bookId + ", isbn=" + isbn + ", author=" + author + ", title=" + title + ", copiesAvailable=" + copiesAvailable + 
+                ", bookCategory=" + bookCategory.getLabel() + '}';
     }
 
 
-    
-    
 
 }

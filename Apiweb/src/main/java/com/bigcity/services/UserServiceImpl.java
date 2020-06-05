@@ -1,15 +1,14 @@
 package com.bigcity.services;
 
-import com.bigcity.exceptions.UserNoFoundException;
 import com.bigcity.dao.UserRepository;
 import com.bigcity.dto.UserDTO;
 import com.bigcity.entity.Role;
 import com.bigcity.entity.User;
-import com.bigcity.exceptions.UsersNoFoundException;
+import com.bigcity.exceptions.EntityAlreadyExistsException;
+import com.bigcity.exceptions.EntityNoFoundException;
 import static com.bigcity.security.EncrytedPasswordUtils.encrytePassword;
 import com.bigcity.services.interfaces.IRoleService;
 import com.bigcity.services.interfaces.IUserService;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +41,7 @@ public class UserServiceImpl implements IUserService {
 
             log.error("Utilisateur existe déjà !");
 
-            throw new Exception("Utilisateur existe déjà !");
+            throw new EntityAlreadyExistsException("Utilisateur existe déjà !");
 
         }
 
@@ -66,7 +65,7 @@ public class UserServiceImpl implements IUserService {
 
             log.error("Utilisateur existe déjà !");
 
-            throw new Exception("Utilisateur existe déjà !");
+            throw new EntityAlreadyExistsException("Utilisateur existe déjà !");
 
         }
 
@@ -90,7 +89,7 @@ public class UserServiceImpl implements IUserService {
 
             log.error("Modification Impossible ! l'utilisateur n'existe pas dans la base.");
 
-            throw new Exception("Utilisateur n'existe pas !");
+            throw new EntityNoFoundException("Utilisateur n'existe pas !");
 
         }
 
@@ -101,23 +100,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User getUser(Long id) throws UserNoFoundException {
+    public User getUser(Long id){
 
-        Optional<User> userFind = userRepository.findById(id);
-
-        if (!userFind.isPresent()) {
-
-            log.error("L'utilisateur  n'existe pas dans la base.");
-
-            throw new UserNoFoundException("Utilisateur  n'existe pas !");
-
-        }
-
-        return userFind.get();
+        return userRepository.findById(id).get();
     }
 
     @Override
-    public List<User> getAllUsers() throws Exception {
+    public List<User> getAllUsers(){
 
         return userRepository.findAll();
     }
@@ -125,25 +114,22 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<User> getUsersByRole(Role role) throws Exception {
 
-        iRoleService.getRole(role.getRoleId());
+        Role roleFind = iRoleService.getRole(role.getRoleId());
+        
+        if (roleFind==null) {
+            
+            log.error("le role n'existe pas dans la base.");
 
-        return userRepository.findByRole(role);
+            throw new EntityNoFoundException("le role n'existe pas !");
+        }
+
+        return userRepository.findAllByRole(roleFind);
     }
 
     @Override
-    public Optional<User> getUserByEmail(String email) throws Exception {
+    public Optional<User> getUserByEmail(String email){
 
-        Optional<User> userFind = userRepository.findByEmail(email);
-
-        if (!userFind.isPresent()) {
-
-            log.error("L'utilisateur n'existe pas dans la base.");
-
-            throw new Exception("L'utilisateur n'existe pas !");
-
-        }
-
-        return userFind;
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -155,7 +141,7 @@ public class UserServiceImpl implements IUserService {
 
             log.error("Modification Impossible ! l'utilisateur  n'existe pas dans la base.");
 
-            throw new Exception("Utilisateur n'existe pas !");
+            throw new EntityNoFoundException("Utilisateur n'existe pas !");
 
         }
 
@@ -176,7 +162,7 @@ public class UserServiceImpl implements IUserService {
 
             log.error("Modification Impossible ! l'utilisateur n'existe pas dans la base.");
 
-            throw new Exception("Utilisateur n'existe pas !");
+            throw new EntityNoFoundException("Utilisateur n'existe pas !");
 
         }
 
@@ -190,20 +176,6 @@ public class UserServiceImpl implements IUserService {
     public List<User> getAllUsers(Specification<User> reallyOld) {
 
         return userRepository.findAll(reallyOld);
-    }
-
-    public UserDTO entityToDto(User user) {
-
-        UserDTO userDTO = new UserDTO();
-
-        userDTO.setFirstname(user.getFirstname());
-        userDTO.setLastname(user.getLastname());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setPassword(user.getPassword());
-//        userDTO.setRole(user.getRole());
-
-        return userDTO;
-
     }
 
     public User dtoToEntity(UserDTO userDTO) {
