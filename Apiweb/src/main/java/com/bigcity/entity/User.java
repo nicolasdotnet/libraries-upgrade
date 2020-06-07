@@ -1,5 +1,6 @@
 package com.bigcity.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -24,36 +25,42 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue
+    @ApiModelProperty(notes = "user id")
     private Long userId;
 
     @JoinColumn(nullable = false)
+    @ApiModelProperty(notes = "user registration date")
     private Date userDate;
 
     @Column(length = 100, nullable = false)
+    @ApiModelProperty(notes = "user registration date")
     private String firstname;
 
     @Column(length = 100, nullable = false)
+    @ApiModelProperty(notes = "first name from user")
     private String lastname;
 
     @Column(nullable = false)
+    @ApiModelProperty(notes = "email from user : unique identifier")
     private String email;
 
     @Column(nullable = false)
+    @ApiModelProperty(notes = "password from user")
     private String password;
 
     @ManyToOne
     @JoinColumn(nullable = false)
+    @ApiModelProperty(notes = "role from user")
     private Role role;
 
     @OneToMany(mappedBy = "bookingUser", fetch = FetchType.LAZY)
+    @ApiModelProperty(notes = "booking list from user")
     private Collection<Booking> bookings;
 
 //    @OneToMany(mappedBy = "librarian", fetch = FetchType.LAZY)
 //    private Collection<Booking> librarianTasks;
-
 //    @OneToMany(mappedBy = "librarian", fetch = FetchType.LAZY)
 //    private Collection<Book> books;
-
     public User() {
     }
 
@@ -128,7 +135,6 @@ public class User implements Serializable {
 //    public void setLibrarianTasks(Collection<Booking> librarianTasks) {
 //        this.librarianTasks = librarianTasks;
 //    }
-
 //    public Collection<Book> getBooks() {
 //        return books;
 //    }
@@ -136,14 +142,11 @@ public class User implements Serializable {
 //    public void setBooks(Collection<Book> books) {
 //        this.books = books;
 //    }
-
     @Override
     public String toString() {
-        return "User{" + "userId=" + userId + ", userDate=" + userDate +
-                ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email +
-                ", password=" + password + ", role=" + role + '}';
+        return "User{" + "userId=" + userId + ", userDate=" + userDate
+                + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email
+                + ", password=" + password + ", role=" + role + '}';
     }
-    
-    
 
 }

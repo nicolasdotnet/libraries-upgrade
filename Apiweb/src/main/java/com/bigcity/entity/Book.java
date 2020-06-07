@@ -5,6 +5,7 @@
  */
 package com.bigcity.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Column;
@@ -28,24 +29,31 @@ public class Book implements Serializable {
 
     @Id
     @GeneratedValue
+    @ApiModelProperty(notes = "book id")
     private Long bookId;
 
     @Column(length = 100, nullable = false)
+    @ApiModelProperty(notes = "the international Standard Book Number")
     private String isbn;
 
     @Column(length = 100, nullable = false)
+    @ApiModelProperty(notes = "book author")
     private String author;
 
     @Column(length = 100, nullable = false)
+    @ApiModelProperty(notes = "book title")
     private String title;
 
+    @ApiModelProperty(notes = "number book copies available : no booked")
     private int copiesAvailable;
 
     @ManyToOne
     @JoinColumn(nullable = false)
+    @ApiModelProperty(notes = "book category")
     private BookCategory bookCategory;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @ApiModelProperty(notes = "book booking list")
     private Collection<Booking> bookings;
 
     public Book() {

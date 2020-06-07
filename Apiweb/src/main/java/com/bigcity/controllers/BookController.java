@@ -6,6 +6,7 @@
 package com.bigcity.controllers;
 
 import com.bigcity.dto.BookDTO;
+import com.bigcity.dto.BookSearchDTO;
 import com.bigcity.entity.Book;
 import com.bigcity.services.interfaces.IBookService;
 import io.swagger.annotations.Api;
@@ -102,6 +103,20 @@ public class BookController {
 
         return ResponseEntity.ok().body(iBookService.edit(bookDTO));
 
+    }
+
+    @ApiOperation("Récupère l'ensemble des livres de la base en fonction du titre ou de l'auteur ou du numero ISBN")
+    @GetMapping("/api/books/")
+    public ResponseEntity showAllBooksByMc(@RequestBody BookSearchDTO bsdto) throws Exception {
+
+        // RequestBody DTO Search
+        log.debug("showAllBooksByMc", bsdto);
+
+        List<Book> books = null;
+
+        books = iBookService.getAllBooksV2(bsdto);
+
+        return ResponseEntity.ok(books);
     }
 
 }

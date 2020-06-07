@@ -10,12 +10,13 @@ import com.bigcity.entity.BookCategory;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  *
  * @author nicolasdotnet
  */
-public interface BookRepository extends JpaRepository<Book,Long>{
+public interface BookRepository extends JpaRepository<Book,Long>, JpaSpecificationExecutor<Book>{
 
     List<Book> findAllByTitleContainingIgnoreCase(String bookTitle);
 

@@ -46,7 +46,6 @@ public class BookingController {
         log.debug("saveBooking()");
 
         // TODO ajouter securité
-
         Booking bookingSave = iBookingService.register(bookingDto.getLibrarianId(), bookingDto.getBookingUserId(), bookingDto.getBookId());
 
 //code 201, ajouter l'URI 
@@ -71,7 +70,7 @@ public class BookingController {
 
     }
 
-    @ApiOperation("Récupère l'ensemble des prêts de la base ou récupèrer une liste de prêt a partir d'un mot clé sur le identifiant de l'usagé")
+    @ApiOperation("Récupère l'ensemble des prêts de la base ou récupèrer une liste de prêt a partir d'un mot clé sur le identifiant/email de l'usagé")
     @GetMapping("/api/bookings")
     public ResponseEntity showAllBookings(@RequestParam(defaultValue = " ") String email) throws Exception {
 

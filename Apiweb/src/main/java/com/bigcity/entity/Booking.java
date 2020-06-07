@@ -6,6 +6,7 @@
 package com.bigcity.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -29,24 +30,31 @@ public class Booking implements Serializable {
 
     @Id
     @GeneratedValue
+    @ApiModelProperty(notes = "booking id")
     private Long bookingId;
     
     @Column(nullable = false)
+    @ApiModelProperty(notes = "start date of booking : effective date")
     private Date bookingStartDate;
     
     @Column(length = 3, nullable = false)
+    @ApiModelProperty(notes = "booking duration in days")
     private String BookingDurationDay;
     
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
+    @ApiModelProperty(notes = "expected end date of reservation")
     private Date bookingEndDate;
     
+    @ApiModelProperty(notes = "book return date : ")
     private Date backBookDate;
     
     @Column(length = 2, nullable = false)
+    @ApiModelProperty(notes = "number of extension of the booking")
     private String counterExtension;
     
     @Column(nullable = false)
+    @ApiModelProperty(notes = "booking status")
     private BookingStatus bookingStatus;
     
 //    @ManyToOne
@@ -57,11 +65,13 @@ public class Booking implements Serializable {
     @ManyToOne
     @JoinColumn(nullable = false)
     @JsonIgnore
+    @ApiModelProperty(notes = "booking owner")
     private User bookingUser;
     
     @ManyToOne
     @JoinColumn(nullable = false)
     @JsonIgnore
+    @ApiModelProperty(notes = "reserved book")
     private Book book;
 
     public Booking() {

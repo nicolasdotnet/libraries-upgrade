@@ -2,6 +2,7 @@ package com.bigcity;
 
 import com.bigcity.dto.BookCategoryDTO;
 import com.bigcity.dto.BookDTO;
+import com.bigcity.dto.BookSearchDTO;
 import com.bigcity.dto.UserDTO;
 import com.bigcity.entity.Book;
 import com.bigcity.entity.BookCategory;
@@ -179,6 +180,37 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         }
 
+        // register trois book
+        isbn = "561353";
+        author = "Nicolas Junior";
+        bookTitle = "Ma vie de dev";
+        copiesAvailable = 5;
+        bcLabel = "Polar";
+
+        BookDTO bookDTO3 = new BookDTO();
+        Book b3 = null;
+
+        bookDTO3.setIsbn(isbn);
+        bookDTO3.setAuthor(author);
+        bookDTO3.setBookTitle(bookTitle);
+        bookDTO3.setCopiesAvailable(copiesAvailable);
+        bookDTO3.setBookCategoryLabel(bcLabel);
+
+        try {
+
+            b3 = iBookService.register(bookDTO3);
+
+        } catch (Exception e) {
+
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+            System.out.println("book 3 : " + e.getMessage());
+
+        }
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+
+        System.out.println("\n register book 3 : " + b3.toString() + "\n");
+
         // register one booking
         Long librarianId = u.getUserId();
         Long bookingUserId = u2.getUserId();
@@ -263,5 +295,30 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         System.out.println("PRET -> extension :" + r.getCounterExtension() + " date de fin : " + r.getBookingEndDate());
 
         System.out.println("Book après booking -> : " + iBookService.getBook(bookId).getCopiesAvailable());
+
+        // book search by MC
+        BookSearchDTO bsdto = new BookSearchDTO();
+        
+        author = "Nicolas";
+        bookTitle = "";
+        isbn = "";
+        
+        bsdto.setAuthor(author);
+        bsdto.setBookTitle(bookTitle);
+        bsdto.setIsbn(isbn);
+
+        List<Book> l = iBookService.getAllBooksV2(bsdto);
+        
+        if (l.isEmpty()) {
+            
+            System.out.println("PAS DE RESULTAT");
+        }
+        
+        for (Book book : l) {
+            
+            System.out.println("book -> : "+book.toString());
+            
+        }
+
     }
 }

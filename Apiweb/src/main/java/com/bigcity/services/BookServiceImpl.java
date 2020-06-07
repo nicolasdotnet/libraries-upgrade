@@ -7,12 +7,14 @@ package com.bigcity.services;
 
 import com.bigcity.dao.BookRepository;
 import com.bigcity.dto.BookDTO;
+import com.bigcity.dto.BookSearchDTO;
 import com.bigcity.entity.Book;
 import com.bigcity.entity.BookCategory;
 import com.bigcity.exceptions.EntityAlreadyExistsException;
 import com.bigcity.exceptions.EntityNoFoundException;
 import com.bigcity.services.interfaces.IBookCategoryService;
 import com.bigcity.services.interfaces.IBookService;
+import com.bigcity.specifications.BookSpecification;
 import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -49,8 +51,8 @@ public class BookServiceImpl implements IBookService {
             throw new EntityAlreadyExistsException("Le livre existe déjà !");
 
         }
-        
-        System.out.println("bc = "+bookDTO.getBookCategoryLabel());
+
+        System.out.println("bc = " + bookDTO.getBookCategoryLabel());
 
         BookCategory bookCategoryFind = iBookCategoryService.getBookCategoryByLabel(bookDTO.getBookCategoryLabel());
 
@@ -142,6 +144,45 @@ public class BookServiceImpl implements IBookService {
 
         return book;
 
+    }
+
+    @Override
+    public List<Book> getAllBooksV2(BookSearchDTO bsdto) {
+
+        if (bsdto.getAuthor().equals("")) {
+
+            bsdto.setAuthor(null);
+
+        }
+
+        if (bsdto.getBookTitle().equals("")) {
+
+            bsdto.setBookTitle(null);
+
+        }
+
+        if (bsdto.getIsbn().equals("")) {
+
+            bsdto.setIsbn(null);
+
+        }
+
+        System.out.println("sous requete");
+
+        List<Book> a = bookRepository.findAll(BookSpecification.getBookByAuthor(bsdto.getAuthor()));
+
+        if (a.isEmpty()) {
+
+            System.out.println("<<<<<<<<<<<<<<<<pas de resultat sous requete");
+
+        }
+
+        for (Book book : a) {
+
+            System.out.println("<<<<<<<<<<RESULTAT sous requete : " + book.toString());
+        }
+
+        return bookRepository.findAll(BookSpecification.getBookByTitleAndAuthorAndIsbn(bsdto.getBookTitle(), bsdto.getAuthor(), bsdto.getIsbn()));
     }
 
 }

@@ -1,6 +1,7 @@
 package com.bigcity.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Collection;
 
@@ -25,10 +26,12 @@ public class Role implements Serializable {
     private Long roleId;
 
     @Column(length = 100, nullable = false)
+    @ApiModelProperty(notes = "label from role")
     private String roleName;
 
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     @JsonIgnore
+    @ApiModelProperty(notes = "list of users with this role")
     private Collection<User> users;
 
     public Role() {
