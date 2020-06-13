@@ -47,7 +47,7 @@ public class BookCategoryController {
     private IBookCategoryService iBookCategoryService;
 
     @ApiOperation("Enregister une nouvelle catégorie de livre")
-    @PostMapping("/api/categories")
+    @PostMapping("/api/librarian/category")
     @ApiResponses(value = {
         @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
         @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookCategoryDTO.class),
@@ -74,7 +74,7 @@ public class BookCategoryController {
     }
 
     @ApiOperation("Récupère une catégorie de livre grâce à son ID à condition que celui-ci soit inscrit !")
-    @GetMapping("/api/category/{id}")
+    @GetMapping("/api/librarian/category/{id}")
         @ApiResponses(value = {
         @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
         @ApiResponse(code = SC_NOT_FOUND, message = "la catégorie n'existe pas dans la base"),
@@ -90,7 +90,7 @@ public class BookCategoryController {
     }
 
     @ApiOperation("Récupère l'ensemble catégories de livre de la base ou récupèrer une liste de livre a partir d'un mot clé sur le titre")
-    @GetMapping("/api/categories")
+    @GetMapping("/api/librarian/category")
         @ApiResponses(value = {
         @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
         @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookCategoryDTO.class),
@@ -118,7 +118,7 @@ public class BookCategoryController {
     }
 
     @ApiOperation("Mettre à jour la catégorie d'un livre à partir de son ID présent dans la base")
-    @PutMapping("/api/category/{id}")
+    @PutMapping("/api/librarian/category/{id}")
         @ApiResponses(value = {
         @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
         @ApiResponse(code = SC_NOT_FOUND, message = "la catégorie n'existe pas dans la base"),

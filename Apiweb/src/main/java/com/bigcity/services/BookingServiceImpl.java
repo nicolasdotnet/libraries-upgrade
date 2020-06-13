@@ -5,7 +5,7 @@ import com.bigcity.entity.Booking;
 import com.bigcity.entity.BookingStatus;
 import com.bigcity.entity.User;
 import com.bigcity.exceptions.EntityAlreadyExistsException;
-import com.bigcity.exceptions.EntityNoFoundException;
+import com.bigcity.exceptions.EntityNotFoundException;
 import com.bigcity.exceptions.BookingNotPossibleException;
 import com.bigcity.services.interfaces.IBookService;
 import com.bigcity.services.interfaces.IUserService;
@@ -113,7 +113,7 @@ public class BookingServiceImpl implements IBookingService {
 
             log.error("La réservation n'existe pas dans la base.");
 
-            throw new EntityNoFoundException("La réservation n'existe pas !");
+            throw new EntityNotFoundException("La réservation n'existe pas !");
 
         }
 
@@ -134,7 +134,7 @@ public class BookingServiceImpl implements IBookingService {
 
         if (bookings.isEmpty()) {
 
-            throw new EntityNoFoundException("Il n'y a pas de réservations dépassées dans la base.");
+            throw new EntityNotFoundException("Il n'y a pas de réservations dépassées dans la base.");
         }
 
         return bookings;
@@ -161,7 +161,7 @@ public class BookingServiceImpl implements IBookingService {
 
         if (bookings.isEmpty()) {
 
-            throw new EntityNoFoundException("Il n'y a pas de réservations pour ce usagé dans la base.");
+            throw new EntityNotFoundException("Il n'y a pas de réservations pour ce usagé dans la base.");
         }
 
         return bookings;
@@ -183,7 +183,7 @@ public class BookingServiceImpl implements IBookingService {
 
             log.error("La réservation n'existe pas dans la base.");
 
-            throw new EntityNoFoundException("la réservation n'existe pas !");
+            throw new EntityNotFoundException("la réservation n'existe pas !");
 
         }
 

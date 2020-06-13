@@ -2,7 +2,7 @@ package com.bigcity.services;
 
 import com.bigcity.entity.Role;
 import com.bigcity.exceptions.EntityAlreadyExistsException;
-import com.bigcity.exceptions.EntityNoFoundException;
+import com.bigcity.exceptions.EntityNotFoundException;
 import com.bigcity.services.interfaces.IRoleService;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +53,7 @@ public class RoleServiceImpl implements IRoleService {
 
             log.error("Modification Impossible ! le role n'existe pas dans la base.");
 
-            throw new EntityNoFoundException("La role n'existe pas !");
+            throw new EntityNotFoundException("La role n'existe pas !");
 
         }
 
@@ -81,7 +81,7 @@ public class RoleServiceImpl implements IRoleService {
 
             log.error("Le role par défault n'existe pas dans la base.");
 
-            throw new EntityNoFoundException("La role par défault n'existe pas !");
+            throw new EntityNotFoundException("La role par défault n'existe pas !");
 
         }
 

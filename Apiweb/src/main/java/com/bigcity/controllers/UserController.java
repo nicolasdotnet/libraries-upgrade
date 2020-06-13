@@ -49,7 +49,7 @@ public class UserController {
         @ApiResponse(code = SC_CONFLICT, message = "l'utilisateur existe déjà dans la base"),
         @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
     })
-    @PostMapping("/api/user")
+    @PostMapping("/api/librarian/user")
     public ResponseEntity<User> saveUser(@Valid @RequestBody UserDTO userDto) throws Exception {
 
         log.debug("saveUser()");
@@ -102,7 +102,7 @@ public class UserController {
     }
 
     @ApiOperation("Test spécification : Récupère l'ensemble des utilidateurs de la base en fonction de leur ancienté")
-    @GetMapping("/s")
+    @GetMapping("/api/librarian/s")
     public List<User> gets() {
 
         return iUserService.getAllUsers(UserSpecification.isReallyOld());
@@ -114,7 +114,7 @@ public class UserController {
         @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
         @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
     })
-    @PostMapping("/api/users")
+    @PostMapping("/api/librarian/users")
     public Page<User> showAllUsersByCriteria(@RequestBody UserCriteria userCriteria, int page, int size) throws Exception {
 
         log.debug("showAllUsersByCriteria", userCriteria);

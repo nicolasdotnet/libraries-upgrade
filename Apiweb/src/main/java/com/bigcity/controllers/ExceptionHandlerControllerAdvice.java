@@ -7,7 +7,7 @@ package com.bigcity.controllers;
 
 import com.bigcity.entity.ExceptionMessage;
 import com.bigcity.exceptions.EntityAlreadyExistsException;
-import com.bigcity.exceptions.EntityNoFoundException;
+import com.bigcity.exceptions.EntityNotFoundException;
 import com.bigcity.exceptions.BookingNotPossibleException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,8 +30,8 @@ public class ExceptionHandlerControllerAdvice {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-//    @ExceptionHandler(EntityNoFoundException.class)
-//    public ResponseEntity<ExceptionMessage> userNoFindHandler(HttpServletRequest request, EntityNoFoundException exception) {
+//    @ExceptionHandler(EntityNotFoundException.class)
+//    public ResponseEntity<ExceptionMessage> userNoFindHandler(HttpServletRequest request, EntityNotFoundException exception) {
 //        ExceptionMessage message = ExceptionMessage.builder()
 //                .date(LocalDateTime.now().format(formatter))
 //                .path(request.getRequestURI().toString() + "?" + request.getQueryString())
@@ -40,16 +40,16 @@ public class ExceptionHandlerControllerAdvice {
 //                .build();
 //        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 //    }
-//    @ExceptionHandler(EntityNoFoundException.class)
-//    public ResponseEntity handleEntityNoFoudException(EntityNoFoundException error) {
+//    @ExceptionHandler(EntityNotFoundException.class)
+//    public ResponseEntity handleEntityNoFoudException(EntityNotFoundException error) {
 //        // log exception
 //        return ResponseEntity
 //                .status(HttpStatus.FORBIDDEN)
 //                .body("Error Message");
 //    }
 
-    @ExceptionHandler(EntityNoFoundException.class)
-    public ResponseEntity<ExceptionMessage> handleEntityNoFoudException(HttpServletRequest request, EntityNoFoundException e) {
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ExceptionMessage> handleEntityNoFoudException(HttpServletRequest request, EntityNotFoundException e) {
         // log exception 
 
         ExceptionMessage message = ExceptionMessage.builder()

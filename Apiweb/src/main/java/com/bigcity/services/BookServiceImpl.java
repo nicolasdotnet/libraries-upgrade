@@ -5,7 +5,7 @@ import com.bigcity.specifications.BookCriteria;
 import com.bigcity.entity.Book;
 import com.bigcity.entity.BookCategory;
 import com.bigcity.exceptions.EntityAlreadyExistsException;
-import com.bigcity.exceptions.EntityNoFoundException;
+import com.bigcity.exceptions.EntityNotFoundException;
 import com.bigcity.services.interfaces.IBookCategoryService;
 import com.bigcity.services.interfaces.IBookService;
 import com.bigcity.specifications.BookSpecification;
@@ -57,7 +57,7 @@ public class BookServiceImpl implements IBookService {
 
             log.error("la catégorie n'existe pas dans la base.");
 
-            throw new EntityNoFoundException("la catégorie n'existe pas !");
+            throw new EntityNotFoundException("la catégorie n'existe pas !");
         }
 
         Book book = dtoToEntity(bookDTO, bookCategoryFind);
@@ -74,7 +74,7 @@ public class BookServiceImpl implements IBookService {
 
             log.error("Modification Impossible ! le livre n'existe pas dans la base.");
 
-            throw new EntityNoFoundException("Le livre n'existe pas !");
+            throw new EntityNotFoundException("Le livre n'existe pas !");
 
         }
 
@@ -84,7 +84,7 @@ public class BookServiceImpl implements IBookService {
 
             log.error("la catégorie n'existe pas dans la base.");
 
-            throw new EntityNoFoundException("la catégorie n'existe pas !");
+            throw new EntityNotFoundException("la catégorie n'existe pas !");
         }
 
         bookFind.get().setIsbn(bookDTO.getIsbn());
@@ -123,7 +123,7 @@ public class BookServiceImpl implements IBookService {
 
             log.error("la catégorie n'existe pas dans la base.");
 
-            throw new EntityNoFoundException("la categorie n'existe pas !");
+            throw new EntityNotFoundException("la categorie n'existe pas !");
         }
 
         return bookRepository.findAllByBookCategory(bookCategoryFind);

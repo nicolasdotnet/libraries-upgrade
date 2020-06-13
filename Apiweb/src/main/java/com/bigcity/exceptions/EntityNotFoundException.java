@@ -10,12 +10,12 @@ package com.bigcity.exceptions;
  * @author nicolasdotnet
  */
 
-public class EntityNoFoundException extends LibraryException {
+public class EntityNotFoundException extends LibraryException {
 
-    public EntityNoFoundException() {
+    public EntityNotFoundException() {
     }
 
-    public EntityNoFoundException(String message) {
+    public EntityNotFoundException(String message) {
 
         super(message);
     }

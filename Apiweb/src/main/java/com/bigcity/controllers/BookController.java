@@ -50,7 +50,7 @@ public class BookController {
         @ApiResponse(code = SC_CONFLICT, message = "le livre existe déjà dans la base"),
         @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
     })
-    @PostMapping("/api/book")
+    @PostMapping("/api/librarian/book")
     public ResponseEntity saveBook(@Valid @RequestBody BookDTO bookDto) throws Exception {
 
         log.debug("saveBook()");
@@ -77,7 +77,7 @@ public class BookController {
         @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
         @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
     })
-    @GetMapping("/api/book/{id}")
+    @GetMapping("/api/user/book/{id}")
     public ResponseEntity showBook(@PathVariable("id") int id) {
 
         log.debug("showBook() id: {}", id);
@@ -92,7 +92,7 @@ public class BookController {
         @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
         @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
     })
-    @GetMapping("/api/books/all")
+    @GetMapping("/api/user/books/all")
     public ResponseEntity showAllBooks(@RequestParam(defaultValue = " ") String title) throws Exception {
 
         // RequestBody DTO Search
@@ -121,7 +121,7 @@ public class BookController {
         @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
         @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
     })
-    @PutMapping("/api/book/{id}")
+    @PutMapping("/api/librarian/book/{id}")
     public ResponseEntity updateBook(@PathVariable("id") int id, @Valid
             @RequestBody BookDTO bookDTO) throws Exception {
 
@@ -137,7 +137,7 @@ public class BookController {
         @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
         @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
     })
-    @PostMapping("/api/books")
+    @PostMapping("/api/user/books")
     public Page<Book> showAllBooksByCriteria(@RequestBody BookCriteria bookCriteria, int page, int size) throws Exception {
 
         log.debug("showAllBooksByCriteria", bookCriteria);

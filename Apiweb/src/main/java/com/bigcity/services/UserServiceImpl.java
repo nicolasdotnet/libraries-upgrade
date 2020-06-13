@@ -4,7 +4,7 @@ import com.bigcity.dto.UserDTO;
 import com.bigcity.entity.Role;
 import com.bigcity.entity.User;
 import com.bigcity.exceptions.EntityAlreadyExistsException;
-import com.bigcity.exceptions.EntityNoFoundException;
+import com.bigcity.exceptions.EntityNotFoundException;
 import static com.bigcity.security.EncrytedPasswordUtils.encrytePassword;
 import com.bigcity.services.interfaces.IRoleService;
 import com.bigcity.services.interfaces.IUserService;
@@ -19,7 +19,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.bigcity.dao.IUserRepository;
-import com.bigcity.entity.Book;
 import com.bigcity.specifications.UserCriteria;
 import com.bigcity.specifications.UserSpecification;
 import org.springframework.data.domain.Page;
@@ -94,7 +93,7 @@ public class UserServiceImpl implements IUserService {
 
             log.error("Modification Impossible ! l'utilisateur n'existe pas dans la base.");
 
-            throw new EntityNoFoundException("Utilisateur n'existe pas !");
+            throw new EntityNotFoundException("Utilisateur n'existe pas !");
 
         }
 
@@ -125,7 +124,7 @@ public class UserServiceImpl implements IUserService {
 
             log.error("le role n'existe pas dans la base.");
 
-            throw new EntityNoFoundException("le role n'existe pas !");
+            throw new EntityNotFoundException("le role n'existe pas !");
         }
 
         return userRepository.findAllByRole(roleFind);
@@ -146,7 +145,7 @@ public class UserServiceImpl implements IUserService {
 
             log.error("Modification Impossible ! l'utilisateur  n'existe pas dans la base.");
 
-            throw new EntityNoFoundException("Utilisateur n'existe pas !");
+            throw new EntityNotFoundException("Utilisateur n'existe pas !");
 
         }
 
@@ -167,7 +166,7 @@ public class UserServiceImpl implements IUserService {
 
             log.error("Modification Impossible ! l'utilisateur n'existe pas dans la base.");
 
-            throw new EntityNoFoundException("Utilisateur n'existe pas !");
+            throw new EntityNotFoundException("Utilisateur n'existe pas !");
 
         }
 
@@ -183,20 +182,6 @@ public class UserServiceImpl implements IUserService {
         return userRepository.findAll(reallyOld);
     }
 
-    public User dtoToEntity(UserDTO userDTO) {
-
-        User user = new User();
-
-        user.setFirstname(userDTO.getFirstname());
-        user.setLastname(userDTO.getLastname());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-//        user.setRole(userDTO.getRole());
-
-        return user;
-
-    }
-
     @Override
     public Page<User> getAllUsersByCriteria(UserCriteria userCriteria, int page, int size) {
 
@@ -208,6 +193,20 @@ public class UserServiceImpl implements IUserService {
         UserSpecification userSpecification = new UserSpecification(userCriteria);
 
         return userRepository.findAll(userSpecification, PageRequest.of(page, size));
+    }
+
+    public User dtoToEntity(UserDTO userDTO) {
+
+        User user = new User();
+
+        user.setFirstname(userDTO.getFirstname());
+        user.setLastname(userDTO.getLastname());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(encrytePassword(userDTO.getPassword()));
+//        user.setRole(userDTO.getRole());
+
+        return user;
+
     }
 
 }

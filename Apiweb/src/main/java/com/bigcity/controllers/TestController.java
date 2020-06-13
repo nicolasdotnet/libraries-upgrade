@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
-    @GetMapping("/Test")
+    @GetMapping("/aî/user/test")
     public String test() {
 
         return "Un exemple de produit";

@@ -3,7 +3,7 @@ package com.bigcity.services;
 import com.bigcity.dto.BookCategoryDTO;
 import com.bigcity.entity.BookCategory;
 import com.bigcity.exceptions.EntityAlreadyExistsException;
-import com.bigcity.exceptions.EntityNoFoundException;
+import com.bigcity.exceptions.EntityNotFoundException;
 import com.bigcity.services.interfaces.IBookCategoryService;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +54,7 @@ public class BookCategoryServiceImpl implements IBookCategoryService {
 
             log.error("Modification Impossible ! la catégérie n'existe pas dans la base.");
 
-            throw new EntityNoFoundException("La catégérie n'existe pas !");
+            throw new EntityNotFoundException("La catégérie n'existe pas !");
 
         }
 

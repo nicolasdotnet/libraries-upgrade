@@ -54,7 +54,7 @@ public class BookingController {
         @ApiResponse(code = SC_CONFLICT, message = "le prêt existe déjà dans la base"),
         @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
     })
-    @PostMapping("/api/booking")
+    @PostMapping("/api/librarian/booking")
     public ResponseEntity saveBooking(@Valid @RequestBody BookingDTO bookingDto) throws Exception {
 
         log.debug("saveBooking()");
@@ -81,7 +81,7 @@ public class BookingController {
         @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookingDTO.class),
         @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
     })
-    @GetMapping("/api/booking/{id}")
+    @GetMapping("/api/user/booking/{id}")
     public ResponseEntity showBooking(@PathVariable("id") int id) {
 
         log.debug("showBooking() id: {}", id);
@@ -136,7 +136,7 @@ public class BookingController {
         @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookingDTO.class),
         @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
     })
-    @GetMapping("/api/extendbooking/{id}")
+    @GetMapping("/api/user/extendbooking/{id}")
     public ResponseEntity updateBooking(@PathVariable("id") int id) throws Exception {
 
         log.debug("updateBooking() id: {}", id);
@@ -151,7 +151,7 @@ public class BookingController {
         @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookingDTO.class),
         @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
     })
-    @PostMapping("/api/bookings")
+    @PostMapping("/api/librarian/bookings")
     public Page<Booking> showAllBookingsByCriteria(@RequestBody BookingCriteria bookingCriteria, int page, int size) throws Exception {
 
         log.debug("showAllBookingsByCriteria", bookingCriteria);
@@ -165,7 +165,7 @@ public class BookingController {
         @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookingDTO.class),
         @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
     })
-    @GetMapping("/api/bookings")
+    @GetMapping("/api/librarian/bookings")
     public ResponseEntity showAllBookings(@RequestParam(defaultValue = " ") String email) throws Exception {
 
         log.debug("showBookings()", email);
