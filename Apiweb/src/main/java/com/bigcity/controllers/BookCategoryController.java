@@ -6,7 +6,6 @@
 package com.bigcity.controllers;
 
 import com.bigcity.dto.BookCategoryDTO;
-import com.bigcity.entity.Book;
 import com.bigcity.entity.BookCategory;
 import com.bigcity.services.interfaces.IBookCategoryService;
 import io.swagger.annotations.Api;
@@ -16,7 +15,10 @@ import io.swagger.annotations.ApiResponses;
 import java.net.URI;
 import java.util.List;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,13 +47,13 @@ public class BookCategoryController {
     private IBookCategoryService iBookCategoryService;
 
     @ApiOperation("Enregister une nouvelle catégorie de livre")
-    @ApiResponses(value = {
-        @ApiResponse(code = SC_OK, message = "ok good job !"),
-
-        @ApiResponse(code = SC_BAD_REQUEST, message = "An unexpected error occurred")
-
-    })
     @PostMapping("/api/categories")
+    @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookCategoryDTO.class),
+        @ApiResponse(code = SC_CONFLICT, message = "la categorie existe déjà dans la base"),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
     public ResponseEntity saveBookCategory(@Valid @RequestBody BookCategoryDTO bookCategoryDto) throws Exception {
 
         log.debug("saveBookCategory()");
@@ -73,6 +75,12 @@ public class BookCategoryController {
 
     @ApiOperation("Récupère une catégorie de livre grâce à son ID à condition que celui-ci soit inscrit !")
     @GetMapping("/api/category/{id}")
+        @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
+        @ApiResponse(code = SC_NOT_FOUND, message = "la catégorie n'existe pas dans la base"),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookCategoryDTO.class),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
     public ResponseEntity showBookCategory(@PathVariable("id") int id) {
 
         log.debug("showBooking() id: {}", id);
@@ -83,6 +91,11 @@ public class BookCategoryController {
 
     @ApiOperation("Récupère l'ensemble catégories de livre de la base ou récupèrer une liste de livre a partir d'un mot clé sur le titre")
     @GetMapping("/api/categories")
+        @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookCategoryDTO.class),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
     public ResponseEntity showAllBookCategories(@RequestParam(defaultValue = " ") String label) throws Exception {
 
         // RequestBody DTO Search
@@ -106,6 +119,12 @@ public class BookCategoryController {
 
     @ApiOperation("Mettre à jour la catégorie d'un livre à partir de son ID présent dans la base")
     @PutMapping("/api/category/{id}")
+        @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
+        @ApiResponse(code = SC_NOT_FOUND, message = "la catégorie n'existe pas dans la base"),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookCategoryDTO.class),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
     public ResponseEntity updateBookCategory(@PathVariable("id") int id, @Valid
             @RequestBody BookCategoryDTO bookCategoryDTO) throws Exception {
 

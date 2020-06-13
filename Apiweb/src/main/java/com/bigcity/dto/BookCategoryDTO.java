@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.bigcity.dto;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -15,8 +10,8 @@ import javax.validation.constraints.Size;
  */
 public class BookCategoryDTO {
 
-    @NotEmpty(message = "le nom de la catégorie n'est pas renseigné.")
-    @Size(min = 3, max = 10, message = "le nom de la catégorie trop long ou trop court.")
+    @NotEmpty(message = "le nom de la catégorie n'est pas renseigné")
+    @Size(min = 3, max = 10, message = "le nom de la catégorie trop long ou trop court")
     @ApiModelProperty(notes = "label for a category")
     private String label;
 

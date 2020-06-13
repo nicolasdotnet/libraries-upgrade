@@ -36,7 +36,6 @@ public interface IRoleService {
      *
      * @param id
      * @return role object find
-     * @throws Exception
      */
     Role getRole(Long id);
 

@@ -1,10 +1,13 @@
 package com.bigcity.services.interfaces;
 
 import com.bigcity.dto.UserDTO;
+import com.bigcity.entity.Book;
 import com.bigcity.entity.Role;
 import com.bigcity.entity.User;
+import com.bigcity.specifications.UserCriteria;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 
 public interface IUserService {
@@ -41,7 +44,6 @@ public interface IUserService {
      *
      * @param userId
      * @return user object find
-     * @throws Exception
      */
     User getUser(Long userId);
 
@@ -49,7 +51,6 @@ public interface IUserService {
      * method to get all users
      *
      * @return the users list
-     * @throws java.lang.Exception
      */
     List<User> getAllUsers();
 
@@ -67,7 +68,6 @@ public interface IUserService {
      *
      * @param userName
      * @return the list users from Role label
-     * @throws Exception
      */
     Optional<User> getUserByEmail(String userName);
 
@@ -104,5 +104,15 @@ public interface IUserService {
      * @return
      */
     List<User> getAllUsers(Specification<User> reallyOld);
+
+    /**
+     * method to get all users by criteria
+     * 
+     * @param userCriteria
+     * @param page
+     * @param size
+     * @return
+     */
+    public Page<User> getAllUsersByCriteria(UserCriteria userCriteria, int page, int size);
 
 }

@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.bigcity.services;
 
-import com.bigcity.dao.BookingRepository;
 import com.bigcity.entity.Book;
 import com.bigcity.entity.Booking;
 import com.bigcity.entity.BookingStatus;
@@ -26,9 +20,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.bigcity.specifications.BookingSpecification;
 import com.bigcity.services.interfaces.IBookingService;
+import com.bigcity.specifications.BookingCriteria;
 import java.time.Instant;
 import java.time.ZoneId;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import com.bigcity.dao.IBookingRepository;
 
 /**
  *
@@ -41,7 +39,7 @@ public class BookingServiceImpl implements IBookingService {
     private static final Logger log = LogManager.getLogger(BookingServiceImpl.class);
 
     @Autowired
-    private BookingRepository bookingRepository;
+    private IBookingRepository bookingRepository;
 
     @Autowired
     private IBookService iBookService;
@@ -51,7 +49,7 @@ public class BookingServiceImpl implements IBookingService {
 
     @Value("${bookingDuration}")
     private String bookingDuration;
-    
+
     @Value("${counterExtension}")
     private String counterExtension;
 
@@ -144,7 +142,7 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public Booking getBooking(Long bookingId){
+    public Booking getBooking(Long bookingId) {
 
         return bookingRepository.findById(bookingId).get();
     }
@@ -171,7 +169,7 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public List<Booking> getAllBookings(){
+    public List<Booking> getAllBookings() {
 
         return bookingRepository.findAll();
     }
@@ -221,6 +219,19 @@ public class BookingServiceImpl implements IBookingService {
         bookingFind.get().setCounterExtension("1");
 
         return bookingRepository.saveAndFlush(bookingFind.get());
+    }
+
+    @Override
+    public Page<Booking> getAllBookingsByCriteria(BookingCriteria bookingCriteria, int page, int size) {
+
+        bookingCriteria.setBookTitle("".equals(bookingCriteria.getBookTitle()) ? null : bookingCriteria.getBookTitle());
+        bookingCriteria.setBookingId(bookingCriteria.getBookingId() == 0 ? null : bookingCriteria.getBookingId());
+        bookingCriteria.setBookingStatus("".equals(bookingCriteria.getBookingStatus()) ? null : bookingCriteria.getBookingStatus());
+        bookingCriteria.setBookingUserEmail("".equals(bookingCriteria.getBookingUserEmail()) ? null : bookingCriteria.getBookingUserEmail());
+
+        BookingSpecification bookSpecification = new BookingSpecification(bookingCriteria);
+
+        return bookingRepository.findAll(bookSpecification, PageRequest.of(page, size));
     }
 
 }

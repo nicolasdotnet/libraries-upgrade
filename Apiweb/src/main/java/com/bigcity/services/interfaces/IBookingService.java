@@ -5,10 +5,10 @@
  */
 package com.bigcity.services.interfaces;
 
-import com.bigcity.entity.Book;
 import com.bigcity.entity.Booking;
+import com.bigcity.specifications.BookingCriteria;
 import java.util.List;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Page;
 
 /**
  *
@@ -58,7 +58,6 @@ public interface IBookingService {
      *
      * @param bookingId
      * @return
-     * @throws Exception
      */
     Booking getBooking(Long bookingId);
 
@@ -66,7 +65,6 @@ public interface IBookingService {
      * method to get all bookings 
      *
      * @return
-     * @throws Exception
      */
     List<Booking> getAllBookings();
 
@@ -85,5 +83,15 @@ public interface IBookingService {
      * @param bookingId
      */
     void delete(Long bookingId);
+
+    /**
+     * method to get all bookings by criteria
+     * 
+     * @param bookingCriteria
+     * @param page
+     * @param size
+     * @return
+     */
+    public Page<Booking> getAllBookingsByCriteria(BookingCriteria bookingCriteria, int page, int size);
 
 }

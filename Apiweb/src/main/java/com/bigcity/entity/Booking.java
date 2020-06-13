@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.bigcity.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -56,11 +51,6 @@ public class Booking implements Serializable {
     @Column(nullable = false)
     @ApiModelProperty(notes = "booking status")
     private BookingStatus bookingStatus;
-    
-//    @ManyToOne
-//    @JoinColumn(nullable = false)
-//    @JsonIgnore
-//    private User librarian;
     
     @ManyToOne
     @JoinColumn(nullable = false)
@@ -132,14 +122,6 @@ public class Booking implements Serializable {
     public void setBookingStatus(BookingStatus bookingStatus) {
         this.bookingStatus = bookingStatus;
     }
-
-//    public User getLibrarian() {
-//        return librarian;
-//    }
-//
-//    public void setLibrarian(User librarian) {
-//        this.librarian = librarian;
-//    }
 
     public User getBookingUser() {
         return bookingUser;

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.bigcity.dto;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -16,22 +11,22 @@ import javax.validation.constraints.Size;
  */
 public class UserDTO {
 
-    @NotEmpty(message = "le prénom n'est pas renseigné.")
-    @Size(min = 3, max = 10, message = "Nom trop long ou trop court. Et oui messages sont plus stylés que ceux de Spring")
+    @NotEmpty(message = "le prénom n'est pas renseigné")
+    @Size(min = 3, max = 10, message = "Nom trop long ou trop court")
     @ApiModelProperty(notes = "firstname for a user")
     private String firstname;
     
-    @NotEmpty(message = "le nom n'est pas renseigné.")
-    @Size(min = 3, max = 10, message = "La taille doit etre entre 3 et 10.")
+    @NotEmpty(message = "le nom n'est pas renseigné")
+    @Size(min = 3, max = 10, message = "La taille doit etre entre 3 et 10")
     @ApiModelProperty(notes = "lastname for a user")
     private String lastname;
 
-    @NotEmpty(message = "l'email n'est pas renseigné.")
-    @Email(message = "l'email est erroné.")
+    @NotEmpty(message = "l'email n'est pas renseigné")
+    @Email(message = "l'email est erroné")
     @ApiModelProperty(notes = "email for a user : user id")
     private String email;
 
-    @NotEmpty(message = "le mot de passe n'est pas renseigné.")
+    @NotEmpty(message = "le mot de passe n'est pas renseigné")
     @ApiModelProperty(notes = "password for a user")
     private String password;
 

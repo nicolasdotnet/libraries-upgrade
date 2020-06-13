@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.bigcity.services;
 
-import com.bigcity.dao.BookRepository;
 import com.bigcity.dto.BookDTO;
-import com.bigcity.dto.BookSearchDTO;
+import com.bigcity.specifications.BookCriteria;
 import com.bigcity.entity.Book;
 import com.bigcity.entity.BookCategory;
 import com.bigcity.exceptions.EntityAlreadyExistsException;
@@ -20,8 +14,11 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.bigcity.dao.IBookRepository;
 
 /**
  *
@@ -34,7 +31,7 @@ public class BookServiceImpl implements IBookService {
     private static final Logger log = LogManager.getLogger(BookServiceImpl.class);
 
     @Autowired
-    private BookRepository bookRepository;
+    private IBookRepository bookRepository;
 
     @Autowired
     private IBookCategoryService iBookCategoryService;
@@ -147,42 +144,17 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public List<Book> getAllBooksV2(BookSearchDTO bsdto) {
+    public Page<Book> getAllBooksByCriteria(BookCriteria bookCriteria, int page, int size) {
 
-        if (bsdto.getAuthor().equals("")) {
+        bookCriteria.setAuthor("".equals(bookCriteria.getAuthor()) ? null : bookCriteria.getAuthor());
+        bookCriteria.setBookTitle("".equals(bookCriteria.getBookTitle()) ? null : bookCriteria.getBookTitle());
+        bookCriteria.setCategoryName("".equals(bookCriteria.getCategoryName()) ? null : bookCriteria.getCategoryName());
+        bookCriteria.setIsbn("".equals(bookCriteria.getIsbn()) ? null : bookCriteria.getIsbn());
 
-            bsdto.setAuthor(null);
+        BookSpecification bookSpecification = new BookSpecification(bookCriteria);
+        
+        return bookRepository.findAll(bookSpecification, PageRequest.of(page, size));
 
-        }
-
-        if (bsdto.getBookTitle().equals("")) {
-
-            bsdto.setBookTitle(null);
-
-        }
-
-        if (bsdto.getIsbn().equals("")) {
-
-            bsdto.setIsbn(null);
-
-        }
-
-        System.out.println("sous requete");
-
-        List<Book> a = bookRepository.findAll(BookSpecification.getBookByAuthor(bsdto.getAuthor()));
-
-        if (a.isEmpty()) {
-
-            System.out.println("<<<<<<<<<<<<<<<<pas de resultat sous requete");
-
-        }
-
-        for (Book book : a) {
-
-            System.out.println("<<<<<<<<<<RESULTAT sous requete : " + book.toString());
-        }
-
-        return bookRepository.findAll(BookSpecification.getBookByTitleAndAuthorAndIsbn(bsdto.getBookTitle(), bsdto.getAuthor(), bsdto.getIsbn()));
     }
 
 }

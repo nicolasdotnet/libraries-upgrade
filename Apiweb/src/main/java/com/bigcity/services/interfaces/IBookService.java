@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.bigcity.services.interfaces;
 
 import com.bigcity.dto.BookDTO;
-import com.bigcity.dto.BookSearchDTO;
+import com.bigcity.specifications.BookCriteria;
 import com.bigcity.entity.Book;
 import com.bigcity.entity.BookCategory;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 /**
  *
@@ -68,11 +64,13 @@ public interface IBookService {
     List<Book> getBookByBookCategory(BookCategory bookCategory) throws Exception;
 
     /**
-     * method to get all book
+     * method to get all books by criteria
      *
-     * @param bsdto
+     * @param bookSearchCriteria
+     * @param page
+     * @param size
      * @return the book list
      */
-    List<Book> getAllBooksV2(BookSearchDTO bsdto);
+    Page<Book> getAllBooksByCriteria(BookCriteria bookSearchCriteria, int page, int size);
 
 }

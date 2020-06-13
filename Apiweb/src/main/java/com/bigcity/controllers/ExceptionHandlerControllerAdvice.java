@@ -5,11 +5,15 @@
  */
 package com.bigcity.controllers;
 
+import com.bigcity.entity.ExceptionMessage;
 import com.bigcity.exceptions.EntityAlreadyExistsException;
 import com.bigcity.exceptions.EntityNoFoundException;
 import com.bigcity.exceptions.BookingNotPossibleException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -24,6 +28,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionHandlerControllerAdvice {
 
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
 //    @ExceptionHandler(EntityNoFoundException.class)
 //    public ResponseEntity<ExceptionMessage> userNoFindHandler(HttpServletRequest request, EntityNoFoundException exception) {
 //        ExceptionMessage message = ExceptionMessage.builder()
@@ -35,47 +41,76 @@ public class ExceptionHandlerControllerAdvice {
 //        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 //    }
 //    @ExceptionHandler(EntityNoFoundException.class)
-//    public ResponseEntity handleException(EntityNoFoundException e) {
+//    public ResponseEntity handleEntityNoFoudException(EntityNoFoundException error) {
 //        // log exception
 //        return ResponseEntity
 //                .status(HttpStatus.FORBIDDEN)
 //                .body("Error Message");
 //    }
+
     @ExceptionHandler(EntityNoFoundException.class)
-    public ResponseEntity handleException(EntityNoFoundException e) {
+    public ResponseEntity<ExceptionMessage> handleEntityNoFoudException(HttpServletRequest request, EntityNoFoundException e) {
         // log exception 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        ExceptionMessage message = ExceptionMessage.builder()
+                .date(LocalDateTime.now().format(formatter))
+                .path(request.getRequestURI() + "?" + request.getQueryString())
+                .className(e.getClass().getName())
+                .message(e.getMessage())
+                .build();
+
+        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
-    public ResponseEntity handleException(EntityAlreadyExistsException e) {
+    public ResponseEntity<ExceptionMessage> handleEntityAlreadyExistsException(HttpServletRequest request, EntityAlreadyExistsException e) {
         // log exception 
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+
+        ExceptionMessage message = ExceptionMessage.builder()
+                .date(LocalDateTime.now().format(formatter))
+                .path(request.getRequestURI() + "?" + request.getQueryString())
+                .className(e.getClass().getName())
+                .message(e.getMessage())
+                .build();
+
+        return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(BookingNotPossibleException.class)
-    public ResponseEntity handleException(BookingNotPossibleException e) {
-        // log exception 
-        return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
+    public ResponseEntity<ExceptionMessage> handleBookingNotPossibleException(HttpServletRequest request, BookingNotPossibleException e) {
+        // log exception
+
+        ExceptionMessage message = ExceptionMessage.builder()
+                .date(LocalDateTime.now().format(formatter))
+                .path(request.getRequestURI() + "?" + request.getQueryString())
+                .className(e.getClass().getName())
+                .message(e.getMessage())
+                .build();
+//        return ResponseEntity.status(error.getHttpStatus()).body(error.getMessage());
+
+        return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity handleBindingErrors(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ExceptionMessage> handleMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException e) {
 
-        List<FieldError> errors = ex.getBindingResult().getFieldErrors();
-        List<String> message = new ArrayList<>();
+        List<FieldError> errors = e.getBindingResult().getFieldErrors();
+        List<String> getMessage = new ArrayList<>();
 
-        for (FieldError e : errors) {
-            message.add("@" + e.getField().toUpperCase() + ":" + e.getDefaultMessage());
+        for (FieldError error : errors) {
+            getMessage.add("@" + error.getField().toUpperCase() + ":" + error.getDefaultMessage());
         }
 
-        String error = "Update Failed";
+        String text = String.format(getMessage.toString());
 
-        String text = String.format(message.toString());
+        ExceptionMessage message = ExceptionMessage.builder()
+                .date(LocalDateTime.now().format(formatter))
+                .path(request.getRequestURI() + "?" + request.getQueryString())
+                .className(e.getClass().getName())
+                .message(text)
+                .build();
 
-        message.toString();
-
-        return ResponseEntity.badRequest().body(text);
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
 }

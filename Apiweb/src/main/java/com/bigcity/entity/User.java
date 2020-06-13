@@ -33,11 +33,11 @@ public class User implements Serializable {
     private Date userDate;
 
     @Column(length = 100, nullable = false)
-    @ApiModelProperty(notes = "user registration date")
+    @ApiModelProperty(notes = "first name from user")
     private String firstname;
 
     @Column(length = 100, nullable = false)
-    @ApiModelProperty(notes = "first name from user")
+    @ApiModelProperty(notes = "last name from user")
     private String lastname;
 
     @Column(nullable = false)
@@ -57,10 +57,6 @@ public class User implements Serializable {
     @ApiModelProperty(notes = "booking list from user")
     private Collection<Booking> bookings;
 
-//    @OneToMany(mappedBy = "librarian", fetch = FetchType.LAZY)
-//    private Collection<Booking> librarianTasks;
-//    @OneToMany(mappedBy = "librarian", fetch = FetchType.LAZY)
-//    private Collection<Book> books;
     public User() {
     }
 
@@ -128,20 +124,6 @@ public class User implements Serializable {
         this.bookings = bookings;
     }
 
-//    public Collection<Booking> getLibrarianTasks() {
-//        return librarianTasks;
-//    }
-//
-//    public void setLibrarianTasks(Collection<Booking> librarianTasks) {
-//        this.librarianTasks = librarianTasks;
-//    }
-//    public Collection<Book> getBooks() {
-//        return books;
-//    }
-//
-//    public void setBooks(Collection<Book> books) {
-//        this.books = books;
-//    }
     @Override
     public String toString() {
         return "User{" + "userId=" + userId + ", userDate=" + userDate

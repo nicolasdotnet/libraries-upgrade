@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.bigcity.services;
 
-import com.bigcity.dao.BookCategoryRepository;
 import com.bigcity.dto.BookCategoryDTO;
 import com.bigcity.entity.BookCategory;
 import com.bigcity.exceptions.EntityAlreadyExistsException;
@@ -18,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.bigcity.dao.IBookCategoryRepository;
 
 /**
  *
@@ -30,7 +25,7 @@ public class BookCategoryServiceImpl implements IBookCategoryService {
     private static final Logger log = LogManager.getLogger(BookCategoryServiceImpl.class);
 
     @Autowired
-    private BookCategoryRepository bookCategoryRepository;
+    private IBookCategoryRepository bookCategoryRepository;
 
     @Override
     public BookCategory register(BookCategoryDTO bookCategoryDTO) throws Exception {

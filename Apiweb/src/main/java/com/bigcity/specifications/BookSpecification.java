@@ -6,72 +6,54 @@
 package com.bigcity.specifications;
 
 import com.bigcity.entity.Book;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
  *
  * @author nicolasdotnet
+ * 
+ * This class is used to search Books specifying the criteria
+ * 
  */
-public class BookSpecification {
+public class BookSpecification implements Specification<Book> {
 
-    public static Specification<Book> getBookByTitle(String title) {
+    private BookCriteria filter;
 
-        return ((root, query, criteriaBuilder) -> {
-
-            String param = "%" + title + "%";
-
-            return criteriaBuilder.like(root.get("title"), param);
-        });
-
+    public BookSpecification(BookCriteria filter) {
+        super();
+        this.filter = filter;
     }
 
-    public static Specification<Book> getBookByTitleIsNull() {
+    @Override
+    public Predicate toPredicate(Root<Book> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 
-        return ((root, query, criteriaBuilder) -> {
+        Predicate predicate = criteriaBuilder.conjunction();
 
-            return criteriaBuilder.isNull(root.get("title"));
-        });
+        if (filter.getAuthor() != null) {
+            
+            String param = "%" + filter.getAuthor() + "%";
+            
+            predicate.getExpressions().add(criteriaBuilder.like(root.get("author"), param));
+        }
 
-    }
+        if (filter.getBookTitle() != null) {
+            predicate.getExpressions().add(criteriaBuilder.like(root.get("title"), "%" + filter.getBookTitle() + "%"));
+        }
 
-    public static Specification<Book> getBookByAuthor(String author) {
+        if (filter.getIsbn() != null) {
+            predicate.getExpressions().add(criteriaBuilder.equal(root.get("isbn"), filter.getIsbn()));
+        }
 
-        return ((root, query, criteriaBuilder) -> {
+        if (filter.getCategoryName() != null) {
+            predicate.getExpressions().add(criteriaBuilder.like(root.join("bookCategory").get("label"), filter.getCategoryName()));
+        }
 
-            String param = "%" + author + "%";
+        return criteriaBuilder.and(predicate);
 
-            return criteriaBuilder.like(root.get("author"), param);
-        });
-    }
-
-    public static Specification<Book> getBookByAuthorIsNull() {
-
-        return ((root, query, criteriaBuilder) -> {
-
-            return criteriaBuilder.isNull(root.get("author"));
-        });
-    }
-
-    public static Specification<Book> getBookByIsbn(String isbn) {
-
-        return ((root, query, criteriaBuilder) -> {
-            return criteriaBuilder.equal(root.get("isbn"), isbn);
-        });
-
-    }
-
-    public static Specification<Book> getBookByIsbnIsNull() {
-
-        return ((root, query, criteriaBuilder) -> {
-            return criteriaBuilder.isNull(root.get("isbn"));
-        });
-
-    }
-
-    public static Specification<Book> getBookByTitleAndAuthorAndIsbn(String title,
-            String author, String isbn) {
-        return Specification.where(getBookByAuthorIsNull().or(getBookByTitle(title)))
-                .and(getBookByAuthorIsNull().or(getBookByAuthor(author))).and(getBookByIsbnIsNull().or(getBookByIsbn(isbn)));
     }
 
 }

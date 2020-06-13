@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.bigcity.dto;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -15,15 +10,15 @@ import javax.validation.constraints.NotEmpty;
 public class BookingDTO {
 
     
-    @NotEmpty(message = "la réference bibliothécaire n'est pas renseigné.")
+    @NotEmpty(message = "la réference bibliothécaire n'est pas renseigné")
     @ApiModelProperty(notes = "librarian id")
     private Long librarianId;
     
-    @NotEmpty(message = "la réference usagé n'est pas renseigné.")
+    @NotEmpty(message = "la réference usagé n'est pas renseigné")
     @ApiModelProperty(notes = "booking user id")
     private Long bookingUserId;
     
-    @NotEmpty(message = "la réference livre n'est pas renseigné.")
+    @NotEmpty(message = "la réference livre n'est pas renseigné")
     @ApiModelProperty(notes = "book id")
     private Long bookId;
 

@@ -2,7 +2,7 @@ package com.bigcity;
 
 import com.bigcity.dto.BookCategoryDTO;
 import com.bigcity.dto.BookDTO;
-import com.bigcity.dto.BookSearchDTO;
+import com.bigcity.specifications.BookCriteria;
 import com.bigcity.dto.UserDTO;
 import com.bigcity.entity.Book;
 import com.bigcity.entity.BookCategory;
@@ -297,7 +297,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         System.out.println("Book après booking -> : " + iBookService.getBook(bookId).getCopiesAvailable());
 
         // book search by MC
-        BookSearchDTO bsdto = new BookSearchDTO();
+        BookCriteria bsdto = new BookCriteria();
         
         author = "Nicolas";
         bookTitle = "";
@@ -307,18 +307,18 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         bsdto.setBookTitle(bookTitle);
         bsdto.setIsbn(isbn);
 
-        List<Book> l = iBookService.getAllBooksV2(bsdto);
+//        List<Book> l = iBookService.getAllBooksByCriteria(bsdto);
         
-        if (l.isEmpty()) {
-            
-            System.out.println("PAS DE RESULTAT");
-        }
+//        if (l.isEmpty()) {
+//            
+//            System.out.println("PAS DE RESULTAT");
+//        }
         
-        for (Book book : l) {
-            
-            System.out.println("book -> : "+book.toString());
-            
-        }
+//        for (Book book : l) {
+//            
+//            System.out.println("book -> : "+book.toString());
+//            
+//        }
 
     }
 }

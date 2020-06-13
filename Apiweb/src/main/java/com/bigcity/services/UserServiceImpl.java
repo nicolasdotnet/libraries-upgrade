@@ -1,6 +1,5 @@
 package com.bigcity.services;
 
-import com.bigcity.dao.UserRepository;
 import com.bigcity.dto.UserDTO;
 import com.bigcity.entity.Role;
 import com.bigcity.entity.User;
@@ -19,6 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.bigcity.dao.IUserRepository;
+import com.bigcity.entity.Book;
+import com.bigcity.specifications.UserCriteria;
+import com.bigcity.specifications.UserSpecification;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 @Service
 @Transactional
@@ -27,7 +32,7 @@ public class UserServiceImpl implements IUserService {
     private static final Logger log = LogManager.getLogger(UserServiceImpl.class);
 
     @Autowired
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
 
     @Autowired
     private IRoleService iRoleService;
@@ -100,13 +105,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User getUser(Long id){
+    public User getUser(Long id) {
 
         return userRepository.findById(id).get();
     }
 
     @Override
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
 
         return userRepository.findAll();
     }
@@ -115,9 +120,9 @@ public class UserServiceImpl implements IUserService {
     public List<User> getUsersByRole(Role role) throws Exception {
 
         Role roleFind = iRoleService.getRole(role.getRoleId());
-        
-        if (roleFind==null) {
-            
+
+        if (roleFind == null) {
+
             log.error("le role n'existe pas dans la base.");
 
             throw new EntityNoFoundException("le role n'existe pas !");
@@ -127,7 +132,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Optional<User> getUserByEmail(String email){
+    public Optional<User> getUserByEmail(String email) {
 
         return userRepository.findByEmail(email);
     }
@@ -190,6 +195,19 @@ public class UserServiceImpl implements IUserService {
 
         return user;
 
+    }
+
+    @Override
+    public Page<User> getAllUsersByCriteria(UserCriteria userCriteria, int page, int size) {
+
+        userCriteria.setEmail("".equals(userCriteria.getEmail()) ? null : userCriteria.getEmail());
+        userCriteria.setFirstname("".equals(userCriteria.getFirstname()) ? null : userCriteria.getFirstname());
+        userCriteria.setLastname("".equals(userCriteria.getLastname()) ? null : userCriteria.getLastname());
+        userCriteria.setRole("".equals(userCriteria.getRole()) ? null : userCriteria.getRole());
+
+        UserSpecification userSpecification = new UserSpecification(userCriteria);
+
+        return userRepository.findAll(userSpecification, PageRequest.of(page, size));
     }
 
 }

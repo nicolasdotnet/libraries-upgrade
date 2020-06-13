@@ -1,11 +1,9 @@
 package com.bigcity.services;
 
-import com.bigcity.dao.RoleRepository;
 import com.bigcity.entity.Role;
 import com.bigcity.exceptions.EntityAlreadyExistsException;
 import com.bigcity.exceptions.EntityNoFoundException;
 import com.bigcity.services.interfaces.IRoleService;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.bigcity.dao.IRoleRepository;
 
 @Service
 @Transactional
@@ -22,7 +21,7 @@ public class RoleServiceImpl implements IRoleService {
     private static final Logger log = LogManager.getLogger(RoleServiceImpl.class);
 
     @Autowired
-    private RoleRepository roleRepository;
+    private IRoleRepository roleRepository;
     
 
     @Override

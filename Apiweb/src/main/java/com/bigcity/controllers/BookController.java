@@ -1,22 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.bigcity.controllers;
 
 import com.bigcity.dto.BookDTO;
-import com.bigcity.dto.BookSearchDTO;
+import com.bigcity.specifications.BookCriteria;
 import com.bigcity.entity.Book;
 import com.bigcity.services.interfaces.IBookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.net.URI;
 import java.util.List;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +44,13 @@ public class BookController {
     private IBookService iBookService;
 
     @ApiOperation("Enregister un nouveau livre")
-    @PostMapping("/api/books")
+    @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookDTO.class),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
+        @ApiResponse(code = SC_CONFLICT, message = "le livre existe déjà dans la base"),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
+    @PostMapping("/api/book")
     public ResponseEntity saveBook(@Valid @RequestBody BookDTO bookDto) throws Exception {
 
         log.debug("saveBook()");
@@ -62,6 +71,12 @@ public class BookController {
     }
 
     @ApiOperation("Récupère un livre grâce à son ID à condition que celui-ci soit inscrit !")
+    @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookDTO.class),
+        @ApiResponse(code = SC_NOT_FOUND, message = "le livre n'existe pas dans la base"),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
     @GetMapping("/api/book/{id}")
     public ResponseEntity showBook(@PathVariable("id") int id) {
 
@@ -72,7 +87,12 @@ public class BookController {
     }
 
     @ApiOperation("Récupère l'ensemble des livres de la base ou récupèrer une liste de livre a partir d'un mot clé sur le titre")
-    @GetMapping("/api/books")
+    @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookDTO.class),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
+    @GetMapping("/api/books/all")
     public ResponseEntity showAllBooks(@RequestParam(defaultValue = " ") String title) throws Exception {
 
         // RequestBody DTO Search
@@ -95,6 +115,12 @@ public class BookController {
     }
 
     @ApiOperation("Mettre à jour un livre à partir de son ID présent dans la base")
+    @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookDTO.class),
+        @ApiResponse(code = SC_NOT_FOUND, message = "le livre n'existe pas dans la base"),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
     @PutMapping("/api/book/{id}")
     public ResponseEntity updateBook(@PathVariable("id") int id, @Valid
             @RequestBody BookDTO bookDTO) throws Exception {
@@ -105,18 +131,18 @@ public class BookController {
 
     }
 
-    @ApiOperation("Récupère l'ensemble des livres de la base en fonction du titre ou de l'auteur ou du numero ISBN")
-    @GetMapping("/api/books/")
-    public ResponseEntity showAllBooksByMc(@RequestBody BookSearchDTO bsdto) throws Exception {
+    @ApiOperation("Récupère l'ensemble des livres de la base en fonction du titre, de l'auteur et du numero ISBN")
+    @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookDTO.class),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
+    @PostMapping("/api/books")
+    public Page<Book> showAllBooksByCriteria(@RequestBody BookCriteria bookCriteria, int page, int size) throws Exception {
 
-        // RequestBody DTO Search
-        log.debug("showAllBooksByMc", bsdto);
+        log.debug("showAllBooksByCriteria", bookCriteria);
 
-        List<Book> books = null;
-
-        books = iBookService.getAllBooksV2(bsdto);
-
-        return ResponseEntity.ok(books);
+        return iBookService.getAllBooksByCriteria(bookCriteria, page, size);
     }
 
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.bigcity.dao;
 
 import com.bigcity.entity.Book;
@@ -17,7 +12,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  *
  * @author nicolasdotnet
  */
-public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpecificationExecutor<Booking> {
+public interface IBookingRepository extends JpaRepository<Booking, Long>, JpaSpecificationExecutor<Booking> {
 
     Optional<Booking> findByBookAndBookingUser(Book book, User bookingUser);
 

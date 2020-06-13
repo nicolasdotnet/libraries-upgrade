@@ -8,19 +8,27 @@ package com.bigcity.controllers;
 import com.bigcity.dto.BookingDTO;
 import com.bigcity.entity.Booking;
 import com.bigcity.services.interfaces.IBookingService;
+import com.bigcity.specifications.BookingCriteria;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.net.URI;
 import java.util.List;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +48,13 @@ public class BookingController {
     private IBookingService iBookingService;
 
     @ApiOperation("Enregister un nouveau prêt")
-    @PostMapping("/api/bookings")
+    @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookingDTO.class),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookingDTO.class),
+        @ApiResponse(code = SC_CONFLICT, message = "le prêt existe déjà dans la base"),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
+    @PostMapping("/api/booking")
     public ResponseEntity saveBooking(@Valid @RequestBody BookingDTO bookingDto) throws Exception {
 
         log.debug("saveBooking()");
@@ -61,6 +75,12 @@ public class BookingController {
     }
 
     @ApiOperation("Récupère un prêt grâce à son ID à condition que celui-ci soit enregistré !")
+    @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookingDTO.class),
+        @ApiResponse(code = SC_NOT_FOUND, message = "le prêt n'existe pas dans la base"),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookingDTO.class),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
     @GetMapping("/api/booking/{id}")
     public ResponseEntity showBooking(@PathVariable("id") int id) {
 
@@ -70,7 +90,81 @@ public class BookingController {
 
     }
 
+    @ApiOperation("Récupère l'ensemble des prêts dont la date est dépasée")
+    @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookingDTO.class),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
+    @GetMapping("/api/bookings/outdate")
+    public ResponseEntity showAllBookingsOutDate() throws Exception {
+
+        log.debug("showBookingsOutDate");
+
+        return ResponseEntity.ok(iBookingService.getOutdatedBookingList());
+
+    }
+
+    //TODO : comment construire les url pour action prolonger booking et action retour du livre ?
+//    @ApiOperation("Mettre à jour un prêt à partir de son ID présent dans la base")
+//    @PutMapping("/api/booking/{id}")
+//    @ApiResponses(value = {
+//        @ApiResponse(code = SC_OK, message = "ok", response = BookingDTO.class),
+//        @ApiResponse(code = SC_NOT_FOUND, message = "le prêt n'existe pas dans la base"),
+//        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookingDTO.class),
+//        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+//    })
+//    public ResponseEntity updateBooking(@PathVariable("id") int id) {
+//
+//        log.debug("updateBook() id: {}", id);
+//
+//        Booking bookingFind = null;
+//
+//        try {
+////            bookingFind = iBookingService.;
+//        } catch (Exception ex) {
+//
+//            return ResponseEntity.badRequest().body(ex.getMessage());
+//        }
+//
+//        return ResponseEntity.ok(bookingFind);
+//
+//    }
+    @ApiOperation("Prolonger un prêt à partir de son ID présent dans la base")
+    @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookingDTO.class),
+        @ApiResponse(code = SC_NOT_FOUND, message = "le prêt n'existe pas dans la base"),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookingDTO.class),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
+    @GetMapping("/api/extendbooking/{id}")
+    public ResponseEntity updateBooking(@PathVariable("id") int id) throws Exception {
+
+        log.debug("updateBooking() id: {}", id);
+
+        return ResponseEntity.ok(iBookingService.extendBooking(Long.valueOf(id)));
+
+    }
+
+    @ApiOperation("Récupère l'ensemble des livres de la base en fonction du titre ou de l'auteur ou du numero ISBN")
+    @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookingDTO.class),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookingDTO.class),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
+    @PostMapping("/api/bookings")
+    public Page<Booking> showAllBookingsByCriteria(@RequestBody BookingCriteria bookingCriteria, int page, int size) throws Exception {
+
+        log.debug("showAllBookingsByCriteria", bookingCriteria);
+
+        return iBookingService.getAllBookingsByCriteria(bookingCriteria, page, size);
+    }
+
     @ApiOperation("Récupère l'ensemble des prêts de la base ou récupèrer une liste de prêt a partir d'un mot clé sur le identifiant/email de l'usagé")
+    @ApiResponses(value = {
+        @ApiResponse(code = SC_OK, message = "ok", response = BookingDTO.class),
+        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookingDTO.class),
+        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    })
     @GetMapping("/api/bookings")
     public ResponseEntity showAllBookings(@RequestParam(defaultValue = " ") String email) throws Exception {
 
@@ -89,36 +183,6 @@ public class BookingController {
         bookings = iBookingService.getAllBookingByUser(email);
 
         return ResponseEntity.ok(bookings);
-
-    }
-
-    @ApiOperation("Récupère l'ensemble des prêts dont la date est dépasée")
-    @GetMapping("/api/bookings/outdate")
-    public ResponseEntity showAllBookingsOutDate() throws Exception {
-
-        log.debug("showBookingsOutDate");
-
-        return ResponseEntity.ok(iBookingService.getOutdatedBookingList());
-
-    }
-
-    //TODO : comment construire les url pour action prolonger booking et action retour du libre ?
-    @ApiOperation("Mettre à jour un prêt à partir de son ID présent dans la base")
-    @PutMapping("/api/booking/{id}")
-    public ResponseEntity updateBooking(@PathVariable("id") int id) {
-
-        log.debug("updateBook() id: {}", id);
-
-        Booking bookingFind = null;
-
-        try {
-//            bookingFind = iBookingService.;
-        } catch (Exception ex) {
-
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
-
-        return ResponseEntity.ok(bookingFind);
 
     }
 
