@@ -22,6 +22,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.time.LocalDate;
 import java.util.List;
 import com.bigcity.services.interfaces.IBookingService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 @EnableSwagger2
@@ -241,22 +243,6 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         System.out.println("\n get booking ID : " + r.toString() + "\n");
 
         try {
-            List<Booking> l = iBookingService.getOutdatedBookingList();
-
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
-
-            System.out.println("\n get booking ID : " + l.toString() + "\n");
-
-        } catch (Exception e) {
-
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
-            System.out.println("com.bigcity.ApiWebApplication.run() : " + e.getMessage());
-
-        }
-
-        System.out.println("equal date ? booking : " + r.getBookingEndDate() + "/ datenow : " + LocalDate.now());
-
-        try {
             List userBookings = iBookingService.getAllBookingByUser(u2.getEmail());
 
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
@@ -320,5 +306,11 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 //            
 //        }
 
+    }
+    
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        return bCryptPasswordEncoder;
     }
 }

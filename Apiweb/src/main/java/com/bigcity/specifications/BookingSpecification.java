@@ -45,9 +45,10 @@ public class BookingSpecification implements Specification<Booking> {
             predicate.getExpressions().add(criteriaBuilder.equal(root.join("User").get("email"), filter.getBookingUserEmail()));
         }
 
-//        if (filter.getBookingStatus() != null) {
-//            predicate.getExpressions().add(criteriaBuilder.equal(root.get("bookingStatus"), filter.getBookingStatus()));
-//        }
+        if (filter.getBookingStatus() != null) {
+            
+            predicate.getExpressions().add(criteriaBuilder.equal(root.get("bookingStatus"), filter.getBookingStatus()));
+        }
 
         if (filter.getBookTitle() != null) {
             predicate.getExpressions().add(criteriaBuilder.like(root.join("book").get("title"), "%" + filter.getBookTitle() + "%"));

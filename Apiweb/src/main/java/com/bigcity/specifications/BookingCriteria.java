@@ -16,7 +16,7 @@ public class BookingCriteria {
     @ApiModelProperty(notes = "booking id")
     private Long bookingId;
 
-    @ApiModelProperty(notes = "booking status")
+    @ApiModelProperty(notes = "booking status : ENCOURS, TERMINE, PROLONGE")
     private String bookingStatus;
 
     @ApiModelProperty(notes = "email booking owner")

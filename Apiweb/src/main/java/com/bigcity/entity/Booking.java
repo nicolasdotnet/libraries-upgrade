@@ -50,7 +50,7 @@ public class Booking implements Serializable {
     
     @Column(nullable = false)
     @ApiModelProperty(notes = "booking status")
-    private BookingStatus bookingStatus;
+    private String bookingStatus;
     
     @ManyToOne
     @JoinColumn(nullable = false)
@@ -115,11 +115,11 @@ public class Booking implements Serializable {
         this.counterExtension = counterExtension;
     }
 
-    public BookingStatus getBookingStatus() {
+    public String getBookingStatus() {
         return bookingStatus;
     }
 
-    public void setBookingStatus(BookingStatus bookingStatus) {
+    public void setBookingStatus(String bookingStatus) {
         this.bookingStatus = bookingStatus;
     }
 

@@ -60,8 +60,6 @@ public class BookingServiceImpl implements IBookingService {
 
         User bookingUser = iUserService.getUser(bookingUserId);
 
-        User librarian = iUserService.getUser(librarianId);
-
         Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUser(book, bookingUser);
 
         if (bookingFind.isPresent()) {
@@ -96,10 +94,9 @@ public class BookingServiceImpl implements IBookingService {
         booking.setBookingDurationDay(bookingDuration);
         booking.setBookingStartDate(new Date());
         booking.setBookingEndDate(bookingEndDate);
-        booking.setBookingStatus(BookingStatus.ENCOURS);
+        booking.setBookingStatus(BookingStatus.ENCOURS.getValue());
         booking.setBookingUser(bookingUser);
-        booking.setCounterExtension(counterExtension);
-//        booking.setLibrarian(librarian);
+        booking.setCounterExtension(counterExtension);;
 
         return bookingRepository.save(booking);
     }
@@ -118,7 +115,7 @@ public class BookingServiceImpl implements IBookingService {
         }
 
         bookingFind.get().setBackBookDate(new Date());
-        bookingFind.get().setBookingStatus(BookingStatus.TERMINE);
+        bookingFind.get().setBookingStatus(BookingStatus.TERMINE.getValue());
 
         int copiesAvailable = bookingFind.get().getBook().getCopiesAvailable();
         bookingFind.get().getBook().setCopiesAvailable(copiesAvailable++);
@@ -128,28 +125,9 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public List<Booking> getOutdatedBookingList() throws Exception {
-
-        List<Booking> bookings = bookingRepository.findAll(BookingSpecification.isExpired(java.sql.Date.valueOf(LocalDate.now())));
-
-        if (bookings.isEmpty()) {
-
-            throw new EntityNotFoundException("Il n'y a pas de réservations dépassées dans la base.");
-        }
-
-        return bookings;
-
-    }
-
-    @Override
     public Booking getBooking(Long bookingId) {
 
         return bookingRepository.findById(bookingId).get();
-    }
-
-    @Override
-    public void delete(Long bookingId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -161,7 +139,7 @@ public class BookingServiceImpl implements IBookingService {
 
         if (bookings.isEmpty()) {
 
-            throw new EntityNotFoundException("Il n'y a pas de réservations pour ce usagé dans la base.");
+            throw new EntityNotFoundException("Il n'y a pas de réservations pour cet usager dans la base.");
         }
 
         return bookings;
@@ -215,6 +193,8 @@ public class BookingServiceImpl implements IBookingService {
         System.out.println("new date : " + bookingEndDateNew);
 
         bookingFind.get().setBookingEndDate(java.sql.Date.valueOf(bookingEndDateNew));
+        
+        bookingFind.get().setBookingStatus(BookingStatus.PROLONGE.getValue());
 
         bookingFind.get().setCounterExtension("1");
 

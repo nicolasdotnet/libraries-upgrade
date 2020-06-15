@@ -72,14 +72,6 @@ public interface IUserService {
     Optional<User> getUserByEmail(String userName);
 
     /**
-     * method to remove a user
-     *
-     * @param email
-     * @throws Exception
-     */
-    void delete(String email) throws Exception;
-
-    /**
      * method to get all users by email
      *
      * @param userName

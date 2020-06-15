@@ -69,7 +69,7 @@ public class BookServiceImpl implements IBookService {
         
         URI uri = new URI(baseUrl + "/api/user/books");
         
-        ResponseEntity<Book[]> r = restTemplate.postForEntity(uri, criteria, Book[].class);
+//        ResponseEntity<Book[]> r = restTemplate.getForEntit
        
         
         

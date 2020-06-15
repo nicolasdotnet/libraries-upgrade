@@ -44,12 +44,12 @@ public class UserController {
 
     @ApiOperation("Enregister un nouveau utilisateur usagé")
     @ApiResponses(value = {
-        @ApiResponse(code = SC_OK, message = "ok", response = BookDTO.class),
-        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
-        @ApiResponse(code = SC_CONFLICT, message = "l'utilisateur existe déjà dans la base"),
-        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+        @ApiResponse(code = 201, message = "utilisateur enregistré", response = BookDTO.class),
+        @ApiResponse(code = 400, message = "erreur de saisie", response = BookDTO.class),
+        @ApiResponse(code = 409, message = "l'utilisateur existe déjà dans la base"),
+        @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
-    @PostMapping("/api/librarian/user")
+    @PostMapping("/api/librarian/users")
     public ResponseEntity<User> saveUser(@Valid @RequestBody UserDTO userDto) throws Exception {
 
         log.debug("saveUser()");
@@ -71,12 +71,11 @@ public class UserController {
 
     @ApiOperation("Récupère un utilisateur grâce à son ID à condition que celui-ci soit inscrit !")
     @ApiResponses(value = {
-        @ApiResponse(code = SC_OK, message = "ok", response = BookingDTO.class),
-        @ApiResponse(code = SC_NOT_FOUND, message = "l'utilisateur n'existe pas dans la base"),
-        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookingDTO.class),
-        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+        @ApiResponse(code = 200, message = "ok", response = BookingDTO.class),
+        @ApiResponse(code = 404, message = "l'utilisateur n'existe pas dans la base"),
+        @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
-    @GetMapping("/api/user/{id}")
+    @GetMapping("/api/user/users/{id}")
     public ResponseEntity showUser(@PathVariable("id") int id) {
 
         log.debug("showUser() id: {}", id);
@@ -87,12 +86,12 @@ public class UserController {
 
     @ApiOperation("Mettre à jour un utilisateur à partir de son ID présent dans la base")
     @ApiResponses(value = {
-        @ApiResponse(code = SC_OK, message = "ok", response = BookingDTO.class),
-        @ApiResponse(code = SC_NOT_FOUND, message = "l'utilisateur n'existe pas dans la base"),
-        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookingDTO.class),
-        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+        @ApiResponse(code = 200, message = "utilisateur a été mis à jour", response = BookingDTO.class),
+        @ApiResponse(code = 404, message = "l'utilisateur n'existe pas dans la base"),
+        @ApiResponse(code = 400, message = "erreur de saisie", response = BookingDTO.class),
+        @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
-    @PutMapping("/api/user/{id}")
+    @PutMapping("/api/user/users/{id}")
     public ResponseEntity updateUser(@PathVariable("id") int id, @Valid @RequestBody UserDTO userDTO) throws Exception {
 
         log.debug("updateUser()");
@@ -102,46 +101,23 @@ public class UserController {
     }
 
     @ApiOperation("Test spécification : Récupère l'ensemble des utilidateurs de la base en fonction de leur ancienté")
-    @GetMapping("/api/librarian/s")
+    @GetMapping("/api/librarian/users")
     public List<User> gets() {
 
         return iUserService.getAllUsers(UserSpecification.isReallyOld());
     }
 
-    @ApiOperation("Récupère l'ensemble des utilisateurs de la base en fonction du prénom, du nom, de l'email et du role")
-    @ApiResponses(value = {
-        @ApiResponse(code = SC_OK, message = "ok", response = BookDTO.class),
-        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
-        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
-    })
-    @PostMapping("/api/librarian/users")
-    public Page<User> showAllUsersByCriteria(@RequestBody UserCriteria userCriteria, int page, int size) throws Exception {
-
-        log.debug("showAllUsersByCriteria", userCriteria);
-
-        return iUserService.getAllUsersByCriteria(userCriteria, page, size);
-    }
-
-//    // delette user
-//    @DeleteMapping("/User/{id}")
-//    public String deleteUser(Principal principal, final RedirectAttributes redirectAttributes, Model model, HttpServletRequest request) {
+//    @ApiOperation("Récupère l'ensemble des utilisateurs de la base en fonction du prénom, du nom, de l'email et du role")
+//    @ApiResponses(value = {
+//        @ApiResponse(code = SC_OK, message = "ok", response = BookDTO.class),
+//        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
+//        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+//    })
+//    @GetMapping("/api/librarian/users")
+//    public Page<User> showAllUsersByCriteria(@RequestBody UserCriteria userCriteria, int page, int size) throws Exception {
 //
-//        log.debug("deleteUser()");
+//        log.debug("showAllUsersByCriteria", userCriteria);
 //
-//        try {
-//            iUserService.delete(principal.getName());
-//        } catch (Exception e) {
-//
-//            redirectAttributes.addFlashAttribute("error", e.getMessage());
-//
-//            return "redirect:/user/account";
-//        }
-//
-//        redirectAttributes.addFlashAttribute("delete", "Membre supprimé !");
-//
-//        new SecurityContextLogoutHandler().logout(request, null, null);
-//
-//        return "redirect:/confirmation";
-//
+//        return iUserService.getAllUsersByCriteria(userCriteria, page, size);
 //    }
 }

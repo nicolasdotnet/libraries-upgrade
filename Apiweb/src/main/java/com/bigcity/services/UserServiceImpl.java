@@ -5,7 +5,6 @@ import com.bigcity.entity.Role;
 import com.bigcity.entity.User;
 import com.bigcity.exceptions.EntityAlreadyExistsException;
 import com.bigcity.exceptions.EntityNotFoundException;
-import static com.bigcity.security.EncrytedPasswordUtils.encrytePassword;
 import com.bigcity.services.interfaces.IRoleService;
 import com.bigcity.services.interfaces.IUserService;
 import java.util.Date;
@@ -23,6 +22,7 @@ import com.bigcity.specifications.UserCriteria;
 import com.bigcity.specifications.UserSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 @Transactional
@@ -35,6 +35,9 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private IRoleService iRoleService;
+    
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public User registerByDefault(UserDTO userDTO) throws Exception {
@@ -137,22 +140,6 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public void delete(String email) throws Exception {
-
-        Optional<User> userFind = userRepository.findByEmail(email);
-
-        if (!userFind.isPresent()) {
-
-            log.error("Modification Impossible ! l'utilisateur  n'existe pas dans la base.");
-
-            throw new EntityNotFoundException("Utilisateur n'existe pas !");
-
-        }
-
-        userRepository.deleteById(userFind.get().getUserId());
-    }
-
-    @Override
     public List<User> getAllUserByEmail(String email) {
         return userRepository.findAllByEmail(email);
     }
@@ -170,7 +157,7 @@ public class UserServiceImpl implements IUserService {
 
         }
 
-        userFind.get().setPassword(encrytePassword(passwordNew));
+        userFind.get().setPassword(bCryptPasswordEncoder.encode(passwordNew));
 
         return userRepository.saveAndFlush(userFind.get());
 
@@ -202,7 +189,7 @@ public class UserServiceImpl implements IUserService {
         user.setFirstname(userDTO.getFirstname());
         user.setLastname(userDTO.getLastname());
         user.setEmail(userDTO.getEmail());
-        user.setPassword(encrytePassword(userDTO.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
 //        user.setRole(userDTO.getRole());
 
         return user;

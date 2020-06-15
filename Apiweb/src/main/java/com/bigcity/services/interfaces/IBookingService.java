@@ -46,14 +46,6 @@ public interface IBookingService {
     Booking extendBooking(Long bookingId) throws Exception;
 
     /**
-     * method to make a book back request
-     *
-     * @return
-     * @throws Exception
-     */
-    List<Booking> getOutdatedBookingList() throws Exception;
-
-    /**
      * method to get a booking
      *
      * @param bookingId
@@ -76,13 +68,6 @@ public interface IBookingService {
      * @throws Exception
      */
     List<Booking> getAllBookingByUser(String username) throws Exception;
-
-    /**
-     * method to remove a booking
-     *
-     * @param bookingId
-     */
-    void delete(Long bookingId);
 
     /**
      * method to get all bookings by criteria

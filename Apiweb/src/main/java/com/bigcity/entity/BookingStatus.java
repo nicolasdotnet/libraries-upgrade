@@ -9,30 +9,15 @@ package com.bigcity.entity;
  */
 public enum BookingStatus {
     
-   ENCOURS, PROLONGE, TERMINE;
+   ENCOURS("ENCOURS"), PROLONGE("PROLONGE"), TERMINE("TERMINE");
 
-    private BookingStatus() {
-    }
-   
+   private String value;
 
-    private String status;
-
-    /**
-     * Get the value of status
-     *
-     * @return the value of status
-     */
-    public String getStatus() {
-        return status;
+    private BookingStatus(String value) {
+        this.value = value;
     }
 
-    /**
-     * Set the value of status
-     *
-     * @param status new value of status
-     */
-    public void setStatus(String status) {
-        this.status = status;
+    public String getValue() {
+        return value;
     }
-    
 }

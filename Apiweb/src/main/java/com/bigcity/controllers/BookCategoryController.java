@@ -49,10 +49,10 @@ public class BookCategoryController {
     @ApiOperation("Enregister une nouvelle catégorie de livre")
     @PostMapping("/api/librarian/category")
     @ApiResponses(value = {
-        @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
-        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookCategoryDTO.class),
-        @ApiResponse(code = SC_CONFLICT, message = "la categorie existe déjà dans la base"),
-        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+        @ApiResponse(code = 201, message = "catégorie de livre créée", response = BookCategoryDTO.class),
+        @ApiResponse(code = 400, message = "erreur de saisie", response = BookCategoryDTO.class),
+        @ApiResponse(code = 409, message = "la categorie existe déjà dans la base"),
+        @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     public ResponseEntity saveBookCategory(@Valid @RequestBody BookCategoryDTO bookCategoryDto) throws Exception {
 
@@ -75,11 +75,10 @@ public class BookCategoryController {
 
     @ApiOperation("Récupère une catégorie de livre grâce à son ID à condition que celui-ci soit inscrit !")
     @GetMapping("/api/librarian/category/{id}")
-        @ApiResponses(value = {
-        @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
-        @ApiResponse(code = SC_NOT_FOUND, message = "la catégorie n'existe pas dans la base"),
-        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookCategoryDTO.class),
-        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "ok", response = BookCategoryDTO.class),
+        @ApiResponse(code = 404, message = "la catégorie n'existe pas dans la base"),
+        @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     public ResponseEntity showBookCategory(@PathVariable("id") int id) {
 
@@ -89,41 +88,41 @@ public class BookCategoryController {
 
     }
 
-    @ApiOperation("Récupère l'ensemble catégories de livre de la base ou récupèrer une liste de livre a partir d'un mot clé sur le titre")
-    @GetMapping("/api/librarian/category")
-        @ApiResponses(value = {
-        @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
-        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookCategoryDTO.class),
-        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
-    })
-    public ResponseEntity showAllBookCategories(@RequestParam(defaultValue = " ") String label) throws Exception {
-
-        // RequestBody DTO Search
-        log.debug("showAllBookCategories()", label);
-
-        List<BookCategory> bookCategories = null;
-
-        if (label.equals(" ")) {
-
-            bookCategories = iBookCategoryService.getAllBookCategories();
-
-            return ResponseEntity.ok(bookCategories);
-
-        }
-
-        BookCategory bookCategorie = iBookCategoryService.getBookCategoryByLabel(label);
-
-        return ResponseEntity.ok(bookCategorie);
-
-    }
-
+    // UN FINDALL une page de category
+//    @ApiOperation("Récupère l'ensemble catégories de livre de la base ou récupèrer une liste de livre a partir d'un mot clé sur le titre")
+//    @GetMapping("/api/librarian/category")
+//        @ApiResponses(value = {
+//        @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
+//        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookCategoryDTO.class),
+//        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+//    })
+//    public ResponseEntity showAllBookCategory(@RequestParam(defaultValue = " ") String label) throws Exception {
+//
+//        // RequestBody DTO Search
+//        log.debug("showAllBookCategories()", label);
+//
+//        List<BookCategory> bookCategories = null;
+//
+//        if (label.equals(" ")) {
+//
+//            bookCategories = iBookCategoryService.getAllBookCategories();
+//
+//            return ResponseEntity.ok(bookCategories);
+//
+//        }
+//
+//        BookCategory bookCategorie = iBookCategoryService.getBookCategoryByLabel(label);
+//
+//        return ResponseEntity.ok(bookCategorie);
+//
+//    }
     @ApiOperation("Mettre à jour la catégorie d'un livre à partir de son ID présent dans la base")
     @PutMapping("/api/librarian/category/{id}")
-        @ApiResponses(value = {
-        @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
-        @ApiResponse(code = SC_NOT_FOUND, message = "la catégorie n'existe pas dans la base"),
-        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookCategoryDTO.class),
-        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "ok", response = BookCategoryDTO.class),
+        @ApiResponse(code = 404, message = "la catégorie n'existe pas dans la base"),
+        @ApiResponse(code = 400, message = "erreur de saisie", response = BookCategoryDTO.class),
+        @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     public ResponseEntity updateBookCategory(@PathVariable("id") int id, @Valid
             @RequestBody BookCategoryDTO bookCategoryDTO) throws Exception {
