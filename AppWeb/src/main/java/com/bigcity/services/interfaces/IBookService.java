@@ -2,6 +2,7 @@ package com.bigcity.services.interfaces;
 
 import com.bigcity.beans.Book;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
@@ -14,6 +15,7 @@ public interface IBookService {
     /**
      * method to get all book
      *
+     * @param principal
      * @return the book list
      * @throws java.net.URISyntaxException
      */

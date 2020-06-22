@@ -13,11 +13,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URI;
 import java.util.List;
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import javax.validation.Valid;
 
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -69,7 +65,7 @@ public class UserController {
 
     }
 
-    @ApiOperation("Récupère un utilisateur grâce à son ID à condition que celui-ci soit inscrit !")
+    @ApiOperation("Récupère un utilisateur grâce à son ID")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "ok", response = BookingDTO.class),
         @ApiResponse(code = 404, message = "l'utilisateur n'existe pas dans la base"),
@@ -84,7 +80,7 @@ public class UserController {
 
     }
 
-    @ApiOperation("Mettre à jour un utilisateur à partir de son ID présent dans la base")
+    @ApiOperation("Mettre à jour un utilisateur à partir de son ID")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "utilisateur a été mis à jour", response = BookingDTO.class),
         @ApiResponse(code = 404, message = "l'utilisateur n'existe pas dans la base"),
@@ -100,7 +96,7 @@ public class UserController {
 
     }
 
-    @ApiOperation("Test spécification : Récupère l'ensemble des utilidateurs de la base en fonction de leur ancienté")
+    @ApiOperation("Test spécification : Récupère l'ensemble des utilisateurs de la base en fonction de leur ancienté")
     @GetMapping("/api/librarian/users")
     public List<User> gets() {
 
@@ -120,4 +116,16 @@ public class UserController {
 //
 //        return iUserService.getAllUsersByCriteria(userCriteria, page, size);
 //    }
+    @ApiOperation("Récupère un utilisateur grâce à son email")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "ok", response = BookingDTO.class),
+        @ApiResponse(code = 401, message = "une authentification est nécessaire")
+    })
+    @GetMapping("/api/user/users")
+    public ResponseEntity getUserByEmail(@RequestParam String email) {
+
+        return ResponseEntity.ok(iUserService.getAllUserByEmail(email));
+
+    }
+
 }

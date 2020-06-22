@@ -32,7 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return bCryptPasswordEncoder;
     }
 
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
@@ -43,13 +42,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.csrf().disable();
+        http.csrf().disable(); 
 
-        http.authorizeRequests().antMatchers("/api/librarian/**").hasAuthority("bibliothecaire");
-        http.authorizeRequests().antMatchers("/api/user/**").hasAnyAuthority("bibliothécaire", "usager");
+        // The pages does not require login
+        http.authorizeRequests().antMatchers("/","/signup","/login", "/img/**", "/styles.css", "/bootstrap/**", "/webjars/**").permitAll();
+        
+        http.authorizeRequests().antMatchers("/user/**").hasAuthority("usager");
+
+        // When the user has logged in as XX.
+        // But access a page that requires role YY,
+        // AccessDeniedException will be thrown.
+        http.exceptionHandling().accessDeniedPage("/403");
+
+        http.formLogin().defaultSuccessUrl("/user/account", true);
+//        http.formLogin().loginPage("/login").defaultSuccessUrl("/", true);
         
         http.authorizeRequests().anyRequest().authenticated();
-        http.httpBasic();
 
     }
 

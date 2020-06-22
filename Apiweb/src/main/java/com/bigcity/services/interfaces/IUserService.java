@@ -66,10 +66,10 @@ public interface IUserService {
     /**
      * method to get a user by his email
      *
-     * @param userName
+     * @param email
      * @return the list users from Role label
      */
-    Optional<User> getUserByEmail(String userName);
+    Optional<User> getUserByEmail(String email);
 
     /**
      * method to get all users by email

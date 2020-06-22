@@ -64,6 +64,11 @@ public class BookController {
 
             return "book/list";
         }
+        
+        if (bookFind.isEmpty()) {
+            
+            System.out.println("BOOK EST VIDE");
+        }
 
         model.addAttribute("books", bookFind);
 
