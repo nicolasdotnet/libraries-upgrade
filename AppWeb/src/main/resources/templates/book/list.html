@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="/common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="/common/header.html::header"></span>
+
+    <main>
+        <div class="container">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item active">Les livres</li>
+                </ol>
+            </nav>
+
+            <div class="row container">
+
+                <div th:insert="/book/multisearch.html::form" class="row vcenter">
+                </div>
+            </div>
+
+
+            <table class="table table-striped mt-10">
+                <tr>
+                    <th>Isbn</th>
+                    <th>Auteur</th>
+                    <th>Titre</th>
+                    <th class="hidden-xs">Catégorie</th>
+                </tr>
+
+                <tr th:each="b:${books}">
+                    <!--<tr th:each="b:${pageBooks.content}">-->
+
+                    <td><a th:href="@{/user/book/}+${b.bookId}" td th:text="${b.isbn}"/></td>
+                    <td th:text="${b.author}"></td>
+                    <td th:text="${b.title}"></td>
+                    <td th:text="${b.bookCategory.label}"></td>
+                </tr>
+            </table>
+        </div>
+    </main>
+
+    <!--<div>
+       <ul class="nav nav-pills">
+
+           <li th:each="page, status :${pagesBooks}">
+
+               <a th:href="/books?page=${status.index}&size=${size}">
+
+                   <span th:if="${status.first && status.last}"></span>
+                   <span th:unless="${status.first && status.last}"
+                         th:text="${status.count}">
+
+                   </span>
+               </a>
+           </li>
+       </ul>
+   </div>-->
+    <span th:insert="/common/footer.html"></span>
+</body>
+</html>

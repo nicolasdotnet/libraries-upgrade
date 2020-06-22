@@ -51,7 +51,7 @@ public class BookController {
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @PostMapping("/api/librarian/books")
-    public ResponseEntity saveBook(@Valid @RequestBody BookDTO bookDto) throws Exception {
+    public ResponseEntity<Book> saveBook(@Valid @RequestBody BookDTO bookDto) throws Exception {
 
         log.debug("saveBook()");
 
@@ -77,7 +77,7 @@ public class BookController {
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @GetMapping("/api/user/books/{id}")
-    public ResponseEntity showBook(@PathVariable("id") int id) {
+    public ResponseEntity<Book> showBook(@PathVariable("id") int id) {
 
         log.debug("showBook() id: {}", id);
 
@@ -92,7 +92,7 @@ public class BookController {
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @GetMapping("/api/user/books/all")
-    public ResponseEntity showAllBooks(@RequestParam(defaultValue = " ") String title) throws Exception {
+    public ResponseEntity<List<Book>> showAllBooks(@RequestParam(defaultValue = " ") String title) throws Exception {
 
         // RequestBody DTO Search
         log.debug("showAllBooks()", title);
@@ -130,18 +130,41 @@ public class BookController {
 
     }
 
-//    @ApiOperation("Récupère l'ensemble des livres de la base en fonction du titre, de l'auteur et du numero ISBN")
-//    @ApiResponses(value = {
-//        @ApiResponse(code = SC_OK, message = "ok", response = BookDTO.class),
-//        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookDTO.class),
-//        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
-//    })
-//    @GetMapping("/api/user/books")
-//    public Page<Book> showAllBooksByCriteria(@RequestBody BookCriteria bookCriteria, int page, int size) throws Exception {
+    @ApiOperation("Récupère l'ensemble des livres de la base en fonction du titre, de l'auteur et du numero ISBN")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "ok", response = BookDTO.class),
+        @ApiResponse(code = 400, message = "erreur de saisie", response = BookDTO.class),
+        @ApiResponse(code = 401, message = "une authentification est nécessaire")
+    })
+    @GetMapping(value = "/api/user/books")
+    public ResponseEntity<Page<Book>> showAllBooksByCriteria(
+            @RequestParam(name = "isbn") String isbn,
+            @RequestParam(name = "author") String author,
+            @RequestParam(name = "bookTitle") String bookTitle,
+            @RequestParam(name = "categoryName") String categoryName,
+            @RequestParam(name = "page") int page,
+            @RequestParam(name = "size") int size) throws Exception {
+
+        log.debug("showAllBooksByCriteria");
+
+        return ResponseEntity.ok().body(iBookService.getAllBooksByCriteria(isbn, author, bookTitle, categoryName, page, size));
+    }
+
+//    @RequestMapping(value = "voyage", method = RequestMethod.GET)
+//    public @ResponseBody
+//    Page<Voyage> viewAllVoyages(@RequestParam Boolean archived,
+//            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date departureDate,
+//            @RequestParam Long busId, @RequestParam Long departureHourId,
+//            @RequestParam String pathId, @RequestParam int page) {
 //
-//        log.debug("showAllBooksByCriteria", bookCriteria);
+//        Voyage voyageExample = new Voyage();
+//        voyageExample.setArchived(archived);
+//        voyageExample.setDepartureDate(departureDate);
+//        voyageExample.setBusId(busId);
+//        voyageExample.setDepartureHourId(departureHourId);
+//        voyageExample.setPathId(pathId == "" ? null : pathId);
 //
-//        return iBookService.getAllBooksByCriteria(bookCriteria, page, size);
+//        return voyageService.findAllByExample(voyageExample, new PageRequest(page, Integer.parseInt(environment.getProperty("pages.number"))));
 //    }
 
 }

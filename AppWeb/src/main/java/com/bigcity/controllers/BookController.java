@@ -28,7 +28,7 @@ public class BookController {
     private IBookService iBookService;
 
     // show book
-    @GetMapping("/book/{id}")
+    @GetMapping("/user/book/{id}")
     public String showBook(@PathVariable("id") Long id, Model model) {
 
         log.debug("showBook() id: {}", id);
@@ -51,10 +51,10 @@ public class BookController {
     }
 
     // show all book
-    @GetMapping("/book/all")
-    public String showBook(Model model) {
-        
-        Object bookFind = null;
+    @GetMapping("/user/book/all")
+    public String showBooks(Model model) {
+
+        List<Book> bookFind = null;
 
         try {
             bookFind = iBookService.getAllBooks();
@@ -72,7 +72,7 @@ public class BookController {
     }
 
     // book list page
-    @GetMapping("/books")
+    @GetMapping("/user/books")
     public String showAllBooks(Model model,
             @RequestParam(name = "page", defaultValue = "0") int p,
             @RequestParam(name = "size", defaultValue = "5") int s,
@@ -105,7 +105,7 @@ public class BookController {
     }
 
     // multisearch book
-    @GetMapping("/Book/multisearch")
+    @GetMapping("/user/book/multisearch")
     public String multisearch(Model model) {
 
         log.debug("multisearch()");

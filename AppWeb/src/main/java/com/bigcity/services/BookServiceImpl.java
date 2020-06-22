@@ -11,7 +11,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,32 +53,45 @@ public class BookServiceImpl implements IBookService {
     @Override
     public Book getBook(Long id) throws URISyntaxException {
 
-        URI uri = new URI(baseUrl + "/api/user/book/" + id);
+        URI uri = new URI(baseUrl + "/api/user/books/" + id);
 
-        ResponseEntity<Book> result = restTemplate.getForEntity(uri,Book.class);
+        ResponseEntity<Book> result = restTemplate.getForEntity(uri, Book.class);
 
         return result.getBody();
 
     }
 
     @Override
-    public Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int p, int s)throws URISyntaxException {
+    public Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int p, int s) throws URISyntaxException {
+
+        // TODO revoir url avec multi param
+        
         
         BookCriteria criteria = new BookCriteria();
-        
+
         criteria.setAuthor(author);
         criteria.setBookTitle(bookTitle);
         criteria.setCategoryName(categoryName);
         criteria.setIsbn(isbn);
+
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity requestBody = new HttpEntity<>(headers);
         
-        URI uri = new URI(baseUrl + "/api/user/books");
-        
-//        ResponseEntity<Book[]> r = restTemplate.getForEntit
-       
-        
-        
-        
-        return null;
+        System.out.println("com.b : "+requestBody.toString());
+
+        URI uri = new URI(baseUrl + "/api/user/books?page="+p+"&size="+s);
+//        Class<Page<Book>> responseType;
+
+//        ResponseEntity<Page<Book>> r = restTemplate.exchange(uri, HttpMethod.GET, entity, responseType.class);
+        ParameterizedTypeReference<RestResponsePage<Book>> responseType = new ParameterizedTypeReference<RestResponsePage<Book>>() {
+        };
+
+        ResponseEntity<RestResponsePage<Book>> result = restTemplate.exchange(uri, HttpMethod.GET, requestBody, responseType);
+
+
+        RestResponsePage<Book> searchResult = result.getBody();
+
+        return result.getBody();
 
     }
 

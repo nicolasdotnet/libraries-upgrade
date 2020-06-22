@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 import com.bigcity.services.interfaces.IBookingService;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
@@ -288,23 +289,26 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         author = "Nicolas";
         bookTitle = "";
         isbn = "";
+        bookCategoryLabel="";
+        int page = 0;
+        int size = 5;
         
         bsdto.setAuthor(author);
         bsdto.setBookTitle(bookTitle);
         bsdto.setIsbn(isbn);
 
-//        List<Book> l = iBookService.getAllBooksByCriteria(bsdto);
+        Page<Book> l = iBookService.getAllBooksByCriteria(isbn, author, bookTitle, bookCategoryLabel, page, size);
         
-//        if (l.isEmpty()) {
-//            
-//            System.out.println("PAS DE RESULTAT");
-//        }
+        if (l.isEmpty()) {
+            
+            System.out.println("PAS DE RESULTAT");
+        }
         
-//        for (Book book : l) {
-//            
-//            System.out.println("book -> : "+book.toString());
-//            
-//        }
+        for (Book book : l) {
+            
+            System.out.println("book -> : "+book.toString());
+            
+        }
 
     }
     

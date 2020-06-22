@@ -1,7 +1,6 @@
 package com.bigcity.services.interfaces;
 
 import com.bigcity.dto.BookDTO;
-import com.bigcity.specifications.BookCriteria;
 import com.bigcity.entity.Book;
 import com.bigcity.entity.BookCategory;
 import java.util.List;
@@ -66,11 +65,14 @@ public interface IBookService {
     /**
      * method to get all books by criteria
      *
-     * @param bookSearchCriteria
+     * @param isbn
+     * @param author
+     * @param bookTitle
+     * @param categoryName
      * @param page
      * @param size
      * @return the book list
      */
-    Page<Book> getAllBooksByCriteria(BookCriteria bookSearchCriteria, int page, int size);
+    Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int page, int size);
 
 }

@@ -53,7 +53,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>3.3.7-1</version>
+            <version>4.5.0</version>
         </dependency>
         
         <dependency>
@@ -67,6 +67,12 @@
             <artifactId>tomcat-embed-jasper</artifactId>
             <version>9.0.30</version>
             <scope>provided</scope>
+        </dependency>
+        
+        <!-- thymeleaf dependency -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
         <!-- JSTL & servlet dependency -->

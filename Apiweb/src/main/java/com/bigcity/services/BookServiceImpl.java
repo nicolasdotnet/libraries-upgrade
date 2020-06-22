@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.bigcity.dao.IBookRepository;
+import static java.util.Arrays.sort;
 
 /**
  *
@@ -143,18 +144,33 @@ public class BookServiceImpl implements IBookService {
 
     }
 
-    @Override
-    public Page<Book> getAllBooksByCriteria(BookCriteria bookCriteria, int page, int size) {
+//    @Override
+//    public Page<Book> getAllBooksByCriteria(BookCriteria bookCriteria, int page, int size) {
+//
+//        bookCriteria.setAuthor("".equals(bookCriteria.getAuthor()) ? null : bookCriteria.getAuthor());
+//        bookCriteria.setBookTitle("".equals(bookCriteria.getBookTitle()) ? null : bookCriteria.getBookTitle());
+//        bookCriteria.setCategoryName("".equals(bookCriteria.getCategoryName()) ? null : bookCriteria.getCategoryName());
+//        bookCriteria.setIsbn("".equals(bookCriteria.getIsbn()) ? null : bookCriteria.getIsbn());
+//
+//        BookSpecification bookSpecification = new BookSpecification(bookCriteria);
+//
+//        return bookRepository.findAll(bookSpecification, PageRequest.of(page, size));
+//
+//    }
 
-        bookCriteria.setAuthor("".equals(bookCriteria.getAuthor()) ? null : bookCriteria.getAuthor());
-        bookCriteria.setBookTitle("".equals(bookCriteria.getBookTitle()) ? null : bookCriteria.getBookTitle());
-        bookCriteria.setCategoryName("".equals(bookCriteria.getCategoryName()) ? null : bookCriteria.getCategoryName());
-        bookCriteria.setIsbn("".equals(bookCriteria.getIsbn()) ? null : bookCriteria.getIsbn());
+    @Override
+    public Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int page, int size) {
+
+        BookCriteria bookCriteria = new BookCriteria();
+
+        bookCriteria.setAuthor("".equals(author) ? null : author);
+        bookCriteria.setBookTitle("".equals(bookTitle) ? null : bookTitle);
+        bookCriteria.setCategoryName("".equals(categoryName) ? null : categoryName);
+        bookCriteria.setIsbn("".equals(isbn) ? null : isbn);
 
         BookSpecification bookSpecification = new BookSpecification(bookCriteria);
-        
-        return bookRepository.findAll(bookSpecification, PageRequest.of(page, size));
 
+        return bookRepository.findAll(bookSpecification, PageRequest.of(page, size));
     }
 
 }

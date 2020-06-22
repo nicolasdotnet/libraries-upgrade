@@ -5,6 +5,11 @@
  */
 package com.bigcity;
 
+import com.bigcity.beans.Book;
+import com.bigcity.services.interfaces.IBookService;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +18,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -21,15 +27,39 @@ import org.springframework.web.client.RestTemplate;
  */
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
-public class AppWebApplication extends SpringBootServletInitializer {
+public class AppWebApplication extends SpringBootServletInitializer implements CommandLineRunner {
+
+    @Autowired
+    private IBookService iBookService;
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder.build();
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(AppWebApplication.class, args);
     }
 
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder.build();
+    public void run(String... args) throws Exception {
+
+        String author = "Nicolas";
+        String bookTitle = "";
+        String isbn = "";
+        String categoryName = "";
+
+        int i = 0;
+
+//        Page<Book> r = iBookService.getAllBooksByCriteria(isbn, author, bookTitle, categoryName, 0, 5);
+//
+//        List<Book> l = r.getContent();
+//
+//        for (Book book : l) {
+//
+//            i = ++i;
+//
+//            System.out.println("affichage : " + i + " " + book.toString());
+//        }
     }
 
 }
