@@ -51,16 +51,29 @@ public class AppWebApplication extends SpringBootServletInitializer implements C
 
         int i = 0;
 
-//        Page<Book> r = iBookService.getAllBooksByCriteria(isbn, author, bookTitle, categoryName, 0, 5);
-//
-//        List<Book> l = r.getContent();
-//
-//        for (Book book : l) {
-//
-//            i = ++i;
-//
-//            System.out.println("affichage : " + i + " " + book.toString());
-//        }
+        Page<Book> r = iBookService.getAllBooksByCriteria(isbn, author, bookTitle, categoryName, 0, 5);
+
+        if (r.isEmpty()) {
+
+            System.out.println("com.bigcity.AppWebApplication.run()" + r.isEmpty());
+
+        } else {
+
+            System.out.println("com.bigcity.AppWebApplication.run()" + r.isEmpty());
+            
+            
+
+            List<Book> l = r.toList();
+                    
+                    //r.getContent();
+
+            for (Book book : l) {
+
+                i = ++i;
+
+                System.out.println("affichage : " + i + " " + book.toString());
+            }
+        }
     }
 
 //    @Bean
@@ -68,5 +81,4 @@ public class AppWebApplication extends SpringBootServletInitializer implements C
 //        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 //        return bCryptPasswordEncoder;
 //    }
-
 }

@@ -15,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -34,31 +36,31 @@ public class BookingController {
     private IBookingService iBookingService;
 
     // save booking with a book
-    @PostMapping("/user/book/{id}/booking")
-    public String saveBookingBook(@PathVariable("id") int id, final RedirectAttributes redirectAttributes, Principal principal) {
+    @PostMapping("/user/book/{isbn}/booking")
+    public String saveBookingBook(@PathVariable("isbn") String isbn, final RedirectAttributes redirectAttributes) {
 
-        log.debug("saveBookingBook() id: {}", id);
+        log.debug("saveBookingBook() isbn: {}", isbn);
 
         Booking bookingNew = null;
 
         try {
-            bookingNew = iBookingService.register(principal.getName(), Long.valueOf(id));
-            
+            bookingNew = iBookingService.register(isbn);
+
         } catch (Exception e) {
-            
+
             redirectAttributes.addFlashAttribute("error", e.getMessage());
 
-            return "redirect:/user/book/" + id;
+            return "redirect:/user/book/" + isbn;
         }
 
         redirectAttributes.addFlashAttribute("msg", "Réservation réalisée ");
 
-        return "redirect:/user/booking/" + Math.toIntExact(bookingNew.getBookingId());
+        return "redirect:/user/bookings/" + Math.toIntExact(bookingNew.getBookingId());
 
     }
 
     // show booking
-    @GetMapping("/user/booking/{id}")
+    @GetMapping("/user/bookings/{id}")
     public String showBooking(@PathVariable("id") Long id, Model model, Principal principal) {
 
         log.debug("showBooking() id: {}", id);
@@ -84,7 +86,7 @@ public class BookingController {
 
     // booking list page by user
     @GetMapping("/user/bookings")
-    public String showAllBookingByUser(Model model, Principal principal) {
+    public String showAllBookingsByUser(Model model, Principal principal) {
 
         log.debug("showAllBookingsbyUser()");
 
@@ -92,24 +94,28 @@ public class BookingController {
 
         try {
 
-            bookingList = iBookingService.getAllBookingByUser(principal.getName());
+            bookingList = iBookingService.getAllBookingByUser("nicolas.desdevises@yahoo.com");
 
         } catch (Exception e) {
+
+            model.addAttribute("error", e.getMessage());
+
+            return "/booking/list";
 
         }
 
         model.addAttribute("bookings", bookingList);
-        model.addAttribute("user", principal.getName());
+//        model.addAttribute("user", principal.getName());
 
         return "/booking/list";
 
     }
 
     // cancel booking
-    @PostMapping("/user/booking/{id}/cancel")
+    @DeleteMapping("/user/bookings/{id}/cancel")
     public String cancelBooking(@PathVariable("id") int id, final RedirectAttributes redirectAttributes) {
 
-        log.debug("deleteBooking() id: {}", id);
+        log.debug("cancelBooking() id: {}", id);
 
         try {
 
@@ -118,12 +124,34 @@ public class BookingController {
         } catch (Exception e) {
 
             redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/user/bookings/topos";
+            return "redirect:/user/bookings/{id}";
         }
 
         redirectAttributes.addFlashAttribute("msg", "Réservation annulée");
 
-        return "redirect:/user/bookings/topos";
+        return "redirect:/user/bookings";
+
+    }
+
+    // extend booking
+    @GetMapping("/user/bookings/{id}/extend")
+    public String extendBooking(@PathVariable("id") int id, final RedirectAttributes redirectAttributes) {
+
+        log.debug("extendBooking() id: {}", id);
+
+        try {
+
+            iBookingService.extend(Long.valueOf(id));
+
+        } catch (Exception e) {
+
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/user/bookings/{id}";
+        }
+
+        redirectAttributes.addFlashAttribute("msg", "Réservation annulée");
+
+        return "redirect:/user/bookings/{id}";
 
     }
 

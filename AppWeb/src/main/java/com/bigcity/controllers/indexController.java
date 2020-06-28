@@ -29,14 +29,24 @@ public class indexController {
     // get confirmation page
     @GetMapping("/confirmation")
     public String confirmation() {
-        return "/common/infos";
+        return "common/infos";
 
     }
 
     // get information page
     @GetMapping("/infos")
     public String information() {
-        return "/common/infos";
+        return "common/infos";
+
+    }
+
+    // show 403 page
+    @GetMapping("/403")
+    public String accessDenied() {
+
+        log.debug("accessDenied()");
+
+        return "common/403";
 
     }
 }

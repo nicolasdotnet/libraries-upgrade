@@ -2,10 +2,7 @@ package com.bigcity.controllers;
 
 import com.bigcity.beans.Book;
 import com.bigcity.services.interfaces.IBookService;
-import java.net.URISyntaxException;
-import java.security.Principal;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,15 +25,15 @@ public class BookController {
     private IBookService iBookService;
 
     // show book
-    @GetMapping("/user/book/{id}")
-    public String showBook(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/user/books/{isbn}")
+    public String showBook(@PathVariable("isbn") String isbn, Model model) {
 
-        log.debug("showBook() id: {}", id);
+        log.debug("showBook() isbn: {}", isbn);
 
         Book bookFind = null;
 
         try {
-            bookFind = iBookService.getBook(id);
+            bookFind = iBookService.getBookByIsbn(isbn);
         } catch (Exception e) {
 
             model.addAttribute("error", e.getMessage());
@@ -64,11 +61,6 @@ public class BookController {
 
             return "book/list";
         }
-        
-        if (bookFind.isEmpty()) {
-            
-            System.out.println("BOOK EST VIDE");
-        }
 
         model.addAttribute("books", bookFind);
 
@@ -79,25 +71,28 @@ public class BookController {
     // book list page
     @GetMapping("/user/books")
     public String showAllBooks(Model model,
+            @RequestParam(name = "isbn", defaultValue = "") String isbn,
+            @RequestParam(name = "author", defaultValue = "") String author,
+            @RequestParam(name = "title", defaultValue = "") String bookTitle,
+            @RequestParam(name = "categoryName", defaultValue = "") String categoryName,
             @RequestParam(name = "page", defaultValue = "0") int p,
-            @RequestParam(name = "size", defaultValue = "5") int s,
-            @RequestParam("isbn") String isbn,
-            @RequestParam("author") String author,
-            @RequestParam("bookTitle") String bookTitle,
-            @RequestParam("categoryName") String categoryName) {
+            @RequestParam(name = "size", defaultValue = "5") int s) {
 
         log.debug("showAllBooks()");
 
         Page<Book> bookPage = null;
+        
         try {
             bookPage = iBookService.getAllBooksByCriteria(isbn, author, bookTitle, categoryName, p, s);
-        } catch (URISyntaxException e) {
+        
+        } catch (Exception e) {
 
             model.addAttribute("error", e.getMessage());
 
         }
 
         int numberPage = bookPage.getTotalPages();
+        
         List<Book> books = bookPage.getContent();
         int[] pages = new int[numberPage];
 

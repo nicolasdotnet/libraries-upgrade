@@ -1,6 +1,7 @@
 package com.bigcity.services.interfaces;
 
 import com.bigcity.dto.UserDTO;
+import com.bigcity.dto.LoginDTO;
 import com.bigcity.entity.Book;
 import com.bigcity.entity.Role;
 import com.bigcity.entity.User;
@@ -38,6 +39,15 @@ public interface IUserService {
      * @throws Exception
      */
     User edit(UserDTO userDTO) throws Exception;
+
+    /**
+     * method to login a user
+     *
+     * @param loginDTO
+     * @return user object
+     * @throws Exception
+     */
+    User login(LoginDTO loginDTO) throws Exception;
 
     /**
      * method to get a profile for a user
@@ -99,12 +109,12 @@ public interface IUserService {
 
     /**
      * method to get all users by criteria
-     * 
+     *
      * @param userCriteria
      * @param page
      * @param size
      * @return
      */
-    public Page<User> getAllUsersByCriteria(UserCriteria userCriteria, int page, int size);
+    Page<User> getAllUsersByCriteria(UserCriteria userCriteria, int page, int size);
 
 }

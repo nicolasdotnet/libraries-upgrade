@@ -110,6 +110,12 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
+    public Optional<Book> getBookByIsbn(String isbn) {
+
+        return bookRepository.findByIsbn(isbn);
+    }
+
+    @Override
     public List<Book> getBookByTitle(String title) {
 
         return bookRepository.findAllByTitleContainingIgnoreCase(title);
@@ -157,14 +163,13 @@ public class BookServiceImpl implements IBookService {
 //        return bookRepository.findAll(bookSpecification, PageRequest.of(page, size));
 //
 //    }
-
     @Override
     public Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int page, int size) {
 
         BookCriteria bookCriteria = new BookCriteria();
 
         bookCriteria.setAuthor("".equals(author) ? null : author);
-        bookCriteria.setBookTitle("".equals(bookTitle) ? null : bookTitle);
+        bookCriteria.setTitle("".equals(bookTitle) ? null : bookTitle);
         bookCriteria.setCategoryName("".equals(categoryName) ? null : categoryName);
         bookCriteria.setIsbn("".equals(isbn) ? null : isbn);
 

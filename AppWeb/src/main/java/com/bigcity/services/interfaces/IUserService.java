@@ -7,7 +7,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.springframework.web.multipart.MultipartFile;
 
 public interface IUserService {
@@ -100,7 +99,7 @@ public interface IUserService {
      * @return the list users from Role label
      * @throws java.net.URISyntaxException
      */
-    User getUserByEmail(String email)throws URISyntaxException;
+    User getUserByEmail(String email) throws Exception;
 
     /**
      * method to remove a user
@@ -108,7 +107,7 @@ public interface IUserService {
      * @param username
      * @throws Exception
      */
-    public void delete(String username) throws Exception;
+    void delete(String username) throws Exception;
 
     /**
      * method to desactivate a user
@@ -116,7 +115,7 @@ public interface IUserService {
      * @param userId
      * @throws java.lang.Exception
      */
-    public void desactivate(Long userId) throws Exception;
+    void desactivate(Long userId) throws Exception;
 
     /**
      * method to get all users by username
@@ -124,7 +123,7 @@ public interface IUserService {
      * @param userName
      * @return the list users with the username
      */
-    public List<User> getAllUserByUsername(String userName);
+    List<User> getAllUserByUsername(String userName);
 
     /**
      * method to update password
@@ -134,6 +133,5 @@ public interface IUserService {
      * @return user objet update
      * @throws Exception
      */
-    public User updatePassword(String passwordNew, String username) throws Exception;
-
+    User updatePassword(String passwordNew, String username) throws Exception;
 }

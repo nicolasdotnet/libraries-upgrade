@@ -1,5 +1,6 @@
 package com.bigcity.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Collection;
@@ -55,6 +56,7 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "bookingUser", fetch = FetchType.LAZY)
     @ApiModelProperty(notes = "booking list from user")
+    @JsonIgnore
     private Collection<Booking> bookings;
 
     public User() {

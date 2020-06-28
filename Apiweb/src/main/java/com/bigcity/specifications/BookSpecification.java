@@ -40,8 +40,11 @@ public class BookSpecification implements Specification<Book> {
             predicate.getExpressions().add(criteriaBuilder.like(root.get("author"), param));
         }
 
-        if (filter.getBookTitle() != null) {
-            predicate.getExpressions().add(criteriaBuilder.like(root.get("title"), "%" + filter.getBookTitle() + "%"));
+        if (filter.getTitle() != null) {
+            
+            String param = "%" + filter.getTitle() + "%";
+            
+            predicate.getExpressions().add(criteriaBuilder.like(root.get("title"), param));
         }
 
         if (filter.getIsbn() != null) {

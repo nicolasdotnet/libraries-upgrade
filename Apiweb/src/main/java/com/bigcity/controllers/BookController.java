@@ -70,18 +70,18 @@ public class BookController {
 
     }
 
-    @ApiOperation("Récupère un livre grâce à son ID")
+    @ApiOperation("Récupère un livre grâce à son ISBN")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "ok", response = BookDTO.class),
         @ApiResponse(code = 404, message = "le livre n'existe pas dans la base"),
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
-    @GetMapping("/api/user/books/{id}")
-    public ResponseEntity<Book> showBook(@PathVariable("id") int id) {
+    @GetMapping("/api/user/books/{isbn}")
+    public ResponseEntity<Book> showBook(@PathVariable("isbn") String isbn) {
 
-        log.debug("showBook() id: {}", id);
+        log.debug("showBook() isbn: {}", isbn);
 
-        return ResponseEntity.ok(iBookService.getBook(Long.valueOf(id)));
+        return ResponseEntity.ok(iBookService.getBookByIsbn(isbn).get());
 
     }
 

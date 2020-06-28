@@ -19,7 +19,7 @@ public interface IBookService {
      * @return the book list
      * @throws java.net.URISyntaxException
      */
-    List<Book> getAllBooks() throws URISyntaxException;
+    List<Book> getAllBooks() throws Exception;
 
     /**
      * method to get a book
@@ -28,7 +28,16 @@ public interface IBookService {
      * @return book object find
      * @throws java.net.URISyntaxException
      */
-    Book getBook(Long id) throws URISyntaxException;
+    Book getBook(Long id) throws Exception;
+
+    /**
+     * method to get a book by isbn
+     *
+     * @param isbn
+     * @return book object find
+     * @throws java.net.URISyntaxException
+     */
+    Book getBookByIsbn(String isbn) throws Exception;
 
     /**
      * method to get all books by criteria
@@ -41,6 +50,6 @@ public interface IBookService {
      * @param s size page
      * @return the book pages
      */
-    Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int p, int s) throws URISyntaxException;
+    Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int p, int s) throws Exception;
 
 }

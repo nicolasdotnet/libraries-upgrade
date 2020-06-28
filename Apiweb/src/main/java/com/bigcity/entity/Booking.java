@@ -54,13 +54,11 @@ public class Booking implements Serializable {
     
     @ManyToOne
     @JoinColumn(nullable = false)
-    @JsonIgnore
     @ApiModelProperty(notes = "booking owner")
     private User bookingUser;
     
     @ManyToOne
     @JoinColumn(nullable = false)
-    @JsonIgnore
     @ApiModelProperty(notes = "reserved book")
     private Book book;
 

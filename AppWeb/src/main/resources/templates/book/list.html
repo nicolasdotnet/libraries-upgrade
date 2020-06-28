@@ -18,7 +18,9 @@
 
             <div class="row container">
 
-                <div th:insert="/book/multisearch.html::form" class="row vcenter">
+                <span th:text="${error}"></span>
+
+                <div th:insert="/book/multisearch.html::form">
                 </div>
             </div>
 
@@ -32,33 +34,32 @@
                 </tr>
 
                 <tr th:each="b:${books}">
-                    <!--<tr th:each="b:${pageBooks.content}">-->
 
-                    <td><a th:href="@{/user/book/}+${b.bookId}" td th:text="${b.isbn}"/></td>
+                    <td><a th:href="@{/user/books/}+${b.isbn}" td th:text="${b.isbn}"/></td>
                     <td th:text="${b.author}"></td>
                     <td th:text="${b.title}"></td>
                     <td th:text="${b.bookCategory.label}"></td>
                 </tr>
             </table>
         </div>
+
+        <div class="container">
+            <ul class="nav nav-pills">
+
+                <li th:each="page, status :${books}">
+
+                    <a th:href="@{/user/books?page=}+${status.index}+@{&size=}+${size}">
+
+                       <span th:if="${status.first == status.last}"></span>
+                        <span th:unless="${status.first == status.last}"
+                              th:text="${status.index}">
+
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </main>
-
-    <!--<div>
-       <ul class="nav nav-pills">
-
-           <li th:each="page, status :${pagesBooks}">
-
-               <a th:href="/books?page=${status.index}&size=${size}">
-
-                   <span th:if="${status.first && status.last}"></span>
-                   <span th:unless="${status.first && status.last}"
-                         th:text="${status.count}">
-
-                   </span>
-               </a>
-           </li>
-       </ul>
-   </div>-->
     <span th:insert="/common/footer.html"></span>
 </body>
 </html>

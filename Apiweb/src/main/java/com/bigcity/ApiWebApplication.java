@@ -2,6 +2,8 @@ package com.bigcity;
 
 import com.bigcity.dto.BookCategoryDTO;
 import com.bigcity.dto.BookDTO;
+import com.bigcity.dto.BookingDTO;
+import com.bigcity.dto.LoginDTO;
 import com.bigcity.specifications.BookCriteria;
 import com.bigcity.dto.UserDTO;
 import com.bigcity.entity.Book;
@@ -123,25 +125,35 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         System.out.println("\n register bookCategory : " + bc.toString() + "\n");
 
         // register one book
-        String isbn = "561352";
-        String author = "Rowston Thebest";
-        String bookTitle = "Java pour les nuls";
-        int copiesAvailable = 5;
-        String bcLabel = "Polar";
+        int x = 0;
+        
+        Book b;
 
-        BookDTO bookDTO = new BookDTO();
+        do {
 
-        bookDTO.setIsbn(isbn);
-        bookDTO.setAuthor(author);
-        bookDTO.setBookTitle(bookTitle);
-        bookDTO.setCopiesAvailable(copiesAvailable);
-        bookDTO.setBookCategoryLabel(bcLabel);
+            String isbn = "561352"+x;
+            String author = "Rowston Thebest";
+            String bookTitle = "Java pour les nuls V"+x;
+            int copiesAvailable = 5;
+            String bcLabel = "Polar";
 
-        Book b = iBookService.register(bookDTO);
+            BookDTO bookDTO = new BookDTO();
 
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+            bookDTO.setIsbn(isbn);
+            bookDTO.setAuthor(author);
+            bookDTO.setBookTitle(bookTitle);
+            bookDTO.setCopiesAvailable(copiesAvailable);
+            bookDTO.setBookCategoryLabel(bcLabel);
 
-        System.out.println("\n register book : " + b.toString() + "\n");
+            b = iBookService.register(bookDTO);
+
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+
+            System.out.println("\n register book : " + b.toString() + "\n");
+            
+            x++;
+
+        } while (x < 5);
 
         // get book
         Book getbook = null;
@@ -159,10 +171,10 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         }
 
         // register seconde book => error
-        isbn = "561352";
-        author = "Rowston Thebest";
-        bookTitle = "Java pour les nuls";
-        copiesAvailable = 5;
+        String isbn = "561352";
+        String author = "Rowston Thebest";
+        String bookTitle = "Java pour les nuls";
+        int copiesAvailable = 5;
 
         BookDTO bookDTO2 = new BookDTO();
         Book b2;
@@ -188,7 +200,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         author = "Nicolas Junior";
         bookTitle = "Ma vie de dev";
         copiesAvailable = 5;
-        bcLabel = "Polar";
+        String bcLabel = "Polar";
 
         BookDTO bookDTO3 = new BookDTO();
         Book b3 = null;
@@ -215,14 +227,20 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         System.out.println("\n register book 3 : " + b3.toString() + "\n");
 
         // register one booking
-        Long librarianId = u.getUserId();
-        Long bookingUserId = u2.getUserId();
-        Long bookId = b.getBookId();
+        String librarianEmail = u.getEmail();
+        String bookingEmail = u2.getEmail();
+        String bookIsbn = b.getIsbn();
+
+        BookingDTO bookingDTO = new BookingDTO();
+
+        bookingDTO.setLibrarianEmail(librarianEmail);
+        bookingDTO.setBookingUserEmail(bookingEmail);
+        bookingDTO.setBookIsbn(bookIsbn);
 
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
         System.out.println(">>>>>>>>>>>>>>>Book avant booking -> : " + b.getCopiesAvailable());
 
-        Booking r = iBookingService.register(librarianId, bookingUserId, bookId);
+        Booking r = iBookingService.register(bookingDTO);
 
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
 
@@ -230,7 +248,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         // register second booking => error
         try {
-            iBookingService.register(librarianId, bookingUserId, bookId);
+            iBookingService.register(bookingDTO);
 
         } catch (Exception e) {
 
@@ -281,37 +299,54 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         System.out.println("PRET -> extension :" + r.getCounterExtension() + " date de fin : " + r.getBookingEndDate());
 
-        System.out.println("Book après booking -> : " + iBookService.getBook(bookId).getCopiesAvailable());
+        System.out.println("Book après booking -> : " + iBookService.getBook(b.getBookId()).getCopiesAvailable());
 
         // book search by MC
         BookCriteria bsdto = new BookCriteria();
-        
+
         author = "Nicolas";
         bookTitle = "";
         isbn = "";
-        bookCategoryLabel="";
+        bookCategoryLabel = "";
         int page = 0;
         int size = 5;
-        
+
         bsdto.setAuthor(author);
-        bsdto.setBookTitle(bookTitle);
+        bsdto.setTitle(bookTitle);
         bsdto.setIsbn(isbn);
 
         Page<Book> l = iBookService.getAllBooksByCriteria(isbn, author, bookTitle, bookCategoryLabel, page, size);
-        
+
         if (l.isEmpty()) {
-            
+
             System.out.println("PAS DE RESULTAT");
         }
-        
+
         for (Book book : l) {
-            
-            System.out.println("book -> : "+book.toString());
-            
+
+            System.out.println("book -> : " + book.toString());
+
+        }
+
+        LoginDTO loginDTO = new LoginDTO();
+
+        loginDTO.setEmail("nicolas.desdevises@yahoo.com");
+        loginDTO.setPassword("123");
+
+        User z = iUserService.login(loginDTO);
+
+        if (z == null) {
+
+            System.out.println(">>>>>>>>>>>>>>>>>< LOGIN IS NOT OK !");
+
+        } else {
+
+            System.out.println(">>>>>>>>>>>>>>>>>< LOGIN IS OK !");
+
         }
 
     }
-    
+
 //    @Bean
 //    public BCryptPasswordEncoder passwordEncoder() {
 //        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();

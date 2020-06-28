@@ -17,30 +17,20 @@ public interface IBookingService {
     /**
      * method to register a booking
      * 
-     * @param username
-     * @param topoId
+     * @param isbn
      * @return
      * @throws Exception
      */
-    Booking register (String username, Long topoId)throws Exception;
+    Booking register (String isbn)throws Exception;
     
     /**
-     * method to validate a booking
+     * method to extend a booking
      * 
      * @param bookingId
      * @return
      * @throws Exception
      */
-    Booking validate(Long bookingId) throws Exception;
-    
-    /**
-     * method to make available a booking
-     * 
-     * @param bookingId
-     * @return
-     * @throws Exception
-     */
-    Booking makeAvailable (Long bookingId) throws Exception;
+    Booking extend(Long bookingId) throws Exception;
     
     /**
      * method to get a booking
@@ -54,11 +44,11 @@ public interface IBookingService {
     /**
      * method to get all bookings by ask user
      * 
-     * @param username
+     * @param email
      * @return
      * @throws Exception
      */
-    public List<Booking> getAllBookingByUser(String username) throws Exception;
+    List<Booking> getAllBookingByUser(String email) throws Exception;
     
     /**
      * method to remove a booking

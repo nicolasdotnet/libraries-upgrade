@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="/common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="/common/header.html::header"></span>
+
+    <main>
+        <div class="container">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item active">Infos</li>
+                </ol>
+            </nav>
+
+            <div class="row container">
+
+                <span th:text="${error}"></span>
+                
+                
+             <!-- <c:choose>
+                    <c:when test="${!empty create}">
+                        <spring:url value="/user/${user.userId}" var="userUrl" />
+                        <p>${create}</p>
+                        <p>Vous pouvez vous connecter à votre compte. Cliquez <a href="${userUrl}">ici</a></p>
+                    </c:when>
+                    <c:when test="${!empty delete}">
+                        <spring:url value="/user/${user.userId}" var="userUrl" />
+                        <p>${delete}</p>
+                        <p>Vous ne pouvez plus vous connecter à votre compte.</p>
+                        <p>Pour créer un nouveau compte, cliquez <a href="/signup">ici</a></p>
+                    </c:when>
+                    <c:when test="${!empty error}">
+                        <p>${error}</p>
+                    </c:when>
+                    <c:when test="${!empty msg}">
+                        <p>${msg}</p>
+                    </c:when>
+                </c:choose> -->
+                
+                
+                
+            </div>
+    </main>
+    <span th:insert="/common/footer.html"></span>
+</body>
+</html>

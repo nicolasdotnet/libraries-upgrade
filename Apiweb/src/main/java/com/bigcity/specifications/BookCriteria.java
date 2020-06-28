@@ -20,7 +20,7 @@ public class BookCriteria {
     private String author;
 
     @ApiModelProperty(notes = "book title")
-    private String bookTitle;
+    private String title;
 
     @ApiModelProperty(notes = "book category")
     private String categoryName;
@@ -44,12 +44,12 @@ public class BookCriteria {
         this.author = author;
     }
 
-    public String getBookTitle() {
-        return bookTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setBookTitle(String bookTitle) {
-        this.bookTitle = bookTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getCategoryName() {

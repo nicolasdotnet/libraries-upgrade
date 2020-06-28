@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="/common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="/common/header.html::header"></span>
+
+    <main>
+        <div class="container">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item active">Mes prêts</li>
+                </ol>
+            </nav>
+
+            <div class="row container">
+                
+                <span th:text="${error}"></span>
+
+            </div>
+
+
+            <table class="table table-striped mt-10">
+                <tr>
+                    <th>N° du prêt</th>
+                    <th>Livre</th>
+                </tr>
+
+                <tr th:each="b:${bookings}">
+                    <!--<tr th:each="b:${pageBooks.content}">-->
+
+                    <td><a th:href="@{/user/bookings/}+${b.bookingId}" td th:text="${b.bookingId}"/></td>
+                    <td th:text="${b.book.title}"></td>
+                </tr>
+            </table>
+        </div>
+    </main>
+
+    <!--<div>
+       <ul class="nav nav-pills">
+
+           <li th:each="page, status :${pagesBooks}">
+
+               <a th:href="/books?page=${status.index}&size=${size}">
+
+                   <span th:if="${status.first && status.last}"></span>
+                   <span th:unless="${status.first && status.last}"
+                         th:text="${status.count}">
+
+                   </span>
+               </a>
+           </li>
+       </ul>
+   </div>-->
+    <span th:insert="/common/footer.html"></span>
+</body>
+</html>

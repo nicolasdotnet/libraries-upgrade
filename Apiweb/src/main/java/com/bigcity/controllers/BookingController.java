@@ -53,15 +53,15 @@ public class BookingController {
         @ApiResponse(code = 201, message = "prêt enregistré", response = BookingDTO.class),
         @ApiResponse(code = 400, message = "erreur de saisie", response = BookingDTO.class),
         @ApiResponse(code = 409, message = "le prêt existe déjà dans la base"),
-        @ApiResponse(code = 401, message = "une authentification est nécessaire")
+        @ApiResponse(code = 401, message = "une authentification est nécessaire"),
+        @ApiResponse(code = 500, message = "erreur dans la requéte")
     })
     @PostMapping("/api/user/bookings")
     public ResponseEntity saveBooking(@Valid @RequestBody BookingDTO bookingDto) throws Exception {
 
         log.debug("saveBooking()");
-
-        // TODO ajouter securité
-        Booking bookingSave = iBookingService.register(bookingDto.getLibrarianId(), bookingDto.getBookingUserId(), bookingDto.getBookId());
+        
+        Booking bookingSave = iBookingService.register(bookingDto);
 
 //code 201, ajouter l'URI 
         URI location = ServletUriComponentsBuilder
@@ -100,7 +100,7 @@ public class BookingController {
     @PutMapping("/api/user/bookings/{id}")
     public ResponseEntity extendBooking(@PathVariable("id") int id) throws Exception {
 
-        log.debug("updateBooking() id: {}", id);
+        log.debug("extendBooking() id: {}", id);
 
         return ResponseEntity.ok(iBookingService.extendBooking(Long.valueOf(id)));
 
@@ -119,8 +119,6 @@ public class BookingController {
 //
 //        return iBookingService.getAllBookingsByCriteria(bookingCriteria, page, size);
 //    }
-    
-    
     @ApiOperation("Récupère l'ensemble des prêts de la base ou récupèrer une liste de prêt a partir d'un mot clé sur le identifiant/email de l'usagé")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "ok", response = BookingDTO.class),
@@ -130,7 +128,7 @@ public class BookingController {
     @GetMapping("/api/user/bookings")
     public ResponseEntity showAllBookings(@RequestParam(defaultValue = " ") String email) throws Exception {
 
-        log.debug("showBookings()", email);
+        log.debug("showAllBookings()", email);
 
         List<Booking> bookings = null;
 

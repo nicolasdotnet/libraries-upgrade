@@ -10,13 +10,9 @@ import com.bigcity.beans.User;
 import com.bigcity.services.interfaces.IUserService;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -25,6 +21,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,11 +38,11 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     RestTemplate restTemplate;
 
-    @Value("${apiServerPort}")
+    @Value("${api.server.port}")
     private String serverPort;
 
     private String baseUrl = "http://localhost:" + "8080";
-    
+
     private HttpHeaders headers = new HttpHeaders();
 
     @Override
@@ -109,25 +106,27 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User getUserByEmail(String email) throws URISyntaxException {
-        
-        
-        
-        URI uri = new URI(baseUrl + "/api/user/users?email="+email);
+    public User getUserByEmail(String email) throws Exception {
+
+        URI uri = new URI(baseUrl + "/api/user/users?email=" + email);
 
 // add basic authentication header
         headers.setBasicAuth("nicolas.desdevises@yahoo.com", "123");
 
         HttpEntity request = new HttpEntity(headers);
 
-        ResponseEntity<User> result = restTemplate.exchange(uri, HttpMethod.GET, request, User.class);
-        
-        if (result.hasBody()) {
-            
-            System.out.println("com.bigcity.services.UserServiceImpl.getUserByEmail()"+result.getStatusCode());
-            
+        ResponseEntity<User> result;
+
+        try {
+
+            result = restTemplate.exchange(uri, HttpMethod.GET, request, User.class);
+
+        } catch (RestClientException e) {
+
+            throw new Exception(e.getMessage());
+
         }
-        
+
         return result.getBody();
 
     }

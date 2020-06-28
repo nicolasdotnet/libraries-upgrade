@@ -4,6 +4,7 @@ import com.bigcity.dto.BookDTO;
 import com.bigcity.entity.Book;
 import com.bigcity.entity.BookCategory;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 
 /**
@@ -44,6 +45,14 @@ public interface IBookService {
      * @return book object find
      */
     Book getBook(Long id);
+
+    /**
+     * method to get a book by isbn
+     *
+     * @param isbn
+     * @return optional book object find
+     */
+    Optional<Book> getBookByIsbn(String isbn);
 
     /**
      * method to get a book list by title

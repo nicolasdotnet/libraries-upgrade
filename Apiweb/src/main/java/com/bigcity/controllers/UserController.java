@@ -2,6 +2,7 @@ package com.bigcity.controllers;
 
 import com.bigcity.dto.BookDTO;
 import com.bigcity.dto.BookingDTO;
+import com.bigcity.dto.LoginDTO;
 import com.bigcity.dto.UserDTO;
 import com.bigcity.entity.User;
 import com.bigcity.services.interfaces.IUserService;
@@ -13,6 +14,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URI;
 import java.util.List;
+import java.util.logging.Level;
 import javax.validation.Valid;
 
 import org.apache.logging.log4j.LogManager;
@@ -128,4 +130,16 @@ public class UserController {
 
     }
 
+    @ApiOperation("S'identifier auprès du ")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "ok", response = LoginDTO.class),
+        @ApiResponse(code = 400, message = "erreur de saisie", response = LoginDTO.class)})
+    @PostMapping("/api/user/login")
+    public ResponseEntity login(@Valid @RequestBody LoginDTO loginDTO) throws Exception {
+
+        log.debug("login()");
+
+        return ResponseEntity.ok(iUserService.login(loginDTO));
+
+    }
 }

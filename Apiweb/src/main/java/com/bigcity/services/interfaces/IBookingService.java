@@ -5,6 +5,7 @@
  */
 package com.bigcity.services.interfaces;
 
+import com.bigcity.dto.BookingDTO;
 import com.bigcity.entity.Booking;
 import com.bigcity.specifications.BookingCriteria;
 import java.util.List;
@@ -25,7 +26,7 @@ public interface IBookingService {
      * @return
      * @throws Exception
      */
-    Booking register(Long librarianId, Long bookingUserId, Long bookId) throws Exception;
+    Booking register(BookingDTO bookingDto) throws Exception;
 
     /**
      * method to stop a booking when book is back
@@ -63,11 +64,11 @@ public interface IBookingService {
     /**
      * method to get all bookings by ask user
      *
-     * @param username
+     * @param email
      * @return
      * @throws Exception
      */
-    List<Booking> getAllBookingByUser(String username) throws Exception;
+    List<Booking> getAllBookingByUser(String email) throws Exception;
 
     /**
      * method to get all bookings by criteria

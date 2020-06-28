@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import com.bigcity.dao.IBookingRepository;
+import com.bigcity.dto.BookingDTO;
 
 /**
  *
@@ -54,13 +55,13 @@ public class BookingServiceImpl implements IBookingService {
     private String counterExtension;
 
     @Override
-    public Booking register(Long librarianId, Long bookingUserId, Long bookId) throws Exception {
+    public Booking register(BookingDTO bookingDto) throws Exception {
 
-        Book book = iBookService.getBook(bookId);
+        Optional<Book> book = iBookService.getBookByIsbn(bookingDto.getBookIsbn());
 
-        User bookingUser = iUserService.getUser(bookingUserId);
+        Optional<User> bookingUser = iUserService.getUserByEmail(bookingDto.getBookingUserEmail());
 
-        Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUser(book, bookingUser);
+        Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUser(book.get(), bookingUser.get());
 
         if (bookingFind.isPresent()) {
 
@@ -70,7 +71,7 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
-        int copiesAvailable = book.getCopiesAvailable();
+        int copiesAvailable = book.get().getCopiesAvailable();
 
         if (copiesAvailable == 0) {
 
@@ -81,7 +82,7 @@ public class BookingServiceImpl implements IBookingService {
         }
 
         // TODO POURQUOI CA MARCHE ?
-        book.setCopiesAvailable(--copiesAvailable);
+        book.get().setCopiesAvailable(--copiesAvailable);
 
         // save en base => transaction
         // TODO : calcul en fonction du param week + TimeZone ?
@@ -90,13 +91,13 @@ public class BookingServiceImpl implements IBookingService {
 
         Booking booking = new Booking();
 
-        booking.setBook(book);
+        booking.setBook(book.get());
         booking.setBookingDurationDay(bookingDuration);
         booking.setBookingStartDate(new Date());
         booking.setBookingEndDate(bookingEndDate);
         booking.setBookingStatus(BookingStatus.ENCOURS.getValue());
-        booking.setBookingUser(bookingUser);
-        booking.setCounterExtension(counterExtension);;
+        booking.setBookingUser(bookingUser.get());
+        booking.setCounterExtension("0");
 
         return bookingRepository.save(booking);
     }
@@ -165,7 +166,7 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
-        if (!bookingFind.get().getCounterExtension().equals("0")) {
+        if (bookingFind.get().getCounterExtension().equals(counterExtension)) {
 
             log.error("Une prolongation du prêt a déjà été réalisée !");
 

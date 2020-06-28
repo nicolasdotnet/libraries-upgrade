@@ -18,11 +18,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.bigcity.dao.IUserRepository;
+import com.bigcity.dto.LoginDTO;
 import com.bigcity.specifications.UserCriteria;
 import com.bigcity.specifications.UserSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 @Transactional
@@ -35,9 +37,12 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private IRoleService iRoleService;
-    
+
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User registerByDefault(UserDTO userDTO) throws Exception {
@@ -193,6 +198,33 @@ public class UserServiceImpl implements IUserService {
 //        user.setRole(userDTO.getRole());
 
         return user;
+
+    }
+
+    @Override
+    public User login(LoginDTO loginDTO) throws Exception {
+
+        Optional<User> userFind = userRepository.findByEmail(loginDTO.getEmail());
+
+        if (!userFind.isPresent()) {
+
+            log.error("Connection impossible ! l'utilisateur n'existe pas dans la base.");
+
+            throw new EntityNotFoundException("Utilisateur n'existe pas !");
+
+        }
+        
+        boolean result = passwordEncoder.matches(loginDTO.getPassword(), userFind.get().getPassword());
+
+        if (!result) {
+
+            log.error("MOT DE PASSE ! ! l'utilisateur n'existe pas dans la base.");
+
+            throw new EntityNotFoundException("MOT DE PASSE !");
+
+        }
+
+        return userFind.get();
 
     }
 

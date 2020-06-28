@@ -12,21 +12,21 @@
             <nav aria-label="breadcrumb" class="b">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
-                    <li class="breadcrumb-item"><a href="/user/book/all">Les livres</a></li>
+                    <li class="breadcrumb-item"><a href="/user/bookings">Mes prêts</a></li>
                 </ol>
             </nav>
 
             <span th:text="${error}"></span>
 
-            <h2 th:text=${bookFind.title}></h2>
+            <h2 th:text=${bookingFind.bookingId}></h2>
 
             <div class="row container">
                 <div  class="col-sm-8 d-none d-sm-block"><h3>Informations</h3></div>
 
                 <div class="col-sm-4 d-none d-sm-block">
-                    <form th:action="@{/user/book/}+${bookFind.isbn}+@{/booking}" method="POST">
-                        <button class="btn btn-primary float-right"
-                                onclick="return confirm('Êtes-vous sûr ?')">Faire un prêt</button>
+                    <form th:action="@{/user/bookings/}+${bookingFind.bookingId}+@{/extend}">
+                        <button class="btn btn-primary x float-right"
+                                onclick="return confirm('Êtes-vous sûr ?')">Prolonger le prêt</button>
                     </form>
                 </div>
             </div>
@@ -34,30 +34,22 @@
             <div class="panel panel-default t">
                 <div class="panel-body">
                     <div>
-                        <label>Isbn :</label>
-                        <span th:text="${bookFind.isbn}"></span>
+                        <label>Titre du livre :</label>
+                        <span th:text="${bookingFind.book.title}"></span>
                     </div>
                     <div>
-                        <label>Auteur :</label>
-                        <span th:text="${bookFind.author}"></span>
+                        <label>Date de fin :</label>
+                        <span th:text="${bookingFind.bookingEndDate}"></span>
                     </div>
                     <div>
-                        <label>Titre : </label>
-                        <span th:text="${bookFind.title}"></span>
-                    </div>
-                    <div>
-                        <label>Nombre de copie disponible : </label>
-                        <span th:text="${bookFind.copiesAvailable}"></span>
-                    </div>
-                    <div>
-                        <label>Catégorie : </label>
-                        <span th:text="${bookFind.bookCategory.label}"></span>
+                        <label>Statut du prêt : </label>
+                        <span th:text="${bookingFind.bookingStatus}"></span>
                     </div>
                 </div>
             </div>
 
             <div class="col-sm-3 d-block d-sm-none">
-                <form th:action="@{/user/book/}+${bookFind.isbn}+@{/booking}" method="POST">
+                <form th:action="@{/user/bookings/}+${bookingFind.bookingId}+@{/extend}">
                     <button class="btn btn-primary x float-right"
                             onclick="return confirm('Êtes-vous sûr ?')">Faire un prêt</button>
                 </form>

@@ -1,17 +1,11 @@
 package com.bigcity.services;
 
 import com.bigcity.beans.Book;
-import com.bigcity.criteria.BookCriteria;
 import com.bigcity.services.interfaces.IBookService;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.security.Principal;
-import java.util.Arrays;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -20,9 +14,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -38,69 +32,115 @@ public class BookServiceImpl implements IBookService {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Value("${apiServerPort}")
+    @Value("${api.server.port}")
     private String serverPort;
 
-    private String baseUrl = "http://localhost:" + "8080";
+    private String baseUrl = "http://localhost:";
 
     private HttpHeaders headers = new HttpHeaders();
 
     @Override
-    public List<Book> getAllBooks() throws URISyntaxException {
+    public List<Book> getAllBooks() throws Exception {
 
-        URI uri = new URI(baseUrl + "/api/user/books/all");
+        URI uri = new URI(baseUrl + serverPort + "/api/user/books/all");
 
 // add basic authentication header
         headers.setBasicAuth("nicolas.desdevises@yahoo.com", "123");
 
-        HttpEntity request = new HttpEntity(headers);
+        HttpEntity requestEntity = new HttpEntity(headers);
 
-        ResponseEntity<Book[]> result = restTemplate.exchange(uri, HttpMethod.GET, request, Book[].class);
-        
-        return Arrays.asList(result.getBody());
+        ResponseEntity<List<Book>> result = null;
 
-    }
+        try {
 
-    @Override
-    public Book getBook(Long id) throws URISyntaxException {
+            result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, new ParameterizedTypeReference<List<Book>>() {
+            });
 
-        URI uri = new URI(baseUrl + "/api/user/books/" + id);
+        } catch (RestClientException e) {
 
-        ResponseEntity<Book> result = restTemplate.getForEntity(uri, Book.class);
+            throw new Exception(e.getMessage());
+
+        }
 
         return result.getBody();
 
     }
 
     @Override
-    public Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int p, int s) throws URISyntaxException {
+    public Book getBook(Long id) throws Exception {
 
-        // TODO revoir url avec multi param
-        BookCriteria criteria = new BookCriteria();
+        URI uri = new URI(baseUrl + serverPort + "/api/user/books/" + id);
 
-        criteria.setAuthor(author);
-        criteria.setBookTitle(bookTitle);
-        criteria.setCategoryName(categoryName);
-        criteria.setIsbn(isbn);
+        // add basic authentication header
+        headers.setBasicAuth("nicolas.desdevises@yahoo.com", "123");
 
-        HttpHeaders headers = new HttpHeaders();
-        HttpEntity requestBody = new HttpEntity<>(headers);
+        HttpEntity requestEntity = new HttpEntity(headers);
 
-        System.out.println("com.b : " + requestBody.toString());
+        ResponseEntity<Book> result = null;
 
-        URI uri = new URI(baseUrl + "/api/user/books?page=" + p + "&size=" + s);
-//        Class<Page<Book>> responseType;
+        try {
 
-//        ResponseEntity<Page<Book>> r = restTemplate.exchange(uri, HttpMethod.GET, entity, responseType.class);
+            result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, Book.class);
+
+        } catch (RestClientException e) {
+
+            throw new Exception(e.getMessage());
+
+        }
+
+        return result.getBody();
+
+    }
+
+    @Override
+    public Book getBookByIsbn(String isbn) throws Exception {
+
+        URI uri = new URI(baseUrl + serverPort + "/api/user/books/" + isbn);
+
+        // add basic authentication header
+        headers.setBasicAuth("nicolas.desdevises@yahoo.com", "123");
+
+        HttpEntity requestEntity = new HttpEntity(headers);
+
+        ResponseEntity<Book> result = null;
+
+        try {
+
+            result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, Book.class);
+
+        } catch (RestClientException e) {
+
+            throw new Exception(e.getMessage());
+
+        }
+
+        return result.getBody();
+
+    }
+
+    @Override
+    public Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int p, int s) throws Exception {
+
+        URI uri = new URI(baseUrl + serverPort + "/api/user/books?isbn=" + isbn + "&author=" + author + "&bookTitle=" + bookTitle
+                + "&categoryName" + categoryName + "&page=" + p + "&size=" + s);
+
+        // add basic authentication header
+        headers.setBasicAuth("nicolas.desdevises@yahoo.com", "123");
+
+        HttpEntity requestEntity = new HttpEntity(headers);
+
+        ResponseEntity<RestResponsePage<Book>> result = null;
+
         ParameterizedTypeReference<RestResponsePage<Book>> responseType = new ParameterizedTypeReference<RestResponsePage<Book>>() {
         };
 
-        ResponseEntity<RestResponsePage<Book>> result = restTemplate.exchange(uri, HttpMethod.GET, requestBody, responseType);
+        try {
+            result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, responseType);
+        } catch (RestClientException e) {
 
-        RestResponsePage<Book> searchResult = result.getBody();
+            throw new Exception(e.getMessage());
+
+        }
 
         return result.getBody();
 

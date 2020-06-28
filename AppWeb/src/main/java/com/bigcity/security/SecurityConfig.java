@@ -5,7 +5,6 @@
  */
 package com.bigcity.security;
 
-import com.bigcity.services.CustomUserServiceDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    CustomUserServiceDetail userDetailsService;
+    CustomAuthentication userDetailsService;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -35,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-        auth.userDetailsService(userDetailsService);
+        auth.authenticationProvider(userDetailsService);
 
     }
 
@@ -54,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // AccessDeniedException will be thrown.
         http.exceptionHandling().accessDeniedPage("/403");
 
-        http.formLogin().defaultSuccessUrl("/user/account", true);
+        http.formLogin().defaultSuccessUrl("/", true);
 //        http.formLogin().loginPage("/login").defaultSuccessUrl("/", true);
         
         http.authorizeRequests().anyRequest().authenticated();
