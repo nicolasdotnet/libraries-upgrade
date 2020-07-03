@@ -1,5 +1,7 @@
 package com.bigcity;
 
+import com.bigcity.batch.beans.Revive;
+import com.bigcity.batch.services.interfaces.IBatchBookingService;
 import com.bigcity.dto.BookCategoryDTO;
 import com.bigcity.dto.BookDTO;
 import com.bigcity.dto.BookingDTO;
@@ -24,12 +26,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.time.LocalDate;
 import java.util.List;
 import com.bigcity.services.interfaces.IBookingService;
+import java.util.Date;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 @EnableSwagger2
+@EnableScheduling
 public class ApiWebApplication extends SpringBootServletInitializer implements CommandLineRunner {
 
     // ou méthode CommandLineRunner avec @Bean
@@ -47,6 +52,9 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
     @Autowired
     private IBookingService iBookingService;
+
+    @Autowired
+    private IBatchBookingService iBatchBookingService;
 
     public static void main(String[] args) {
         SpringApplication.run(ApiWebApplication.class, args);
@@ -356,6 +364,38 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
             System.out.println(">>>>>>>>>>>>>>>>>< LOGIN IS OK !");
 
+        }
+
+        // Liste booking relance
+        librarianEmail = u.getEmail();
+        bookingEmail = u2.getEmail();
+        bookIsbn = b.getIsbn();
+
+        bookingDTO = new BookingDTO();
+
+        bookingDTO.setLibrarianEmail(librarianEmail);
+        bookingDTO.setBookingUserEmail(bookingEmail);
+        bookingDTO.setBookIsbn("5613520");
+
+        r = iBookingService.register(bookingDTO);
+
+        librarianEmail = u.getEmail();
+        bookingEmail = u2.getEmail();
+        bookIsbn = b.getIsbn();
+
+        bookingDTO = new BookingDTO();
+
+        bookingDTO.setLibrarianEmail(librarianEmail);
+        bookingDTO.setBookingUserEmail(bookingEmail);
+        bookingDTO.setBookIsbn("561353");
+
+        r = iBookingService.register(bookingDTO);
+
+        List<Revive> w = iBatchBookingService.getRevives(new Date());
+
+        for (Revive revive : w) {
+
+            System.out.println("RELANCES : " + revive.toString());
         }
 
     }
