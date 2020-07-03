@@ -7,6 +7,7 @@ package com.bigcity.services.interfaces;
 
 import com.bigcity.beans.Booking;
 import java.util.List;
+import org.springframework.security.core.Authentication;
 
 /**
  *
@@ -18,43 +19,56 @@ public interface IBookingService {
      * method to register a booking
      * 
      * @param isbn
+     * @param authentication
      * @return
      * @throws Exception
      */
-    Booking register (String isbn)throws Exception;
+    Booking register (String isbn, Authentication authentication)throws Exception;
     
     /**
      * method to extend a booking
      * 
      * @param bookingId
+     * @param authentication
      * @return
      * @throws Exception
      */
-    Booking extend(Long bookingId) throws Exception;
+    Booking extend(Long bookingId, Authentication authentication) throws Exception;
+    
+    /**
+     *
+     * @param bookingId
+     * @param authentication
+     * @return
+     * @throws Exception
+     */
+    Booking backBook(Long bookingId, Authentication authentication) throws Exception;
     
     /**
      * method to get a booking
      * 
      * @param bookingId
+     * @param authentication
      * @return
      * @throws Exception
      */
-    Booking getBooking(Long bookingId) throws Exception;
+    Booking getBooking(Long bookingId, Authentication authentication) throws Exception;
     
     /**
      * method to get all bookings by ask user
      * 
-     * @param email
+     * @param authentication
      * @return
      * @throws Exception
      */
-    List<Booking> getAllBookingByUser(String email) throws Exception;
+    List<Booking> getAllBookingByUser(Authentication authentication) throws Exception;
     
     /**
      * method to remove a booking
      * 
      * @param bookingId
+     * @param authentication
      */
-    void delete(Long bookingId);
+    void delete(Long bookingId, Authentication authentication);
     
 }

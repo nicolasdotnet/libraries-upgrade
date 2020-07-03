@@ -30,24 +30,6 @@ public class ExceptionHandlerControllerAdvice {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
-//    @ExceptionHandler(EntityNotFoundException.class)
-//    public ResponseEntity<ExceptionMessage> userNoFindHandler(HttpServletRequest request, EntityNotFoundException exception) {
-//        ExceptionMessage message = ExceptionMessage.builder()
-//                .date(LocalDateTime.now().format(formatter))
-//                .path(request.getRequestURI().toString() + "?" + request.getQueryString())
-//                .className(exception.getClass().getName())
-//                .message("Tu veux éviter les null ? N'hésite pas à lire cet article: https://www.developpez.net/forums/blogs/473169-gugelhupf/b2944/java-astuces-eviter-nullpointerexception/")
-//                .build();
-//        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-//    @ExceptionHandler(EntityNotFoundException.class)
-//    public ResponseEntity handleEntityNoFoudException(EntityNotFoundException error) {
-//        // log exception
-//        return ResponseEntity
-//                .status(HttpStatus.FORBIDDEN)
-//                .body("Error Message");
-//    }
-
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ExceptionMessage> handleEntityNoFoudException(HttpServletRequest request, EntityNotFoundException e) {
         // log exception 
@@ -86,7 +68,6 @@ public class ExceptionHandlerControllerAdvice {
                 .className(e.getClass().getName())
                 .message(e.getMessage())
                 .build();
-//        return ResponseEntity.status(error.getHttpStatus()).body(error.getMessage());
 
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }

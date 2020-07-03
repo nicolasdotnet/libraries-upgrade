@@ -5,9 +5,7 @@
  */
 package com.bigcity;
 
-import com.bigcity.beans.Book;
 import com.bigcity.services.interfaces.IBookService;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,8 +16,6 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.Page;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -43,37 +39,6 @@ public class AppWebApplication extends SpringBootServletInitializer implements C
     }
 
     public void run(String... args) throws Exception {
-
-        String author = "Nicolas";
-        String bookTitle = "";
-        String isbn = "";
-        String categoryName = "";
-
-        int i = 0;
-
-        Page<Book> r = iBookService.getAllBooksByCriteria(isbn, author, bookTitle, categoryName, 0, 5);
-
-        if (r.isEmpty()) {
-
-            System.out.println("com.bigcity.AppWebApplication.run()" + r.isEmpty());
-
-        } else {
-
-            System.out.println("com.bigcity.AppWebApplication.run()" + r.isEmpty());
-            
-            
-
-            List<Book> l = r.toList();
-                    
-                    //r.getContent();
-
-            for (Book book : l) {
-
-                i = ++i;
-
-                System.out.println("affichage : " + i + " " + book.toString());
-            }
-        }
     }
 
 //    @Bean

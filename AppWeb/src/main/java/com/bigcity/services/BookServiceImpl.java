@@ -14,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
@@ -35,17 +36,18 @@ public class BookServiceImpl implements IBookService {
     @Value("${api.server.port}")
     private String serverPort;
 
-    private String baseUrl = "http://localhost:";
+    @Value("${baseUrl}")
+    private String baseUrl;
 
     private HttpHeaders headers = new HttpHeaders();
 
     @Override
-    public List<Book> getAllBooks() throws Exception {
+    public List<Book> getAllBooks(Authentication authentication) throws Exception {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/books/all");
 
 // add basic authentication header
-        headers.setBasicAuth("nicolas.desdevises@yahoo.com", "123");
+        headers.setBasicAuth(authentication.getName(), authentication.getCredentials().toString());
 
         HttpEntity requestEntity = new HttpEntity(headers);
 
@@ -67,12 +69,12 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public Book getBook(Long id) throws Exception {
+    public Book getBook(Long id, Authentication authentication) throws Exception {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/books/" + id);
 
-        // add basic authentication header
-        headers.setBasicAuth("nicolas.desdevises@yahoo.com", "123");
+// add basic authentication header
+        headers.setBasicAuth(authentication.getName(), authentication.getCredentials().toString());
 
         HttpEntity requestEntity = new HttpEntity(headers);
 
@@ -93,12 +95,12 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public Book getBookByIsbn(String isbn) throws Exception {
+    public Book getBookByIsbn(String isbn, Authentication authentication) throws Exception {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/books/" + isbn);
 
-        // add basic authentication header
-        headers.setBasicAuth("nicolas.desdevises@yahoo.com", "123");
+// add basic authentication header
+        headers.setBasicAuth(authentication.getName(), authentication.getCredentials().toString());
 
         HttpEntity requestEntity = new HttpEntity(headers);
 
@@ -119,13 +121,13 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int p, int s) throws Exception {
+    public Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int p, int s, Authentication authentication) throws Exception {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/books?isbn=" + isbn + "&author=" + author + "&bookTitle=" + bookTitle
-                + "&categoryName" + categoryName + "&page=" + p + "&size=" + s);
+                + "&categoryName=" + categoryName + "&page=" + p + "&size=" + s);
 
-        // add basic authentication header
-        headers.setBasicAuth("nicolas.desdevises@yahoo.com", "123");
+// add basic authentication header
+        headers.setBasicAuth(authentication.getName(), authentication.getCredentials().toString());
 
         HttpEntity requestEntity = new HttpEntity(headers);
 

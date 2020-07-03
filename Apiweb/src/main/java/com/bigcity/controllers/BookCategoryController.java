@@ -13,12 +13,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URI;
-import java.util.List;
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,7 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -58,10 +51,8 @@ public class BookCategoryController {
 
         log.debug("saveBookCategory()");
 
-        // TODO ajouter securité
         BookCategory bookCategorySave = iBookCategoryService.register(bookCategoryDto);
 
-//code 201, ajouter l'URI 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -88,34 +79,6 @@ public class BookCategoryController {
 
     }
 
-    // UN FINDALL une page de category
-//    @ApiOperation("Récupère l'ensemble catégories de livre de la base ou récupèrer une liste de livre a partir d'un mot clé sur le titre")
-//    @GetMapping("/api/librarian/category")
-//        @ApiResponses(value = {
-//        @ApiResponse(code = SC_OK, message = "ok", response = BookCategoryDTO.class),
-//        @ApiResponse(code = SC_BAD_REQUEST, message = "erreur de saisie", response = BookCategoryDTO.class),
-//        @ApiResponse(code = SC_UNAUTHORIZED, message = "une authentification est nécessaire")
-//    })
-//    public ResponseEntity showAllBookCategory(@RequestParam(defaultValue = " ") String label) throws Exception {
-//
-//        // RequestBody DTO Search
-//        log.debug("showAllBookCategories()", label);
-//
-//        List<BookCategory> bookCategories = null;
-//
-//        if (label.equals(" ")) {
-//
-//            bookCategories = iBookCategoryService.getAllBookCategories();
-//
-//            return ResponseEntity.ok(bookCategories);
-//
-//        }
-//
-//        BookCategory bookCategorie = iBookCategoryService.getBookCategoryByLabel(label);
-//
-//        return ResponseEntity.ok(bookCategorie);
-//
-//    }
     @ApiOperation("Mettre à jour la catégorie d'un livre à partir de son ID présent dans la base")
     @PutMapping("/api/librarian/category/{id}")
     @ApiResponses(value = {

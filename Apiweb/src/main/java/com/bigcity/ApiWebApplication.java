@@ -124,16 +124,29 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         System.out.println("\n register bookCategory : " + bc.toString() + "\n");
 
+        // register one more bookCategory
+        bookCategoryLabel = "Science";
+
+        bookCategoryDTO = new BookCategoryDTO();
+
+        bookCategoryDTO.setLabel(bookCategoryLabel);
+
+        bc = iBookCategoryService.register(bookCategoryDTO);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+
+        System.out.println("\n register bookCategory : " + bc.toString() + "\n");
+
         // register one book
         int x = 0;
-        
+
         Book b;
 
         do {
 
-            String isbn = "561352"+x;
+            String isbn = "561352" + x;
             String author = "Rowston Thebest";
-            String bookTitle = "Java pour les nuls V"+x;
+            String bookTitle = "Java pour les nuls V" + x;
             int copiesAvailable = 5;
             String bcLabel = "Polar";
 
@@ -150,7 +163,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
             System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
 
             System.out.println("\n register book : " + b.toString() + "\n");
-            
+
             x++;
 
         } while (x < 5);
@@ -200,7 +213,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         author = "Nicolas Junior";
         bookTitle = "Ma vie de dev";
         copiesAvailable = 5;
-        String bcLabel = "Polar";
+        String bcLabel = "Science";
 
         BookDTO bookDTO3 = new BookDTO();
         Book b3 = null;
@@ -304,10 +317,10 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         // book search by MC
         BookCriteria bsdto = new BookCriteria();
 
-        author = "Nicolas";
+        author = "";
         bookTitle = "";
         isbn = "";
-        bookCategoryLabel = "";
+        bookCategoryLabel = "science";
         int page = 0;
         int size = 5;
 

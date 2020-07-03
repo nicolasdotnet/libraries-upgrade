@@ -8,7 +8,7 @@
     <span th:insert="common/header.html::header"></span>
 
     <main>
-        <div class="container">
+        <div class="container mt-3">
             <nav aria-label="breadcrumb" class="b">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
@@ -16,14 +16,15 @@
                 </ol>
             </nav>
 
-            <span th:text="${error}"></span>
+            <div th:text="${error}"></div>
+            <div th:text="${msg}"></div>
 
             <h2 th:text=${bookFind.title}></h2>
 
-            <div class="row container">
+            <div class="row container mt-4 pr-0 pl-0">
                 <div  class="col-sm-8 d-none d-sm-block"><h3>Informations</h3></div>
 
-                <div class="col-sm-4 d-none d-sm-block">
+                <div class="col-sm-4 d-none d-sm-block align-self-center">
                     <form th:action="@{/user/book/}+${bookFind.isbn}+@{/booking}" method="POST">
                         <button class="btn btn-primary float-right"
                                 onclick="return confirm('Êtes-vous sûr ?')">Faire un prêt</button>
@@ -31,7 +32,7 @@
                 </div>
             </div>
 
-            <div class="panel panel-default t">
+            <div class="panel panel-default">
                 <div class="panel-body">
                     <div>
                         <label>Isbn :</label>

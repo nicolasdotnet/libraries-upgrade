@@ -3,11 +3,14 @@ package com.bigcity.controllers;
 import com.bigcity.beans.Book;
 import com.bigcity.services.interfaces.IBookService;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -26,14 +29,14 @@ public class BookController {
 
     // show book
     @GetMapping("/user/books/{isbn}")
-    public String showBook(@PathVariable("isbn") String isbn, Model model) {
+    public String showBook(@PathVariable("isbn") String isbn, Model model, Authentication authentication) {
 
         log.debug("showBook() isbn: {}", isbn);
 
         Book bookFind = null;
 
         try {
-            bookFind = iBookService.getBookByIsbn(isbn);
+            bookFind = iBookService.getBookByIsbn(isbn, authentication);
         } catch (Exception e) {
 
             model.addAttribute("error", e.getMessage());
@@ -49,12 +52,12 @@ public class BookController {
 
     // show all book
     @GetMapping("/user/book/all")
-    public String showBooks(Model model) {
+    public String showBooks(Model model, Authentication authentication) {
 
         List<Book> bookFind = null;
 
         try {
-            bookFind = iBookService.getAllBooks();
+            bookFind = iBookService.getAllBooks(authentication);
         } catch (Exception e) {
 
             model.addAttribute("error", e.getMessage());
@@ -75,31 +78,35 @@ public class BookController {
             @RequestParam(name = "author", defaultValue = "") String author,
             @RequestParam(name = "title", defaultValue = "") String bookTitle,
             @RequestParam(name = "categoryName", defaultValue = "") String categoryName,
-            @RequestParam(name = "page", defaultValue = "0") int p,
-            @RequestParam(name = "size", defaultValue = "5") int s) {
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size, Authentication authentication) {
 
         log.debug("showAllBooks()");
 
         Page<Book> bookPage = null;
-        
+
         try {
-            bookPage = iBookService.getAllBooksByCriteria(isbn, author, bookTitle, categoryName, p, s);
-        
+            bookPage = iBookService.getAllBooksByCriteria(isbn, author, bookTitle, categoryName, page-1, size, authentication);
+
         } catch (Exception e) {
 
             model.addAttribute("error", e.getMessage());
 
         }
 
-        int numberPage = bookPage.getTotalPages();
+        int totalPages = bookPage.getTotalPages();
         
-        List<Book> books = bookPage.getContent();
-        int[] pages = new int[numberPage];
+        System.out.println("com.bigcity.controllers.BookController.showAllBooks()>>>>>>>>>>>>>>>>>"+totalPages);
+        
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
 
-        model.addAttribute("pages", pages);
-        model.addAttribute("size", s);
-        model.addAttribute("pageCourante", p);
-        model.addAttribute("books", books);
+        model.addAttribute("size", size);
+        model.addAttribute("bookPage", bookPage);
 
         return "book/list";
     }

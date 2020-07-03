@@ -8,7 +8,7 @@
     <span th:insert="/common/header.html::header"></span>
 
     <main>
-        <div class="container">
+        <div class="container mt-3">
             <nav aria-label="breadcrumb" class="b">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
@@ -20,44 +20,38 @@
 
                 <span th:text="${error}"></span>
 
-                <div th:insert="/book/multisearch.html::form">
+                <div class="mx-auto" th:insert="/book/multisearch.html::form">
                 </div>
             </div>
 
+            <div class="table-responsive mt-1">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Isbn</th>
+                        <th>Auteur</th>
+                        <th>Titre</th>
+                        <th>Catégorie</th>
+                        <th class="d-none d-sm-block">Quantité</th>
+                    </tr>
 
-            <table class="table table-striped mt-10">
-                <tr>
-                    <th>Isbn</th>
-                    <th>Auteur</th>
-                    <th>Titre</th>
-                    <th class="hidden-xs">Catégorie</th>
-                </tr>
-
-                <tr th:each="b:${books}">
-
-                    <td><a th:href="@{/user/books/}+${b.isbn}" td th:text="${b.isbn}"/></td>
-                    <td th:text="${b.author}"></td>
-                    <td th:text="${b.title}"></td>
-                    <td th:text="${b.bookCategory.label}"></td>
-                </tr>
-            </table>
+                    <tr th:each="b:${bookPage.content}">
+                        <td><a th:href="@{/user/books/}+${b.isbn}" td th:text="${b.isbn}"/></td>
+                        <td th:text="${b.author}"></td>
+                        <td th:text="${b.title}"></td>
+                        <td th:text="${b.bookCategory.label}"></td>
+                        <td class="d-none d-sm-block" th:text="${b.copiesAvailable}"></td>
+                    </tr>
+                </table>
+            </div>
         </div>
 
         <div class="container">
-            <ul class="nav nav-pills">
-
-                <li th:each="page, status :${books}">
-
-                    <a th:href="@{/user/books?page=}+${status.index}+@{&size=}+${size}">
-
-                       <span th:if="${status.first == status.last}"></span>
-                        <span th:unless="${status.first == status.last}"
-                              th:text="${status.index}">
-
-                        </span>
-                    </a>
+            <nav class="nav nav-pills" th:if="${bookPage.totalPages > 0}">
+                <li th:each="pageNumber : ${pageNumbers}">
+                    <a class="btn btn-outline-danger btn-sm mr-1" th:href="@{/user/books?page=}+${pageNumber}+@{&size=}+${size}"
+                       th:text=${pageNumber}></a>
                 </li>
-            </ul>
+            </nav>
         </div>
     </main>
     <span th:insert="/common/footer.html"></span>

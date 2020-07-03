@@ -44,7 +44,8 @@ public class CustomAuthentication implements AuthenticationProvider {
     @Value("${api.server.port}")
     private String serverPort;
 
-    private String baseUrl = "http://localhost:";
+    @Value("${baseUrl}")
+    private String baseUrl;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -83,9 +84,6 @@ public class CustomAuthentication implements AuthenticationProvider {
     public User login(String email, String password) throws Exception {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/login");
-        
-        // add basic authentication header
-        headers.setBasicAuth("nicolas.desdevises@yahoo.com", "123");
 
         LoginDTO loginDTO = new LoginDTO();
 

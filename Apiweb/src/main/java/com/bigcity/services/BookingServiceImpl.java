@@ -86,8 +86,7 @@ public class BookingServiceImpl implements IBookingService {
 
         // save en base => transaction
         // TODO : calcul en fonction du param week + TimeZone ?
-//        Date bookingEndDate = java.sql.Date.valueOf(LocalDate.now().plusWeeks(4));
-        Date bookingEndDate = java.sql.Date.valueOf(LocalDate.now());
+        Date bookingEndDate = java.sql.Date.valueOf(LocalDate.now(ZoneId.systemDefault()).plusDays(Long.valueOf(bookingDuration)+1));
 
         Booking booking = new Booking();
 
@@ -119,7 +118,7 @@ public class BookingServiceImpl implements IBookingService {
         bookingFind.get().setBookingStatus(BookingStatus.TERMINE.getValue());
 
         int copiesAvailable = bookingFind.get().getBook().getCopiesAvailable();
-        bookingFind.get().getBook().setCopiesAvailable(copiesAvailable++);
+        bookingFind.get().getBook().setCopiesAvailable(++copiesAvailable);
 
         return bookingFind.get();
 
@@ -174,6 +173,14 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
+        if (bookingFind.get().getCounterExtension().equals(counterExtension)) {
+
+            log.error("Une prolongation du prêt a déjà été réalisée !");
+
+            throw new BookingNotPossibleException("Une prolongation du prêt a déjà été réalisée !");
+
+        }
+
         System.out.println("TEST 1");
 
         System.out.println("old date : )" + bookingFind.get().getBookingEndDate());
@@ -194,7 +201,7 @@ public class BookingServiceImpl implements IBookingService {
         System.out.println("new date : " + bookingEndDateNew);
 
         bookingFind.get().setBookingEndDate(java.sql.Date.valueOf(bookingEndDateNew));
-        
+
         bookingFind.get().setBookingStatus(BookingStatus.PROLONGE.getValue());
 
         bookingFind.get().setCounterExtension("1");
@@ -213,6 +220,13 @@ public class BookingServiceImpl implements IBookingService {
         BookingSpecification bookSpecification = new BookingSpecification(bookingCriteria);
 
         return bookingRepository.findAll(bookSpecification, PageRequest.of(page, size));
+    }
+
+    @Override
+    public List<Booking> getAllBookingByOutdated(Date dateToday) {
+        
+        return bookingRepository.findAllByBookingEndDate(dateToday);
+        
     }
 
 }

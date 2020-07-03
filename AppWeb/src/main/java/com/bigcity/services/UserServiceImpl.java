@@ -41,7 +41,8 @@ public class UserServiceImpl implements IUserService {
     @Value("${api.server.port}")
     private String serverPort;
 
-    private String baseUrl = "http://localhost:" + "8080";
+    @Value("${baseUrl}")
+    private String baseUrl;
 
     private HttpHeaders headers = new HttpHeaders();
 
@@ -108,7 +109,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User getUserByEmail(String email) throws Exception {
 
-        URI uri = new URI(baseUrl + "/api/user/users?email=" + email);
+        URI uri = new URI(baseUrl + serverPort +"/api/user/users?email=" + email);
 
 // add basic authentication header
         headers.setBasicAuth("nicolas.desdevises@yahoo.com", "123");

@@ -1,7 +1,6 @@
 package com.bigcity.controllers;
 
 import com.bigcity.dto.BookDTO;
-import com.bigcity.specifications.BookCriteria;
 import com.bigcity.entity.Book;
 import com.bigcity.services.interfaces.IBookService;
 import io.swagger.annotations.Api;
@@ -10,11 +9,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URI;
 import java.util.List;
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,10 +49,8 @@ public class BookController {
 
         log.debug("saveBook()");
 
-        // TODO ajouter securité
         Book bookSave = iBookService.register(bookDto);
-
-//code 201, ajouter l'URI 
+ 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -94,7 +86,6 @@ public class BookController {
     @GetMapping("/api/user/books/all")
     public ResponseEntity<List<Book>> showAllBooks(@RequestParam(defaultValue = " ") String title) throws Exception {
 
-        // RequestBody DTO Search
         log.debug("showAllBooks()", title);
 
         List<Book> books = null;
@@ -149,22 +140,4 @@ public class BookController {
 
         return ResponseEntity.ok().body(iBookService.getAllBooksByCriteria(isbn, author, bookTitle, categoryName, page, size));
     }
-
-//    @RequestMapping(value = "voyage", method = RequestMethod.GET)
-//    public @ResponseBody
-//    Page<Voyage> viewAllVoyages(@RequestParam Boolean archived,
-//            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date departureDate,
-//            @RequestParam Long busId, @RequestParam Long departureHourId,
-//            @RequestParam String pathId, @RequestParam int page) {
-//
-//        Voyage voyageExample = new Voyage();
-//        voyageExample.setArchived(archived);
-//        voyageExample.setDepartureDate(departureDate);
-//        voyageExample.setBusId(busId);
-//        voyageExample.setDepartureHourId(departureHourId);
-//        voyageExample.setPathId(pathId == "" ? null : pathId);
-//
-//        return voyageService.findAllByExample(voyageExample, new PageRequest(page, Integer.parseInt(environment.getProperty("pages.number"))));
-//    }
-
 }

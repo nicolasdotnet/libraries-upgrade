@@ -52,7 +52,10 @@ public class BookSpecification implements Specification<Book> {
         }
 
         if (filter.getCategoryName() != null) {
-            predicate.getExpressions().add(criteriaBuilder.like(root.join("bookCategory").get("label"), filter.getCategoryName()));
+            
+            String param = "%" + filter.getCategoryName() + "%";
+            
+            predicate.getExpressions().add(criteriaBuilder.like(root.join("bookCategory").get("label"), param));
         }
 
         return criteriaBuilder.and(predicate);

@@ -8,6 +8,7 @@ package com.bigcity.services.interfaces;
 import com.bigcity.dto.BookingDTO;
 import com.bigcity.entity.Booking;
 import com.bigcity.specifications.BookingCriteria;
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
@@ -78,6 +79,14 @@ public interface IBookingService {
      * @param size
      * @return
      */
-    public Page<Booking> getAllBookingsByCriteria(BookingCriteria bookingCriteria, int page, int size);
+    Page<Booking> getAllBookingsByCriteria(BookingCriteria bookingCriteria, int page, int size);
+    
+    /**
+     * method to get all bookings by outdated
+     * 
+     * @param dateToday
+     * @return
+     */
+    List<Booking> getAllBookingByOutdated(Date dateToday);
 
 }

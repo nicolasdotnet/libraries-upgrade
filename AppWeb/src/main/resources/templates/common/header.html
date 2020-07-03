@@ -22,7 +22,7 @@
         <header>
             <!-- menu de navigation -->
 
-            <nav class="navbar navbar-default navbar-expand-lg" role="navigation">
+            <nav class="navbar navbar-default navbar-expand-lg " role="navigation">
                 <div class="container">
 
                     <a class="navbar-brand" style="font-family: Montserrat" href="/">Biblio</br>de Big City</a>
@@ -33,27 +33,34 @@
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-auto">
-
+                        <ul class="navbar-nav" sec:authorize="isAuthenticated()">
 
                             <li class="nav-item">
                                 <a class="nav-link" href="/user/books">Livres</a>
                             </li>
-
 
                             <li class="nav-item">
                                 <a class="nav-link" href="/user/bookings">Mes prêts</a>
                             </li>                           
 
                         </ul>
-                        <ul class="nav navbar-nav navbar-right">
+                        <ul class="nav navbar-nav ml-auto" sec:authorize="isAuthenticated()">
 
                             <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
 
+                        </ul>
+
+                        <ul class="nav navbar-nav ml-auto" th:if="!${#request.userPrincipal}">
+
                             <li class="nav-item"><a class="nav-link" href="/login">Se connecter</a></li>
+
                         </ul>
                     </div>
                 </div>
             </nav>
+
+
         </header>
+
+
 

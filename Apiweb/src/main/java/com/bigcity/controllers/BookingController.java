@@ -8,23 +8,17 @@ package com.bigcity.controllers;
 import com.bigcity.dto.BookingDTO;
 import com.bigcity.entity.Booking;
 import com.bigcity.services.interfaces.IBookingService;
-import com.bigcity.specifications.BookingCriteria;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -152,13 +146,22 @@ public class BookingController {
         @ApiResponse(code = 404, message = "le prêt n'existe pas dans la base"),
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
-    @PutMapping("/api/user/bookings/{id}/")
+    @PutMapping("/api/user/bookings/{id}/back")
     public ResponseEntity backFromTheBook(@PathVariable("id") int id) throws Exception {
 
         log.debug("backFromTheBook() id: {}", id);
 
         return ResponseEntity.ok(iBookingService.bookIsBack(Long.valueOf(id)));
 
+    }
+    
+    @GetMapping("/api/user/alpha")
+    public ResponseEntity getBookingOut(){
+        
+        Date dateToday = new Date();
+        
+        
+        return ResponseEntity.ok(iBookingService.getAllBookingByOutdated(dateToday));
     }
 
 }
