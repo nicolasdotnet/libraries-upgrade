@@ -43,11 +43,11 @@
                     </div>
                     <div>
                         <label>Date de début :</label>
-                        <span th:text="${bookingFind.bookingStartDate}"></span>
+                        <span th:text="${#dates.format(bookingFind.bookingStartDate,'dd MMM yyyy')}"></span>
                     </div>
                     <div>
                         <label>Date de fin :</label>
-                        <span th:text="${bookingFind.bookingEndDate}"></span>
+                        <span th:text="${#dates.format(bookingFind.bookingEndDate,'dd MMM yyyy')}"></span>
                     </div>
                     <div>
                         <label>Statut du prêt : </label>
