@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="common/header.html::header"></span>
+
+    <main>
+        <div class="container mt-3">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item"><a href="/user/book/all">Les livres</a></li>
+                </ol>
+            </nav>
+
+            <div th:text="${error}"></div>
+            <div th:text="${msg}"></div>
+
+            <h2 th:text=${bookFind.title}></h2>
+
+            <div class="row container mt-4 pr-0 pl-0">
+                <div  class="col-sm-8 d-none d-sm-block"></div>
+
+                <div class="col-sm-4 d-none d-sm-block align-self-center">
+                    <form th:action="@{/user/book/}+${bookFind.isbn}+@{/booking}" method="POST">
+                        <button class="btn btn-primary float-right"
+                                onclick="return confirm('Êtes-vous sûr ?')">Faire un prêt</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div>
+                        <label>Isbn :</label>
+                        <span th:text="${bookFind.isbn}"></span>
+                    </div>
+                    <div>
+                        <label>Auteur :</label>
+                        <span th:text="${bookFind.author}"></span>
+                    </div>
+                    <div>
+                        <label>Présentation : </label>
+                        <p th:text="${bookFind.summary}"></p>
+                    </div>
+                    <h5>Informations complémentaires</h5>
+                    <div>
+                        <label>Nombre de copie disponible : </label>
+                        <span th:text="${bookFind.copiesAvailable}"></span>
+                    </div>
+                    <div>
+                        <label>Catégorie : </label>
+                        <span th:text="${bookFind.bookCategory.label}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3 d-block d-sm-none">
+                <form th:action="@{/user/book/}+${bookFind.isbn}+@{/booking}" method="POST">
+                    <button class="btn btn-primary x float-right"
+                            onclick="return confirm('Êtes-vous sûr ?')">Faire un prêt</button>
+                </form>
+            </div>
+        </div>
+    </main>
+    <span th:insert="common/footer.html"></span>
+</body>
+</html>
