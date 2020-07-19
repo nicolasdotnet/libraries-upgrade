@@ -5,13 +5,25 @@
  */
 package com.bigcity.batch.services.interfaces;
 
+import com.bigcity.batch.bean.Booking;
+import java.net.URISyntaxException;
+import java.util.List;
+import org.springframework.web.client.RestClientException;
+
 /**
  *
  * @author nicolasdotnet
  */
 public interface IScheduledTasks {
-    
-    
+
     void scheduleBookingReminder();
-    
+
+    /**
+     * method to get all bookings by outdated
+     *
+     * @return
+     * @throws java.net.URISyntaxException
+     */
+    List<Booking> getAllBookingByOutdated() throws URISyntaxException, RestClientException;
+
 }

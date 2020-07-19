@@ -2,7 +2,14 @@ package com.bigcity.appweb.controllers;
 
 import com.bigcity.appweb.beans.Book;
 import com.bigcity.appweb.services.interfaces.IBookService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -39,7 +46,21 @@ public class BookController {
             bookFind = iBookService.getBookByIsbn(isbn, authentication);
         } catch (Exception e) {
 
-            model.addAttribute("error", e.getMessage());
+            // methode string to map
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            Map<String, Object> jsonMap = null;
+            
+            try {
+                jsonMap = objectMapper.readValue(e.getMessage(),
+                        new TypeReference<Map<String, Object>>() {
+                        });
+            } catch (JsonProcessingException ex) {
+                java.util.logging.Logger.getLogger(BookController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            //response message
+            model.addAttribute("error", jsonMap.get("message"));
 
             return "book/show";
         }
@@ -86,7 +107,7 @@ public class BookController {
         Page<Book> bookPage = null;
 
         try {
-            bookPage = iBookService.getAllBooksByCriteria(isbn, author, bookTitle, categoryName, page-1, size, authentication);
+            bookPage = iBookService.getAllBooksByCriteria(isbn, author, bookTitle, categoryName, page - 1, size, authentication);
 
         } catch (Exception e) {
 
@@ -95,9 +116,9 @@ public class BookController {
         }
 
         int totalPages = bookPage.getTotalPages();
-        
-        System.out.println("com.bigcity.controllers.BookController.showAllBooks()>>>>>>>>>>>>>>>>>"+totalPages);
-        
+
+        System.out.println("com.bigcity.controllers.BookController.showAllBooks()>>>>>>>>>>>>>>>>>" + totalPages);
+
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
                     .boxed()

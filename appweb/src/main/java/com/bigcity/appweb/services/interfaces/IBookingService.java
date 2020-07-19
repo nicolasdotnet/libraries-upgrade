@@ -63,12 +63,4 @@ public interface IBookingService {
      */
     List<Booking> getAllBookingByUser(Authentication authentication) throws Exception;
     
-    /**
-     * method to remove a booking
-     * 
-     * @param bookingId
-     * @param authentication
-     */
-    void delete(Long bookingId, Authentication authentication);
-    
 }

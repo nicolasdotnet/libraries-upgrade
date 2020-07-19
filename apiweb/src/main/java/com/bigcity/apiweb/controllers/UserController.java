@@ -7,13 +7,11 @@ import com.bigcity.apiweb.dto.UserDTO;
 import com.bigcity.apiweb.entity.User;
 import com.bigcity.apiweb.services.interfaces.IUserService;
 import com.bigcity.apiweb.specifications.UserCriteria;
-import com.bigcity.apiweb.specifications.UserSpecification;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URI;
-import java.util.List;
 import javax.validation.Valid;
 
 import org.apache.logging.log4j.LogManager;

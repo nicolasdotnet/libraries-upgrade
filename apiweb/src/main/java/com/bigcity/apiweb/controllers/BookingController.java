@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
@@ -123,15 +124,11 @@ public class BookingController {
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @GetMapping("/api/user/bookings")
-    public ResponseEntity showAllBookingsByUser(@RequestParam(defaultValue = " ") String email) throws Exception {
+    public ResponseEntity showAllBookingsByUser(@RequestParam String email) throws Exception {
 
         log.debug("showAllBookingsByUser()", email);
 
-        List<Booking> bookings = null;
-
-        bookings = iBookingService.getAllBookingByUser(email);
-
-        return ResponseEntity.ok(bookings);
+        return ResponseEntity.ok(iBookingService.getAllBookingByUser(email));
 
     }
 
@@ -148,6 +145,21 @@ public class BookingController {
 
         return ResponseEntity.ok(iBookingService.bookIsBack(Long.valueOf(id)));
 
+    }
+
+    
+    @ApiOperation("Enregistrer un retour de livre à la bibliothéque suite à un prêt.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "retour du livre enregistré", response = BookingDTO.class),
+        @ApiResponse(code = 404, message = "le prêt n'existe pas dans la base"),
+        @ApiResponse(code = 401, message = "une authentification est nécessaire")
+    })
+    @GetMapping("/api/user/alpha")
+    public ResponseEntity getBookingOut() {
+
+        Date dateToday = new Date();
+
+        return ResponseEntity.ok(iBookingService.getAllBookingByOutdated(dateToday));
     }
 
 }

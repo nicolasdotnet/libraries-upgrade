@@ -181,9 +181,9 @@ public class BookingServiceImpl implements IBookingService {
                 .toLocalDate();
 //
 //        // ne marche pas avec un date sans le time !
-        bookingFind.get().getBookingEndDate().toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+//        bookingFind.get().getBookingEndDate().toInstant()
+//                .atZone(ZoneId.systemDefault())
+//                .toLocalDate();
 //        System.out.println("old date : 2 " + bookingEndDateOld.toString());
 //
         LocalDate bookingEndDateNew = bookingEndDateOld.plusDays((Long.valueOf(bookingDuration) + 1));

@@ -6,8 +6,16 @@
 package com.bigcity.appweb.controllers;
 
 import com.bigcity.appweb.beans.Booking;
+import com.bigcity.appweb.beans.ExceptionMessage;
 import com.bigcity.appweb.services.interfaces.IBookingService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +44,7 @@ public class BookingController {
 
     // save booking with a book
     @PostMapping("/user/book/{isbn}/booking")
-    public String saveBookingBook(@PathVariable("isbn") String isbn, Authentication authentication, final RedirectAttributes redirectAttributes) {
+    public String saveBookingBook(@PathVariable("isbn") String isbn, Authentication authentication, final RedirectAttributes redirectAttributes) throws JsonProcessingException {
 
         log.debug("saveBookingBook() isbn: {}", isbn);
 
@@ -46,8 +54,19 @@ public class BookingController {
             bookingNew = iBookingService.register(isbn, authentication);
 
         } catch (Exception e) {
+            
+            System.out.println("com.bigcity.appweb.controllers.BookingController.saveBookingBook() : "+e.getMessage());
 
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            ObjectMapper mapper = new ObjectMapper();
+
+            ExceptionMessage ex = mapper.readValue(e.getMessage(), ExceptionMessage.class);
+
+            System.out.println("com.bigcity.appweb.controllers.BookingController.saveBookingBook()");
+//                    + ex.getMessage());
+
+            //response message
+//            model.addAttribute("error", jsonMap.get("message"));
+//            redirectAttributes.addFlashAttribute("error", ex.getMessage());
 
             return "redirect:/user/books/" + isbn;
         }
@@ -110,28 +129,27 @@ public class BookingController {
 
     }
 
-    // cancel booking
-    @DeleteMapping("/user/bookings/{id}/cancel")
-    public String cancelBooking(@PathVariable("id") int id, Authentication authentication, final RedirectAttributes redirectAttributes) {
-
-        log.debug("cancelBooking() id: {}", id);
-
-        try {
-
-            iBookingService.delete(Long.valueOf(id), authentication);
-
-        } catch (Exception e) {
-
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/user/bookings/{id}";
-        }
-
-        redirectAttributes.addFlashAttribute("msg", "Réservation annulée");
-
-        return "redirect:/user/bookings";
-
-    }
-
+//    // cancel booking
+//    @DeleteMapping("/user/bookings/{id}/cancel")
+//    public String cancelBooking(@PathVariable("id") int id, Authentication authentication, final RedirectAttributes redirectAttributes) {
+//
+//        log.debug("cancelBooking() id: {}", id);
+//
+//        try {
+//
+//            iBookingService.delete(Long.valueOf(id), authentication);
+//
+//        } catch (Exception e) {
+//
+//            redirectAttributes.addFlashAttribute("error", e.getMessage());
+//            return "redirect:/user/bookings/{id}";
+//        }
+//
+//        redirectAttributes.addFlashAttribute("msg", "Réservation annulée");
+//
+//        return "redirect:/user/bookings";
+//
+//    }
     // extend booking
     @GetMapping("/user/bookings/{id}/extend")
     public String extendBooking(@PathVariable("id") int id, Authentication authentication, final RedirectAttributes redirectAttributes) {

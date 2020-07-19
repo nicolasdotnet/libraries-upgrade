@@ -1,4 +1,4 @@
-package com.bigcity.appweb.beans;
+package com.bigcity.batch.bean;
 
 import java.io.Serializable;
 import java.util.Collection;

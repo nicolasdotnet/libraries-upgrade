@@ -7,9 +7,9 @@ package com.bigcity.appweb.services;
 
 import com.bigcity.appweb.beans.Booking;
 import com.bigcity.appweb.dto.BookingDTO;
-import com.bigcity.appweb.exception.DisplayException;
 import com.bigcity.appweb.services.interfaces.IBookingService;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +48,7 @@ public class BookingServiceImpl implements IBookingService {
     private HttpHeaders headers = new HttpHeaders();
 
     @Override
-    public Booking register(String isbn, Authentication authentication) throws Exception {
+    public Booking register(String isbn, Authentication authentication) throws URISyntaxException, RestClientException {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/bookings");
 
@@ -64,21 +64,13 @@ public class BookingServiceImpl implements IBookingService {
 
         ResponseEntity<Booking> result = null;
 
-        try {
-
-            result = restTemplate.postForEntity(uri, requestEntity, Booking.class);
-
-        } catch (RestClientException e) {
-
-            throw new DisplayException(e.getMessage());
-
-        }
+        result = restTemplate.postForEntity(uri, requestEntity, Booking.class);
 
         return result.getBody();
     }
 
     @Override
-    public Booking extend(Long bookingId, Authentication authentication) throws Exception {
+    public Booking extend(Long bookingId, Authentication authentication) throws URISyntaxException, RestClientException {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/bookings/" + bookingId);
 
@@ -86,22 +78,14 @@ public class BookingServiceImpl implements IBookingService {
 
         HttpEntity requestEntity = new HttpEntity(headers);
 
-        try {
-
-            restTemplate.put(uri, requestEntity);
-
-        } catch (RestClientException e) {
-
-            throw new Exception(e.getMessage());
-
-        }
+        restTemplate.put(uri, requestEntity);
 
         return getBooking(bookingId, authentication);
 
     }
 
     @Override
-    public Booking backBook(Long bookingId, Authentication authentication) throws Exception {
+    public Booking backBook(Long bookingId, Authentication authentication) throws URISyntaxException, RestClientException {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/bookings/" + bookingId + "/back");
 
@@ -110,22 +94,14 @@ public class BookingServiceImpl implements IBookingService {
 
         HttpEntity requestEntity = new HttpEntity(headers);
 
-        try {
-
-            restTemplate.put(uri, requestEntity);
-
-        } catch (RestClientException e) {
-
-            throw new Exception(e.getMessage());
-
-        }
+        restTemplate.put(uri, requestEntity);
 
         return getBooking(bookingId, authentication);
 
     }
 
     @Override
-    public Booking getBooking(Long bookingId, Authentication authentication) throws Exception {
+    public Booking getBooking(Long bookingId, Authentication authentication) throws URISyntaxException, RestClientException {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/bookings/" + bookingId);
 
@@ -136,21 +112,13 @@ public class BookingServiceImpl implements IBookingService {
 
         ResponseEntity<Booking> result = null;
 
-        try {
-
-            result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, Booking.class);
-
-        } catch (RestClientException e) {
-
-            throw new Exception(e.getMessage());
-
-        }
+        result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, Booking.class);
 
         return result.getBody();
     }
 
     @Override
-    public List<Booking> getAllBookingByUser(Authentication authentication) throws Exception {
+    public List<Booking> getAllBookingByUser(Authentication authentication) throws URISyntaxException, RestClientException {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/bookings?email=" + authentication.getName());
 
@@ -161,24 +129,11 @@ public class BookingServiceImpl implements IBookingService {
 
         ResponseEntity<List<Booking>> result = null;
 
-        try {
-
-            result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, new ParameterizedTypeReference<List<Booking>>() {
-            });
-
-        } catch (RestClientException e) {
-
-            throw new Exception(e.getMessage());
-
-        }
+        result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, new ParameterizedTypeReference<List<Booking>>() {
+        });
 
         return result.getBody();
 
-    }
-
-    @Override
-    public void delete(Long bookingId, Authentication authentication) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

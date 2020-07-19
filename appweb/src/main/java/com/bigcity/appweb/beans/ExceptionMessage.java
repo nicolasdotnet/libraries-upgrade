@@ -1,27 +1,33 @@
 package com.bigcity.appweb.beans;
 
-import com.bigcity.appweb.tools.ExceptionMessageBuilder;
+import java.util.Map;
 
 /**
- * Exception Message
+ * Exception Message 
  *
  * @author nicolasdotnet
  */
 public class ExceptionMessage {
-
-    private String message;
-
-    // Builder Initialitation
-    public static ExceptionMessageBuilder builder() {
-        return new ExceptionMessageBuilder();
-    }
     
-    public String getMessage() {
-        return message;
+    
+    private Map<Integer, Message[]> exception;
+
+    public ExceptionMessage() {
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public ExceptionMessage(Map<Integer, Message[]> exception) {
+        this.exception = exception;
     }
 
+    public Map<Integer, Message[]> getException() {
+        return exception;
+    }
+
+    public void setException(Map<Integer, Message[]> exception) {
+        this.exception = exception;
+    }
+
+    
+    
+    
 }

@@ -110,6 +110,25 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         System.out.println("\n register usagé : " + u2.toString() + "\n");
 
+        // register membre admin
+        firstname = "root";
+        lastname = "admin";
+        password = "123";
+        email = "admin@mail.com";
+
+        UserDTO uVa = new UserDTO();
+
+        uVa.setFirstname(firstname);
+        uVa.setLastname(lastname);
+        uVa.setPassword(password);
+        uVa.setEmail(email);
+
+        User ua = iUserService.registerForMembre(uVa);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+
+        System.out.println("\n register admin : " + ua.toString() + "\n");
+
         // register one bookCategory
         String bookCategoryLabel = "Polar";
 
@@ -154,7 +173,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
             }
             int copiesAvailable = 5;
             String bcLabel = "Polar";
-            String resume = "Vol "+x + "  : Le dev ninja délivre ses conseils pour savoir repérer les beaux codes du XXIe siècle : "
+            String resume = "Vol " + x + "  : Le dev ninja délivre ses conseils pour savoir repérer les beaux codes du XXIe siècle : "
                     + "script contemporains, hi-fi d'antan, nouvelles matières comme le Formica ou luminaires, modèles iconiques.";
 
             BookDTO bookDTO = new BookDTO();

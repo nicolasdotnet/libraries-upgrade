@@ -3,6 +3,7 @@ package com.bigcity.appweb.services;
 import com.bigcity.appweb.beans.Book;
 import com.bigcity.appweb.services.interfaces.IBookService;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +43,7 @@ public class BookServiceImpl implements IBookService {
     private HttpHeaders headers = new HttpHeaders();
 
     @Override
-    public List<Book> getAllBooks(Authentication authentication) throws Exception {
+    public List<Book> getAllBooks(Authentication authentication) throws URISyntaxException, RestClientException {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/books/all");
 
@@ -53,23 +54,16 @@ public class BookServiceImpl implements IBookService {
 
         ResponseEntity<List<Book>> result = null;
 
-        try {
-
-            result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, new ParameterizedTypeReference<List<Book>>() {
-            });
-
-        } catch (RestClientException e) {
-
-            throw new Exception(e.getMessage());
-
-        }
+        result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, new ParameterizedTypeReference<List<Book>>() {
+        });
 
         return result.getBody();
 
     }
 
+    //////////////////////// MODELE DE METHODE SANS CATH
     @Override
-    public Book getBook(Long id, Authentication authentication) throws Exception {
+    public Book getBook(Long id, Authentication authentication) throws URISyntaxException, RestClientException {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/books/" + id);
 
@@ -78,24 +72,14 @@ public class BookServiceImpl implements IBookService {
 
         HttpEntity requestEntity = new HttpEntity(headers);
 
-        ResponseEntity<Book> result = null;
-
-        try {
-
-            result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, Book.class);
-
-        } catch (RestClientException e) {
-
-            throw new Exception(e.getMessage());
-
-        }
+        ResponseEntity<Book> result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, Book.class);
 
         return result.getBody();
 
     }
 
     @Override
-    public Book getBookByIsbn(String isbn, Authentication authentication) throws Exception {
+    public Book getBookByIsbn(String isbn, Authentication authentication) throws URISyntaxException, RestClientException {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/books/" + isbn);
 
@@ -106,22 +90,15 @@ public class BookServiceImpl implements IBookService {
 
         ResponseEntity<Book> result = null;
 
-        try {
-
-            result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, Book.class);
-
-        } catch (RestClientException e) {
-
-            throw new Exception(e.getMessage());
-
-        }
+        result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, Book.class);
 
         return result.getBody();
 
     }
 
     @Override
-    public Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int p, int s, Authentication authentication) throws Exception {
+    public Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int p, int s, Authentication authentication)
+            throws URISyntaxException, RestClientException {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/books?isbn=" + isbn + "&author=" + author + "&bookTitle=" + bookTitle
                 + "&categoryName=" + categoryName + "&page=" + p + "&size=" + s);
@@ -136,13 +113,7 @@ public class BookServiceImpl implements IBookService {
         ParameterizedTypeReference<RestResponsePage<Book>> responseType = new ParameterizedTypeReference<RestResponsePage<Book>>() {
         };
 
-        try {
-            result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, responseType);
-        } catch (RestClientException e) {
-
-            throw new Exception(e.getMessage());
-
-        }
+        result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, responseType);
 
         return result.getBody();
 
