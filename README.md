@@ -66,7 +66,7 @@ mvn spring-boot:run
 ```
 Par défault, le batch excécute la tache tous les jour à xx
 
-Pour personnalisée le l'heure, vous pouvez modifier les valeurs des clès du fichier ressources/application.properties du projet : 
+Pour personnalisée l'heure, vous pouvez modifier les valeurs des clès du fichier ressources/application.properties du projet : 
 
 ```shell
 cron.expression:0 Min Heure * * ?
@@ -76,9 +76,13 @@ cron.expression:0 Min Heure * * ?
 
 - Aller sur un navigateur à l'adresse http://localhost:9090
 
-Il existe un compte Membre dans la base démo :
+Il existe un compte bibliothécaire et un compte usager dans la base démo :
 
-Identifiant : membre
+Identifiant : employe@mail.com
+
+Mot de passe : 123
+
+Identifiant : usager@mail.com
 
 Mot de passe : 123
 

@@ -28,8 +28,6 @@ public class BatchApplication extends SpringBootServletInitializer implements Co
 
     public void run(String... args) throws Exception {
 
-        System.out.println("A com.bigcity.services.ScheduledTasks.scheduleRevive()");
-
     }
 
 }

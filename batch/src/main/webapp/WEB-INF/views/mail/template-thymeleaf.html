@@ -2,14 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Biblio Relance</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body>
         <p>Bonjour<span th:text="${userName}"></span> </p>
         <p>Sauf erreur de notre part, vous avez emprunté le document suivant au sein de biblio : </p>
         <p th:text="${title}"></p>
-        <p>Son retour était fixé au <span th:text="${#dates.format(bookingEndDate,'dd MMM yyyy')}"></span></p>
+        <p>Son retour était fixé au <span th:text="${bookingEndDate}"></span></p> 
         <p>La durée maximale du prêt étant désormais dépassée, nous vous serions reconnaissants de le restituer dès que possible.</p>
         <p>D'autres lecteurs peuvent en avoir besoin.</p>
         <p>Cordialement.</p>

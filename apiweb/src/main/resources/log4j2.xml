@@ -4,7 +4,6 @@
     
     <Properties>
         <Property name="basePath">logs</Property>
-        <!-- resources/all.log ; ../Log4j2Example/logs(error) ; ./Log4j2Example/logs (googler racine du projet) -->
     </Properties>
     
     <Appenders>
@@ -15,8 +14,9 @@
                 <OnStartupTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size ="100 KB"/>
             </Policies> 
-        </RollingFile> 
+        </RollingFile>
         
+        <!-- Console Appender -->
         <Console name="STDOUT" target="SYSTEM_OUT">
             <PatternLayout pattern="%m%n"/>
         </Console>

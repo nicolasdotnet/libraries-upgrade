@@ -7,9 +7,12 @@ package com.bigcity.appweb.security;
 
 import com.bigcity.appweb.beans.User;
 import com.bigcity.appweb.dto.LoginDTO;
+import com.bigcity.appweb.services.Tools;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -57,9 +61,12 @@ public class CustomAuthentication implements AuthenticationProvider {
         
         try {
             user = login(email, password);
-        } catch (Exception ex) {
+        } catch (HttpClientErrorException ex) {
             
-            throw new BadCredentialsException(ex.getMessage());
+            throw new BadCredentialsException(Tools.messageExtraction(ex).getMessage());
+            
+        } catch (URISyntaxException ex) {
+            java.util.logging.Logger.getLogger(CustomAuthentication.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         if (user != null) {
@@ -81,7 +88,7 @@ public class CustomAuthentication implements AuthenticationProvider {
 
     }
 
-    public User login(String email, String password) throws Exception {
+    public User login(String email, String password) throws URISyntaxException {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/login");
 

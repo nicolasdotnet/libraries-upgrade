@@ -49,7 +49,7 @@ public class BookController {
         log.debug("saveBook()");
 
         Book bookSave = iBookService.register(bookDto);
- 
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -76,7 +76,7 @@ public class BookController {
 
     }
 
-    @ApiOperation("Mettre à jour un livre à partir de son ID présent dans la base")
+    @ApiOperation("Mettre à jour un livre à partir de son ID")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "ok", response = BookDTO.class),
         @ApiResponse(code = 404, message = "le livre n'existe pas dans la base"),

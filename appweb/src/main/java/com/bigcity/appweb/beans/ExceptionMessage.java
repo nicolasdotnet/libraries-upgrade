@@ -1,6 +1,6 @@
 package com.bigcity.appweb.beans;
 
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Exception Message 
@@ -9,25 +9,47 @@ import java.util.Map;
  */
 public class ExceptionMessage {
     
+    @JsonProperty("message")
+    private String message;
     
-    private Map<Integer, Message[]> exception;
+    @JsonProperty("className")
+    private String className;
+    
+    @JsonProperty("path")
+    private String path;
+    
+    @JsonProperty("date")
+    private String date;
 
-    public ExceptionMessage() {
+    public String getMessage() {
+        return message;
     }
 
-    public ExceptionMessage(Map<Integer, Message[]> exception) {
-        this.exception = exception;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public Map<Integer, Message[]> getException() {
-        return exception;
+    public String getClassName() {
+        return className;
     }
 
-    public void setException(Map<Integer, Message[]> exception) {
-        this.exception = exception;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
-    
-    
-    
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }

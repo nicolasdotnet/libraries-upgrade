@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.MessagingException;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -37,6 +38,8 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 @Service
 public class ScheduledTasks implements IScheduledTasks {
 
+    private final org.apache.logging.log4j.Logger log = LogManager.getLogger(ScheduledTasks.class);
+
     @Autowired
     private IEmailService iEmailService;
 
@@ -54,14 +57,15 @@ public class ScheduledTasks implements IScheduledTasks {
 
     @Value("${api.server.port}")
     private String serverPort;
+    // apiserveurport
 
     @Value("${baseUrl}")
     private String baseUrl;
 
-    @Value("${login}")
+    @Value("${apiLogin}")
     private String login;
 
-    @Value("${password}")
+    @Value("${apiPassword}")
     private String password;
 
     private HttpHeaders headers = new HttpHeaders();
@@ -70,16 +74,15 @@ public class ScheduledTasks implements IScheduledTasks {
     @Override
     public void scheduleBookingReminder() {
 
-        System.out.println("B com.bigcity.services.ScheduledTasks.scheduleRevive()");
+        log.debug("scheduleBookingReminder()");
 
         List<Booking> bookings = null;
 
         try {
             bookings = getAllBookingByOutdated();
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(ScheduledTasks.class.getName()).log(Level.SEVERE, null, ex);
+
         } catch (RestClientException ex) {
-            Logger.getLogger(ScheduledTasks.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("erreur dans la réponse de l'api !" + ex.getMessage());
         }
 
         for (Booking booking : bookings) {
@@ -107,11 +110,17 @@ public class ScheduledTasks implements IScheduledTasks {
     }
 
     @Override
-    public List<Booking> getAllBookingByOutdated() throws URISyntaxException, RestClientException {
+    public List<Booking> getAllBookingByOutdated() {
 
-        System.out.println("C com.bigcity.services.ScheduledTasks.scheduleRevive()");
+        log.debug("getAllBookingByOutdated()");
 
-        URI uri = new URI(baseUrl + serverPort + "/api/user/alpha");
+        URI uri = null;
+
+        try {
+            uri = new URI(baseUrl + serverPort + "/api/user/alpha");
+        } catch (URISyntaxException ex) {
+            log.error("erreur de endpoint !");
+        }
 
 // add basic authentication header
         headers.setBasicAuth(login, password);
@@ -125,31 +134,14 @@ public class ScheduledTasks implements IScheduledTasks {
 
         if (result.getBody().isEmpty()) {
 
-            System.out.println("Pas de relances : " + result.getStatusCode());
-
-            Map<String, Object> templateModel = new HashMap<>();
-            templateModel.put("userName", "Laure");
-            templateModel.put("title", "RELANCE");
-            templateModel.put("bookingEndDate", "Aujourd'hui");
-            templateModel.put("senderName", senderName);
-
-            Context thymeleafContext = new Context();
-            thymeleafContext.setVariables(templateModel);
-
-            String htmlBody = thymeleafTemplateEngine.process("template-thymeleaf.html", thymeleafContext);
-
-            try {
-                iEmailService.sendHtmlMessage("laure@yahoo.com", reminderSubject, htmlBody);
-            } catch (MessagingException ex) {
-
-                Logger.getLogger(ScheduledTasks.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            log.info("il n'y a pas de relances ");
 
         } else {
 
-            System.out.println("il y a " + result.getBody().size() + " relances");
+            log.info("il y a " + result.getBody().size() + " relances");
         }
 
         return result.getBody();
     }
+
 }

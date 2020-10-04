@@ -49,10 +49,8 @@ public class UserController {
 
         log.debug("saveUser()");
 
-        // TODO ajouter securité
         User userSave = iUserService.registerByDefault(userDto);
 
-//code 201, ajouter l'URI 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -116,6 +114,8 @@ public class UserController {
     })
     @GetMapping("/api/user/users")
     public ResponseEntity getUserByEmail(@RequestParam String email) {
+        
+        log.debug("getUserByEmail()");
 
         return ResponseEntity.ok(iUserService.getUserByEmail(email));
 

@@ -32,7 +32,6 @@ public class ExceptionHandlerControllerAdvice {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ExceptionMessage> handleEntityNoFoudException(HttpServletRequest request, EntityNotFoundException e) {
-        // log exception 
 
         ExceptionMessage message = ExceptionMessage.builder()
                 .date(LocalDateTime.now().format(formatter))
@@ -46,7 +45,6 @@ public class ExceptionHandlerControllerAdvice {
 
     @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<ExceptionMessage> handleEntityAlreadyExistsException(HttpServletRequest request, EntityAlreadyExistsException e) {
-        // log exception 
 
         ExceptionMessage message = ExceptionMessage.builder()
                 .date(LocalDateTime.now().format(formatter))
@@ -60,7 +58,6 @@ public class ExceptionHandlerControllerAdvice {
 
     @ExceptionHandler(BookingNotPossibleException.class)
     public ResponseEntity<ExceptionMessage> handleBookingNotPossibleException(HttpServletRequest request, BookingNotPossibleException e) {
-        // log exception
 
         ExceptionMessage message = ExceptionMessage.builder()
                 .date(LocalDateTime.now().format(formatter))

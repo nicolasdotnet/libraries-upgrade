@@ -24,10 +24,6 @@
                 <div  class="col-sm-8 d-none d-sm-block"><h3>Informations</h3></div>
 
                 <div class="col-sm-4 d-none d-sm-block align-self-center">
-                    <form th:action="@{/user/bookings/}+${bookingFind.bookingId}+@{/back}">
-                        <button class="btn btn-primary x float-right"
-                                onclick="return confirm('Êtes-vous sûr ?')">Faire un retour</button>
-                    </form>
                     <form th:action="@{/user/bookings/}+${bookingFind.bookingId}+@{/extend}">
                         <button class="btn btn-primary x float-right"
                                 onclick="return confirm('Êtes-vous sûr ?')">Prolonger le prêt</button>
@@ -53,14 +49,14 @@
                         <label>Date de fin :</label>
                         <span th:text="${#dates.format(bookingFind.bookingEndDate,'dd MMM yyyy')}"></span>
                     </div>
+                    <div>
+                        <label>Date de retour :</label>
+                        <span th:text="${#dates.format(bookingFind.backBookDate,'dd MMM yyyy')}"></span>
+                    </div>
                 </div>
             </div>
 
             <div class="col-sm-3 d-block d-sm-none">
-                <form th:action="@{/user/bookings/}+${bookingFind.bookingId}+@{/back}">
-                    <button class="btn btn-primary x float-right"
-                            onclick="return confirm('Êtes-vous sûr ?')">Faire un retour</button>
-                </form>
                 <form th:action="@{/user/bookings/}+${bookingFind.bookingId}+@{/extend}">
                     <button class="btn btn-primary x float-right"
                             onclick="return confirm('Êtes-vous sûr ?')">Prolonger le prêt</button>

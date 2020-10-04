@@ -1,15 +1,12 @@
 package com.bigcity.appweb.controllers;
 
 import com.bigcity.appweb.beans.Book;
+import com.bigcity.appweb.services.Tools;
 import com.bigcity.appweb.services.interfaces.IBookService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.net.URISyntaxException;
 
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -24,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Controller
 @Transactional
@@ -34,9 +32,8 @@ public class BookController {
     @Autowired
     private IBookService iBookService;
 
-    // show book
     @GetMapping("/user/books/{isbn}")
-    public String showBook(@PathVariable("isbn") String isbn, Model model, Authentication authentication) {
+    public String showBook(@PathVariable("isbn") String isbn, Model model, Authentication authentication) throws URISyntaxException {
 
         log.debug("showBook() isbn: {}", isbn);
 
@@ -44,23 +41,9 @@ public class BookController {
 
         try {
             bookFind = iBookService.getBookByIsbn(isbn, authentication);
-        } catch (Exception e) {
+        } catch (HttpClientErrorException e) {
 
-            // methode string to map
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            Map<String, Object> jsonMap = null;
-            
-            try {
-                jsonMap = objectMapper.readValue(e.getMessage(),
-                        new TypeReference<Map<String, Object>>() {
-                        });
-            } catch (JsonProcessingException ex) {
-                java.util.logging.Logger.getLogger(BookController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            //response message
-            model.addAttribute("error", jsonMap.get("message"));
+            model.addAttribute("error", Tools.messageExtraction(e).getMessage());
 
             return "book/show";
         }
@@ -71,17 +54,18 @@ public class BookController {
 
     }
 
-    // show all book
     @GetMapping("/user/book/all")
-    public String showBooks(Model model, Authentication authentication) {
+    public String showBooks(Model model, Authentication authentication) throws URISyntaxException {
+        
+        log.debug("showBooks()");
 
         List<Book> bookFind = null;
 
         try {
             bookFind = iBookService.getAllBooks(authentication);
-        } catch (Exception e) {
+        } catch (HttpClientErrorException e) {
 
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("error", Tools.messageExtraction(e).getMessage());
 
             return "book/list";
         }
@@ -92,7 +76,6 @@ public class BookController {
 
     }
 
-    // book list page
     @GetMapping("/user/books")
     public String showAllBooks(Model model,
             @RequestParam(name = "isbn", defaultValue = "") String isbn,
@@ -100,7 +83,7 @@ public class BookController {
             @RequestParam(name = "title", defaultValue = "") String bookTitle,
             @RequestParam(name = "categoryName", defaultValue = "") String categoryName,
             @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "size", defaultValue = "5") int size, Authentication authentication) {
+            @RequestParam(name = "size", defaultValue = "5") int size, Authentication authentication) throws URISyntaxException {
 
         log.debug("showAllBooks()");
 
@@ -109,15 +92,13 @@ public class BookController {
         try {
             bookPage = iBookService.getAllBooksByCriteria(isbn, author, bookTitle, categoryName, page - 1, size, authentication);
 
-        } catch (Exception e) {
+        } catch (HttpClientErrorException e) {
 
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("error", Tools.messageExtraction(e).getMessage());
 
         }
 
         int totalPages = bookPage.getTotalPages();
-
-        System.out.println("com.bigcity.controllers.BookController.showAllBooks()>>>>>>>>>>>>>>>>>" + totalPages);
 
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
@@ -132,7 +113,6 @@ public class BookController {
         return "book/list";
     }
 
-    // multisearch book
     @GetMapping("/user/book/multisearch")
     public String multisearch(Model model) {
 

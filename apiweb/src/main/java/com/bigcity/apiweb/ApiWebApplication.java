@@ -1,5 +1,6 @@
 package com.bigcity.apiweb;
 
+import com.bigcity.apiweb.dao.IBookingRepository;
 import com.bigcity.apiweb.dto.BookCategoryDTO;
 import com.bigcity.apiweb.dto.BookDTO;
 import com.bigcity.apiweb.dto.BookingDTO;
@@ -9,6 +10,7 @@ import com.bigcity.apiweb.dto.UserDTO;
 import com.bigcity.apiweb.entity.Book;
 import com.bigcity.apiweb.entity.BookCategory;
 import com.bigcity.apiweb.entity.Booking;
+import com.bigcity.apiweb.entity.BookingStatus;
 import com.bigcity.apiweb.entity.Role;
 import com.bigcity.apiweb.entity.User;
 import com.bigcity.apiweb.services.interfaces.IBookCategoryService;
@@ -23,6 +25,8 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.List;
 import com.bigcity.apiweb.services.interfaces.IBookingService;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -46,6 +50,9 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
     @Autowired
     private IBookingService iBookingService;
+
+    @Autowired
+    private IBookingRepository iBookingRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(ApiWebApplication.class, args);
@@ -76,7 +83,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         String firstname = "nicolas";
         String lastname = "desdevises";
         String password = "123";
-        String email = "nicolas.desdevises@yahoo.com";
+        String email = "employe@mail.com";
 
         UserDTO uV1 = new UserDTO();
 
@@ -85,17 +92,19 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         uV1.setPassword(password);
         uV1.setEmail(email);
 
+        
+        //registerEmploye
         User u = iUserService.registerForMembre(uV1);
 
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
 
         System.out.println("\n register admin : " + u.toString() + "\n");
 
-        // register default User
+        // register default User / Client
         firstname = "laure";
         lastname = "desdevises";
         password = "123";
-        email = "laure@yahoo.com";
+        email = "usager@mail.com";
 
         UserDTO uV2 = new UserDTO();
 
@@ -340,10 +349,44 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         System.out.println("\n register book 5 : " + b5.toString() + "\n");
 
-        // register one booking
+        // register old booking
         String librarianEmail = u.getEmail();
         String bookingEmail = u2.getEmail();
-        String bookIsbn = b.getIsbn();
+        String bookIsbn = b5.getIsbn();
+
+        BookingDTO bookingDTOOld = new BookingDTO();
+
+        bookingDTOOld.setLibrarianEmail(librarianEmail);
+        bookingDTOOld.setBookingUserEmail(bookingEmail);
+        bookingDTOOld.setBookIsbn(bookIsbn);
+
+        Booking old = iBookingService.register(bookingDTOOld);
+
+        Date bookingStartDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-02-14");
+        old.setBookingStartDate(bookingStartDate);
+
+        Date bookingEndDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-02-28");
+        old.setBookingEndDate(bookingEndDate);
+
+        iBookingRepository.saveAndFlush(old);
+
+        // register old booking 2 with termine
+        bookingDTOOld.setLibrarianEmail(librarianEmail);
+        bookingDTOOld.setBookingUserEmail(bookingEmail);
+        bookingDTOOld.setBookIsbn("5613521");
+        
+        old = iBookingService.register(bookingDTOOld);
+        
+        old.setBookingStartDate(bookingStartDate);
+        old.setBookingEndDate(bookingEndDate);
+        old.setBookingStatus(BookingStatus.TERMINE.getValue());
+        
+        iBookingRepository.saveAndFlush(old);
+
+        // register one booking
+        librarianEmail = u.getEmail();
+        bookingEmail = u2.getEmail();
+        bookIsbn = b.getIsbn();
 
         BookingDTO bookingDTO = new BookingDTO();
 
@@ -462,25 +505,12 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         // Liste booking relance
         librarianEmail = u.getEmail();
         bookingEmail = u2.getEmail();
-        bookIsbn = b.getIsbn();
 
         bookingDTO = new BookingDTO();
 
         bookingDTO.setLibrarianEmail(librarianEmail);
         bookingDTO.setBookingUserEmail(bookingEmail);
         bookingDTO.setBookIsbn("56135300");
-
-        r = iBookingService.register(bookingDTO);
-
-        librarianEmail = u.getEmail();
-        bookingEmail = u2.getEmail();
-        bookIsbn = b.getIsbn();
-
-        bookingDTO = new BookingDTO();
-
-        bookingDTO.setLibrarianEmail(librarianEmail);
-        bookingDTO.setBookingUserEmail(bookingEmail);
-        bookingDTO.setBookIsbn("561353");
 
         r = iBookingService.register(bookingDTO);
 

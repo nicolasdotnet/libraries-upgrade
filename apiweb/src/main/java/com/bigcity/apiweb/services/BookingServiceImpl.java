@@ -48,10 +48,10 @@ public class BookingServiceImpl implements IBookingService {
     @Autowired
     private IUserService iUserService;
 
-    @Value("${bookingDuration}")
+    @Value("${bookingDurationInDay}")
     private String bookingDuration;
 
-    @Value("${counterExtension}")
+    @Value("${bookingCounterExtension}")
     private String counterExtension;
 
     @Override
@@ -132,7 +132,7 @@ public class BookingServiceImpl implements IBookingService {
 
         if (email.isEmpty()) {
 
-            throw new EntityNotFoundException("Il n'y a pas de réservations pour cet usager dans la base.");
+            throw new EntityNotFoundException("Il n'y a pas de réservations pour cet usager.");
         }
 
         Optional<User> userFind = iUserService.getUserByEmail(email);
@@ -150,7 +150,7 @@ public class BookingServiceImpl implements IBookingService {
 
         if (!bookingFind.isPresent()) {
 
-            log.error("La réservation n'existe pas dans la base.");
+            log.error("La réservation n'existe pas.");
 
             throw new EntityNotFoundException("la réservation n'existe pas !");
 
@@ -215,8 +215,12 @@ public class BookingServiceImpl implements IBookingService {
 
     @Override
     public List<Booking> getAllBookingByOutdated(Date dateToday) {
-
-        return bookingRepository.findAllByBookingEndDate(dateToday);
+        
+        // sup à la date du jour fin la 25 debut relance 26 !!
+        
+        // patvarable / request par default date du jour de la date de la date user
+        
+        return bookingRepository.findAllByBookingEndDateLessThanEqualAndBookingStatusNotLike(dateToday,BookingStatus.TERMINE.getValue());
 
     }
 

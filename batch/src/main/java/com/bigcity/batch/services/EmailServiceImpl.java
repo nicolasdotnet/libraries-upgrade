@@ -10,6 +10,7 @@ import java.io.File;
 import javax.mail.MessagingException;
 
 import javax.mail.internet.MimeMessage;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -25,21 +26,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailServiceImpl implements IEmailService {
 
-    private static final String NOREPLY_ADDRESS = "noreply@biblio.com";
+    private final org.apache.logging.log4j.Logger log = LogManager.getLogger(EmailServiceImpl.class);
 
     @Autowired
     private JavaMailSender emailSender;
 
     @Value("classpath:/mail-logo.png")
-    Resource resourceFile;
+    private Resource resourceFile;
+
+    @Value("noreply_address")
+    private String noreplyAddress;
 
     @Override
     public void sendHtmlMessage(String to, String subject, String htmlBody) throws MessagingException {
 
-//        logger.info("sendHtmlMessage() {}", to);
+        log.debug("sendHtmlMessage() to: subject: htmlBody: {}");
+
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setFrom(NOREPLY_ADDRESS);
+        helper.setFrom(noreplyAddress);
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);
@@ -48,12 +53,13 @@ public class EmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public void sendHtmlMessage(String to, String subject, String htmlBody, String pathToAttachment) throws MessagingException{
+    public void sendHtmlMessage(String to, String subject, String htmlBody, String pathToAttachment) throws MessagingException {
 
-//        logger.info("sendHtmlMessage() {}", to);
+        log.debug("sendHtmlMessage() to: subject: htmlBody: pathToAttachment: {}");
+        
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setFrom(NOREPLY_ADDRESS);
+        helper.setFrom(noreplyAddress);
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);

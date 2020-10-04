@@ -17,20 +17,20 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 @Configuration
 public class EmailConfiguration {
 
-//    @Bean
-//    public SpringResourceTemplateResolver thymeleafTemplateResolver() {
-//        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-//        templateResolver.setPrefix("/WEB-INF/views/mail/");
-//        templateResolver.setSuffix(".html");
-//        templateResolver.setTemplateMode("HTML");
-//        templateResolver.setCharacterEncoding("UTF-8");
-//        return templateResolver;
-//    }
+    @Bean
+    public SpringResourceTemplateResolver thymeleafTemplateResolver() {
+        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+        templateResolver.setPrefix("/WEB-INF/views/mail/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode("HTML");
+        templateResolver.setCharacterEncoding("UTF-8");
+        return templateResolver;
+    }
 
     @Bean
     public SpringTemplateEngine thymeleafTemplateEngine() {
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-//        templateEngine.setTemplateResolver(thymeleafTemplateResolver());
+        templateEngine.setTemplateResolver(thymeleafTemplateResolver());
         return templateEngine;
     }
 

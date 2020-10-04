@@ -6,8 +6,10 @@
 package com.bigcity.appweb.services.interfaces;
 
 import com.bigcity.appweb.beans.Booking;
+import java.net.URISyntaxException;
 import java.util.List;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.client.RestClientException;
 
 /**
  *
@@ -20,47 +22,42 @@ public interface IBookingService {
      * 
      * @param isbn
      * @param authentication
-     * @return
-     * @throws Exception
+     * @throws java.net.URISyntaxException
      */
-    Booking register (String isbn, Authentication authentication)throws Exception;
+    Booking register (String isbn, Authentication authentication)throws URISyntaxException, RestClientException;
     
     /**
      * method to extend a booking
      * 
      * @param bookingId
      * @param authentication
-     * @return
-     * @throws Exception
+     * @throws java.net.URISyntaxException
      */
-    Booking extend(Long bookingId, Authentication authentication) throws Exception;
+    Booking extend(Long bookingId, Authentication authentication)throws URISyntaxException, RestClientException;
     
     /**
      *
      * @param bookingId
      * @param authentication
-     * @return
-     * @throws Exception
+     * @throws java.net.URISyntaxException
      */
-    Booking backBook(Long bookingId, Authentication authentication) throws Exception;
+    Booking backBook(Long bookingId, Authentication authentication)throws URISyntaxException, RestClientException;
     
     /**
      * method to get a booking
      * 
      * @param bookingId
      * @param authentication
-     * @return
-     * @throws Exception
+     * @throws java.net.URISyntaxException
      */
-    Booking getBooking(Long bookingId, Authentication authentication) throws Exception;
+    Booking getBooking(Long bookingId, Authentication authentication)throws URISyntaxException, RestClientException;
     
     /**
      * method to get all bookings by ask user
      * 
      * @param authentication
-     * @return
-     * @throws Exception
+     * @throws java.net.URISyntaxException
      */
-    List<Booking> getAllBookingByUser(Authentication authentication) throws Exception;
+    List<Booking> getAllBookingByUser(Authentication authentication)throws URISyntaxException, RestClientException;
     
 }
