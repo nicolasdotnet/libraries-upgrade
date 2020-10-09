@@ -22,10 +22,9 @@ public class RoleServiceImpl implements IRoleService {
 
     @Autowired
     private IRoleRepository roleRepository;
-    
 
     @Override
-    public Role register(String roleName) throws Exception {
+    public Role register(String roleName) throws EntityAlreadyExistsException {
 
         Optional<Role> roleFind = roleRepository.findByRoleName(roleName);
 
@@ -45,7 +44,7 @@ public class RoleServiceImpl implements IRoleService {
     }
 
     @Override
-    public Role edit(Role role) throws Exception {
+    public Role edit(Role role) throws EntityNotFoundException {
 
         Optional<Role> roleFind = roleRepository.findById(role.getRoleId());
 
@@ -67,13 +66,23 @@ public class RoleServiceImpl implements IRoleService {
     }
 
     @Override
-    public Role getRole(Long id){
-        
-        return roleRepository.findById(id).get();
+    public Role getRole(Long id) throws EntityNotFoundException {
+
+        Optional<Role> roleFind = roleRepository.findById(id);
+
+        if (!roleFind.isPresent()) {
+
+            log.error("le role n'existe pas dans la base.");
+
+            throw new EntityNotFoundException("le role n'existe pas !");
+
+        }
+
+        return roleFind.get();
     }
 
     @Override
-    public Role getDefaultRole() throws Exception {
+    public Role getDefaultRole() throws EntityNotFoundException {
 
         Optional<Role> defaultCategory = roleRepository.findById(1L);
 

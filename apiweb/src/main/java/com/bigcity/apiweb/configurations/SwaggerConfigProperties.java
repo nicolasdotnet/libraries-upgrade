@@ -27,6 +27,9 @@ public class SwaggerConfigProperties {
     @Value("${swagger.description}")
     private String description;
 
+    @Value("${swagger.default_produces_and_consumes}")
+    private String producesAndconsumes;
+
     public String getApiVersion() {
         return apiVersion;
     }
@@ -53,6 +56,14 @@ public class SwaggerConfigProperties {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getProducesAndconsumes() {
+        return producesAndconsumes;
+    }
+
+    public void setProducesAndconsumes(String producesAndconsumes) {
+        this.producesAndconsumes = producesAndconsumes;
     }
 
     public void setDescription(String description) {

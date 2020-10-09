@@ -5,6 +5,8 @@ import com.bigcity.apiweb.dto.BookingDTO;
 import com.bigcity.apiweb.dto.LoginDTO;
 import com.bigcity.apiweb.dto.UserDTO;
 import com.bigcity.apiweb.entity.User;
+import com.bigcity.apiweb.exceptions.EntityAlreadyExistsException;
+import com.bigcity.apiweb.exceptions.EntityNotFoundException;
 import com.bigcity.apiweb.services.interfaces.IUserService;
 import com.bigcity.apiweb.specifications.UserCriteria;
 import io.swagger.annotations.Api;
@@ -28,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@Api(tags = "API pour les opérations CRUD sur les utilisateurs par un bibliothécaire.")
+@Api(tags = "API pour les opérations CRUD sur les utilisateurs.")
 @RestController
 public class UserController {
 
@@ -45,7 +47,7 @@ public class UserController {
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @PostMapping("/api/librarian/users")
-    public ResponseEntity<User> saveUser(@Valid @RequestBody UserDTO userDto) throws Exception {
+    public ResponseEntity<User> saveUser(@Valid @RequestBody UserDTO userDto) throws EntityAlreadyExistsException, EntityNotFoundException {
 
         log.debug("saveUser()");
 
@@ -69,7 +71,7 @@ public class UserController {
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @GetMapping("/api/user/users/{id}")
-    public ResponseEntity showUser(@PathVariable("id") int id) {
+    public ResponseEntity showUser(@PathVariable("id") int id) throws EntityNotFoundException{
 
         log.debug("showUser() id: {}", id);
 
@@ -113,7 +115,7 @@ public class UserController {
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @GetMapping("/api/user/users")
-    public ResponseEntity getUserByEmail(@RequestParam String email) {
+    public ResponseEntity getUserByEmail(@RequestParam String email) throws EntityNotFoundException{
         
         log.debug("getUserByEmail()");
 
@@ -126,7 +128,7 @@ public class UserController {
         @ApiResponse(code = 200, message = "ok", response = LoginDTO.class),
         @ApiResponse(code = 400, message = "erreur de saisie", response = LoginDTO.class)})
     @PostMapping("/api/user/login")
-    public ResponseEntity login(@Valid @RequestBody LoginDTO loginDTO) throws Exception {
+    public ResponseEntity login(@Valid @RequestBody LoginDTO loginDTO) throws EntityNotFoundException {
 
         log.debug("login()");
 

@@ -2,6 +2,8 @@ package com.bigcity.apiweb.controllers;
 
 import com.bigcity.apiweb.dto.BookDTO;
 import com.bigcity.apiweb.entity.Book;
+import com.bigcity.apiweb.exceptions.EntityAlreadyExistsException;
+import com.bigcity.apiweb.exceptions.EntityNotFoundException;
 import com.bigcity.apiweb.services.interfaces.IBookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,7 +29,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  *
  * @author nicolasdotnet
  */
-@Api(tags = "API pour les opérations CRUD sur les livres par un bibliothécaire.")
+@Api(tags = "API pour les opérations CRUD sur les livres.")
 @RestController
 public class BookController {
 
@@ -44,7 +46,7 @@ public class BookController {
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @PostMapping("/api/librarian/books")
-    public ResponseEntity<Book> saveBook(@Valid @RequestBody BookDTO bookDto) throws Exception {
+    public ResponseEntity<Book> saveBook(@Valid @RequestBody BookDTO bookDto) throws EntityAlreadyExistsException, EntityNotFoundException {
 
         log.debug("saveBook()");
 
@@ -68,11 +70,11 @@ public class BookController {
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @GetMapping("/api/user/books/{isbn}")
-    public ResponseEntity<Book> showBook(@PathVariable("isbn") String isbn) {
+    public ResponseEntity<Book> showBook(@PathVariable("isbn") String isbn) throws EntityNotFoundException{
 
         log.debug("showBook() isbn: {}", isbn);
 
-        return ResponseEntity.ok(iBookService.getBookByIsbn(isbn).get());
+        return ResponseEntity.ok(iBookService.getBookByIsbn(isbn));
 
     }
 
@@ -93,7 +95,7 @@ public class BookController {
 
     }
 
-    @ApiOperation("Récupère l'ensemble des livres de la base en fonction du titre, de l'auteur et du numero ISBN")
+    @ApiOperation("Récupère l'ensemble des livres en fonction du titre, de l'auteur et du numero ISBN")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "ok", response = BookDTO.class),
         @ApiResponse(code = 400, message = "erreur de saisie", response = BookDTO.class),
@@ -101,12 +103,12 @@ public class BookController {
     })
     @GetMapping(value = "/api/user/books")
     public ResponseEntity<Page<Book>> showAllBooksByCriteria(
-            @RequestParam(name = "isbn") String isbn,
-            @RequestParam(name = "author") String author,
-            @RequestParam(name = "bookTitle") String bookTitle,
-            @RequestParam(name = "categoryName") String categoryName,
-            @RequestParam(name = "page") int page,
-            @RequestParam(name = "size") int size) throws Exception {
+            @RequestParam(name = "isbn", defaultValue = "") String isbn,
+            @RequestParam(name = "author", defaultValue = "") String author,
+            @RequestParam(name = "bookTitle", defaultValue = "") String bookTitle,
+            @RequestParam(name = "categoryName", defaultValue = "") String categoryName,
+            @RequestParam(name = "page",defaultValue = "1") int page,
+            @RequestParam(name = "size",defaultValue = "5") int size){
 
         log.debug("showAllBooksByCriteria");
 

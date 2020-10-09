@@ -30,7 +30,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  *
  * @author nicolasdotnet
  */
-@Api(tags = "API pour les opérations CRUD sur les catégories de livre par un bibliothécaire.")
+@Api(tags = "API pour les opérations CRUD sur les catégories de livre.")
 @RestController
 public class BookCategoryController {
 

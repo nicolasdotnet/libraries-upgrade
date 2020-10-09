@@ -36,7 +36,7 @@ public class BookServiceImpl implements IBookService {
     private IBookCategoryService iBookCategoryService;
 
     @Override
-    public Book register(BookDTO bookDTO) throws Exception {
+    public Book register(BookDTO bookDTO) throws EntityAlreadyExistsException, EntityNotFoundException {
 
         Optional<Book> bookFind = bookRepository.findByIsbnAndTitleAndAuthor(bookDTO.getIsbn(), bookDTO.getBookTitle(), bookDTO.getAuthor());
 
@@ -65,7 +65,7 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public Book edit(BookDTO bookDTO) throws Exception {
+    public Book edit(BookDTO bookDTO) throws EntityNotFoundException {
 
         Optional<Book> bookFind = bookRepository.findByIsbn(bookDTO.getIsbn());
 
@@ -97,15 +97,35 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public Book getBook(Long id) {
+    public Book getBook(Long id) throws EntityNotFoundException {
 
-        return bookRepository.findById(id).get();
+        Optional<Book>  bookFind = bookRepository.findById(id);
+
+        if (!bookFind.isPresent()) {
+
+            log.error("le livre n'existe pas dans la base.");
+
+            throw new EntityNotFoundException("le livre n'existe pas !");
+
+        }
+
+        return bookFind.get();
     }
 
     @Override
-    public Optional<Book> getBookByIsbn(String isbn) {
+    public Book getBookByIsbn(String isbn) throws EntityNotFoundException {
 
-        return bookRepository.findByIsbn(isbn);
+        Optional<Book> bookFind = bookRepository.findByIsbn(isbn);
+
+        if (!bookFind.isPresent()) {
+
+            log.error("le livre n'existe pas dans la base.");
+
+            throw new EntityNotFoundException("le livre n'existe pas !");
+
+        }
+
+        return bookFind.get();
     }
 
     @Override
@@ -122,7 +142,7 @@ public class BookServiceImpl implements IBookService {
 
         return bookRepository.findAll(bookSpecification, PageRequest.of(page, size));
     }
-    
+
     public Book dtoToEntity(BookDTO bookDTO, BookCategory bookCategoryFind) {
 
         Book book = new Book();

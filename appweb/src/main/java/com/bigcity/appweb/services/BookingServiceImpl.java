@@ -89,7 +89,6 @@ public class BookingServiceImpl implements IBookingService {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/bookings/" + bookingId + "/back");
 
-// add basic authentication header
         headers.setBasicAuth(authentication.getName(), authentication.getCredentials().toString());
 
         HttpEntity requestEntity = new HttpEntity(headers);
@@ -105,7 +104,6 @@ public class BookingServiceImpl implements IBookingService {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/bookings/" + bookingId);
 
-// add basic authentication header
         headers.setBasicAuth(authentication.getName(), authentication.getCredentials().toString());
 
         HttpEntity requestEntity = new HttpEntity(headers);
@@ -122,7 +120,6 @@ public class BookingServiceImpl implements IBookingService {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/bookings?email=" + authentication.getName());
 
-// add basic authentication header
         headers.setBasicAuth(authentication.getName(), authentication.getCredentials().toString());
 
         HttpEntity requestEntity = new HttpEntity(headers);

@@ -1,6 +1,8 @@
 package com.bigcity.apiweb.services.interfaces;
 
 import com.bigcity.apiweb.entity.Role;
+import com.bigcity.apiweb.exceptions.EntityAlreadyExistsException;
+import com.bigcity.apiweb.exceptions.EntityNotFoundException;
 import java.util.List;
 
 
@@ -11,18 +13,18 @@ public interface IRoleService {
      *
      * @param role
      * @return role object saved
-     * @throws Exception
+     * @throws com.bigcity.apiweb.exceptions.EntityAlreadyExistsException
      */
-    Role register(String role) throws Exception;
+    Role register(String role) throws EntityAlreadyExistsException;
 
     /**
      * method to modify a role
      *
      * @param role
      * @return role object modified
-     * @throws Exception
+     * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
      */
-    Role edit(Role role) throws Exception;
+    Role edit(Role role)throws EntityNotFoundException;
 
     /**
      * method to get all user role
@@ -36,14 +38,15 @@ public interface IRoleService {
      *
      * @param id
      * @return role object find
+     * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
      */
-    Role getRole(Long id);
+    Role getRole(Long id)throws EntityNotFoundException;
 
     /**
      * method to get the default user role
      *
      * @return default role for a user
-     * @throws Exception
+     * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
      */
-    Role getDefaultRole() throws Exception;
+    Role getDefaultRole() throws EntityNotFoundException;
 }

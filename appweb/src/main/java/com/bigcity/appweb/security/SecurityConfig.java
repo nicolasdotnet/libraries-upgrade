@@ -54,7 +54,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.exceptionHandling().accessDeniedPage("/403");
 
         http.formLogin().defaultSuccessUrl("/", true);
-//        http.formLogin().loginPage("/login").defaultSuccessUrl("/", true);
         
         http.authorizeRequests().anyRequest().authenticated();
 

@@ -12,6 +12,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface IBookRepository extends JpaRepository<Book,Long>, JpaSpecificationExecutor<Book>{
 
     Optional<Book> findByIsbn(String isbn);
+    
+    Optional<Book> findById(Long id);
 
     Optional<Book> findByIsbnAndTitleAndAuthor(String isbn, String title, String author);
     

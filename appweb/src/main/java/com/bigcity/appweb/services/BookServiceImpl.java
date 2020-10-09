@@ -47,7 +47,6 @@ public class BookServiceImpl implements IBookService {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/books/all");
 
-// add basic authentication header
         headers.setBasicAuth(authentication.getName(), authentication.getCredentials().toString());
 
         HttpEntity requestEntity = new HttpEntity(headers);
@@ -61,13 +60,11 @@ public class BookServiceImpl implements IBookService {
 
     }
 
-    //////////////////////// MODELE DE METHODE SANS CATH
     @Override
     public Book getBook(Long id, Authentication authentication) throws URISyntaxException, RestClientException {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/books/" + id);
 
-// add basic authentication header
         headers.setBasicAuth(authentication.getName(), authentication.getCredentials().toString());
 
         HttpEntity requestEntity = new HttpEntity(headers);
@@ -83,7 +80,6 @@ public class BookServiceImpl implements IBookService {
 
         URI uri = new URI(baseUrl + serverPort + "/api/user/books/" + isbn);
 
-// add basic authentication header
         headers.setBasicAuth(authentication.getName(), authentication.getCredentials().toString());
 
         HttpEntity requestEntity = new HttpEntity(headers);
@@ -103,7 +99,6 @@ public class BookServiceImpl implements IBookService {
         URI uri = new URI(baseUrl + serverPort + "/api/user/books?isbn=" + isbn + "&author=" + author + "&bookTitle=" + bookTitle
                 + "&categoryName=" + categoryName + "&page=" + p + "&size=" + s);
 
-// add basic authentication header
         headers.setBasicAuth(authentication.getName(), authentication.getCredentials().toString());
 
         HttpEntity requestEntity = new HttpEntity(headers);

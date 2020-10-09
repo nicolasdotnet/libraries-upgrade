@@ -20,6 +20,8 @@ public class LibraryException extends Exception{
         super(message);
     }
     
+    // message plus autres elements => autres contruteyru
+    
     
     
     

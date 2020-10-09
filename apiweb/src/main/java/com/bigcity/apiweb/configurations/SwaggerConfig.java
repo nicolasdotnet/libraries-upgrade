@@ -5,6 +5,8 @@
  */
 package com.bigcity.apiweb.configurations;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -26,6 +28,11 @@ public class SwaggerConfig {
     @Bean
     public Docket api(SwaggerConfigProperties swaggerConfigProperties) {
         return new Docket(DocumentationType.SWAGGER_2)
+                .produces(new HashSet<>(
+                        Arrays.asList(swaggerConfigProperties.getProducesAndconsumes())))
+                .
+                consumes(new HashSet<>(
+                        Arrays.asList(swaggerConfigProperties.getProducesAndconsumes())))
                 .apiInfo(apiInfo(swaggerConfigProperties))
                 .enable(Boolean.valueOf(swaggerConfigProperties.getEnabled()))
                 .select()

@@ -55,13 +55,13 @@ public class BookingServiceImpl implements IBookingService {
     private String counterExtension;
 
     @Override
-    public Booking register(BookingDTO bookingDto) throws Exception {
+    public Booking register(BookingDTO bookingDto) throws EntityAlreadyExistsException, BookingNotPossibleException, EntityNotFoundException {
 
-        Optional<Book> book = iBookService.getBookByIsbn(bookingDto.getBookIsbn());
+        Book book = iBookService.getBookByIsbn(bookingDto.getBookIsbn());
 
         Optional<User> bookingUser = iUserService.getUserByEmail(bookingDto.getBookingUserEmail());
 
-        Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUser(book.get(), bookingUser.get());
+        Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUser(book, bookingUser.get());
 
         if (bookingFind.isPresent()) {
 
@@ -71,7 +71,7 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
-        int copiesAvailable = book.get().getCopiesAvailable();
+        int copiesAvailable = book.getCopiesAvailable();
 
         if (copiesAvailable == 0) {
 
@@ -81,13 +81,13 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
-        book.get().setCopiesAvailable(--copiesAvailable);
+        book.setCopiesAvailable(--copiesAvailable);
 
         Date bookingEndDate = java.sql.Date.valueOf(LocalDate.now(ZoneId.systemDefault()).plusDays(Long.valueOf(bookingDuration) + 1));
 
         Booking booking = new Booking();
 
-        booking.setBook(book.get());
+        booking.setBook(book);
         booking.setBookingDurationDay(bookingDuration);
         booking.setBookingStartDate(new Date());
         booking.setBookingEndDate(bookingEndDate);
@@ -99,7 +99,7 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public Booking bookIsBack(Long bookingId) throws Exception {
+    public Booking bookIsBack(Long bookingId) throws EntityNotFoundException {
 
         Optional<Booking> bookingFind = bookingRepository.findById(bookingId);
 
@@ -128,7 +128,7 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public List<Booking> getAllBookingByUser(String email) throws Exception {
+    public List<Booking> getAllBookingByUser(String email) throws EntityNotFoundException {
 
         if (email.isEmpty()) {
 
@@ -144,7 +144,7 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public Booking extendBooking(Long bookingId) throws Exception {
+    public Booking extendBooking(Long bookingId) throws EntityNotFoundException, BookingNotPossibleException {
 
         Optional<Booking> bookingFind = bookingRepository.findById(bookingId);
 
@@ -171,25 +171,12 @@ public class BookingServiceImpl implements IBookingService {
             throw new BookingNotPossibleException("Une prolongation du prêt a déjà été réalisée !");
 
         }
-//
-//        System.out.println("TEST 1");
-//
-//        System.out.println("old date : )" + bookingFind.get().getBookingEndDate());
-//
+
         LocalDate bookingEndDateOld = Instant.ofEpochMilli(bookingFind.get().getBookingEndDate().getTime())
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
-//
-//        // ne marche pas avec un date sans le time !
-//        bookingFind.get().getBookingEndDate().toInstant()
-//                .atZone(ZoneId.systemDefault())
-//                .toLocalDate();
-//        System.out.println("old date : 2 " + bookingEndDateOld.toString());
-//
+
         LocalDate bookingEndDateNew = bookingEndDateOld.plusDays((Long.valueOf(bookingDuration) + 1));
-//
-//        System.out.println("TEST 2");
-//        System.out.println("new date : " + bookingEndDateNew);
 
         bookingFind.get().setBookingEndDate(java.sql.Date.valueOf(bookingEndDateNew));
 
@@ -201,12 +188,14 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public Page<Booking> getAllBookingsByCriteria(BookingCriteria bookingCriteria, int page, int size) {
+    public Page<Booking> getAllBookingsByCriteria(String bookingId, String bookingStatus, String bookingUserEmail, String bookTitle, int page, int size) {
 
-        bookingCriteria.setBookTitle("".equals(bookingCriteria.getBookTitle()) ? null : bookingCriteria.getBookTitle());
-        bookingCriteria.setBookingId(bookingCriteria.getBookingId() == 0 ? null : bookingCriteria.getBookingId());
-        bookingCriteria.setBookingStatus("".equals(bookingCriteria.getBookingStatus()) ? null : bookingCriteria.getBookingStatus());
-        bookingCriteria.setBookingUserEmail("".equals(bookingCriteria.getBookingUserEmail()) ? null : bookingCriteria.getBookingUserEmail());
+        BookingCriteria bookingCriteria = new BookingCriteria();
+
+        bookingCriteria.setBookTitle("".equals(bookTitle) ? null : bookTitle);
+        bookingCriteria.setBookingId("".equals(bookingId) ? null : Long.parseLong(bookingId));
+        bookingCriteria.setBookingStatus("".equals(bookingStatus) ? null : bookingStatus);
+        bookingCriteria.setBookingUserEmail("".equals(bookingUserEmail) ? null : bookingUserEmail);
 
         BookingSpecification bookSpecification = new BookingSpecification(bookingCriteria);
 
@@ -214,13 +203,9 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public List<Booking> getAllBookingByOutdated(Date dateToday) {
-        
-        // sup à la date du jour fin la 25 debut relance 26 !!
-        
-        // patvarable / request par default date du jour de la date de la date user
-        
-        return bookingRepository.findAllByBookingEndDateLessThanEqualAndBookingStatusNotLike(dateToday,BookingStatus.TERMINE.getValue());
+    public List<Booking> getAllBookingByOutdated(LocalDate dateBookingOut) {
+
+        return bookingRepository.findAllByBookingEndDateLessThanEqualAndBookingStatusNotLike(java.sql.Date.valueOf(dateBookingOut), BookingStatus.TERMINE.getValue());
 
     }
 

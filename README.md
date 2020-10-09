@@ -1,8 +1,10 @@
 # libraries
 
-Des outils numériques pour les différents acteurs des bibliothèques de la ville Big City
+Des outils numériques pour les différents acteurs des bibliothèques de la ville Big City !
 
 Projet réalisé dans le cadre du parcours développeur d'application Java d'OpenClassrooms.
+
+Le présent dépôt représente le code source des composants développé de la Release 1
 
 
 ## Prérequis
@@ -16,20 +18,20 @@ Projet réalisé dans le cadre du parcours développeur d'application Java d'Ope
 - Clonez le projet : 
 
 ```shell
-git clone https://github.com/nicolasdotnet/librairies.git
+git clone https://github.com/nicolasdotnet/libraries.git
 ```
 
 le projet est composé de 3 modules : 
 
 apiweb : Logique métier accécible à partir d'une Api Rest sécurisée
-appweb : Application web pour les usagers
-batch : Module batch pour la relance automatique par mails aux usagers n’ayant pas rendu les livres en fin de prêt 
+appweb : Application web pour les usagers. Client de l'apiweb
+batch : Module batch pour la relance automatique par mails aux usagers n’ayant pas rendu les livres en fin de prêt. Client de l'apiweb également
 
 ### Déployer ApiWeb : 
 
 - Créer une base de donnée dans MySql avec les paramétres suivants : 
 
-Nom de la base  : db_community_librairies
+Nom de la base  : db_libraries
 
 Identifiant : root
 
@@ -64,9 +66,9 @@ mvn spring-boot:run
 ```shell
 mvn spring-boot:run
 ```
-Par défault, le batch excécute la tache tous les jour à xx
+Par défault, le batch excécute la tâche tous les jours à 23 h 30
 
-Pour personnalisée l'heure, vous pouvez modifier les valeurs des clès du fichier ressources/application.properties du projet : 
+Pour personnaliser l'heure, vous pouvez modifier les valeurs des clès du fichier ressources/application.properties du projet : 
 
 ```shell
 cron.expression:0 Min Heure * * ?
@@ -78,15 +80,17 @@ cron.expression:0 Min Heure * * ?
 
 Il existe un compte bibliothécaire et un compte usager dans la base démo :
 
-Identifiant : employe@mail.com
+### bibliothécaire : 
 
+Identifiant : employe@mail.com
 Mot de passe : 123
 
-Identifiant : usager@mail.com
+### usager :
 
+Identifiant : usager@mail.com
 Mot de passe : 123
 
 ## Consulter la documentation de ApiWeb : 
 
-- Aller sur un navigateur à l'adresse http://localhost:9000/swagger-ui.html
+- Aller sur un navigateur à l'adresse http://localhost:8080/swagger-ui.html
 

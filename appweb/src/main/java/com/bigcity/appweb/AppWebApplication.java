@@ -35,10 +35,4 @@ public class AppWebApplication extends SpringBootServletInitializer implements C
 
     public void run(String... args) throws Exception {
     }
-
-//    @Bean
-//    public BCryptPasswordEncoder passwordEncoder() {
-//        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-//        return bCryptPasswordEncoder;
-//    }
 }

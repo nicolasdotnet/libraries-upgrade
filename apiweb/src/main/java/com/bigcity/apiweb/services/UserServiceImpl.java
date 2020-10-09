@@ -43,7 +43,7 @@ public class UserServiceImpl implements IUserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User registerByDefault(UserDTO userDTO) throws Exception {
+    public User registerByDefault(UserDTO userDTO) throws EntityAlreadyExistsException, EntityNotFoundException {
 
         Optional<User> userFind = userRepository.findByEmail(userDTO.getEmail());
 
@@ -67,7 +67,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User registerForMembre(UserDTO userDTO) throws Exception {
+    public User registerForMembre(UserDTO userDTO) throws EntityAlreadyExistsException, EntityNotFoundException {
 
         Optional<User> userFind = userRepository.findByEmail(userDTO.getEmail());
 
@@ -91,7 +91,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User edit(UserDTO userDTO) throws Exception {
+    public User edit(UserDTO userDTO) throws EntityNotFoundException {
 
         Optional<User> userFind = userRepository.findByEmail(userDTO.getEmail());
 
@@ -110,19 +110,39 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User getUser(Long id) {
+    public User getUser(Long id) throws EntityNotFoundException {
 
-        return userRepository.findById(id).get();
+        User userFind = userRepository.findById(id).get();
+
+        if (userFind == null) {
+
+            log.error("l'utilisateur n'existe pas dans la base.");
+
+            throw new EntityNotFoundException("l'utilisateur n'existe pas !");
+
+        }
+
+        return userFind;
     }
 
     @Override
-    public Optional<User> getUserByEmail(String email) {
+    public Optional<User> getUserByEmail(String email) throws EntityNotFoundException {
 
-        return userRepository.findByEmail(email);
+        Optional<User> userFind = userRepository.findByEmail(email);
+
+        if (!userFind.isPresent()) {
+
+            log.error("l'utilisateur n'existe pas dans la base.");
+
+            throw new EntityNotFoundException("l'utilisateur n'existe pas !");
+
+        }
+
+        return userFind;
     }
 
     @Override
-    public User updatePassword(String passwordNew, String email) throws Exception {
+    public User updatePassword(String passwordNew, String email) throws EntityNotFoundException {
 
         Optional<User> userFind = userRepository.findByEmail(email);
 
@@ -154,7 +174,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User login(LoginDTO loginDTO) throws Exception {
+    public User login(LoginDTO loginDTO) throws EntityNotFoundException {
 
         Optional<User> userFind = userRepository.findByEmail(loginDTO.getEmail());
 
@@ -165,7 +185,7 @@ public class UserServiceImpl implements IUserService {
             throw new EntityNotFoundException("Utilisateur n'existe pas !");
 
         }
-        
+
         boolean result = passwordEncoder.matches(loginDTO.getPassword(), userFind.get().getPassword());
 
         if (!result) {
@@ -179,7 +199,7 @@ public class UserServiceImpl implements IUserService {
         return userFind.get();
 
     }
-    
+
     public User dtoToEntity(UserDTO userDTO) {
 
         User user = new User();

@@ -5,10 +5,12 @@
  */
 package com.bigcity.batch.configurations;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.templateresolver.FileTemplateResolver;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 
 /**
  *
@@ -17,10 +19,14 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 @Configuration
 public class EmailConfiguration {
 
+    @Value("${spring.mail.templates.path}")
+    private String mailTemplatesPath;
+
     @Bean
-    public SpringResourceTemplateResolver thymeleafTemplateResolver() {
-        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setPrefix("/WEB-INF/views/mail/");
+    public ITemplateResolver thymeleafTemplateResolver() {
+
+        FileTemplateResolver templateResolver = new FileTemplateResolver();
+        templateResolver.setPrefix(mailTemplatesPath);
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode("HTML");
         templateResolver.setCharacterEncoding("UTF-8");

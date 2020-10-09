@@ -17,7 +17,7 @@
         </RollingFile>
         
         <!-- Console Appender -->
-        <Console name="STDOUT" target="SYSTEM_OUT">
+        <Console name="CONSOLE" target="SYSTEM_OUT">
             <PatternLayout pattern="%m%n"/>
         </Console>
     </Appenders>
@@ -25,6 +25,7 @@
     <Loggers>
         <Root level="debug">
             <AppenderRef ref="ROLLINGFILE" />
+            <AppenderRef ref="CONSOLE" />
         </Root>
     </Loggers>
 
