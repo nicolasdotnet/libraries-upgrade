@@ -61,7 +61,7 @@ public class BookingServiceImpl implements IBookingService {
 
         Optional<User> bookingUser = iUserService.getUserByEmail(bookingDto.getBookingUserEmail());
 
-        Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUser(book, bookingUser.get());
+        Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUserAndBookingStatusNotLike(book, bookingUser.get(), BookingStatus.TERMINE.getValue());
 
         if (bookingFind.isPresent()) {
 

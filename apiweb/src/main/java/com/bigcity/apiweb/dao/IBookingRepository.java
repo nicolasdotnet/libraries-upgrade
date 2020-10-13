@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface IBookingRepository extends JpaRepository<Booking, Long>, JpaSpecificationExecutor<Booking> {
 
-    Optional<Booking> findByBookAndBookingUser(Book book, User bookingUser);
+    Optional<Booking> findByBookAndBookingUserAndBookingStatusNotLike(Book book, User bookingUser, String bookingStatus);
 
     List<Booking> findAllByBookingUser(User userFind);
 
@@ -23,6 +23,6 @@ public interface IBookingRepository extends JpaRepository<Booking, Long>, JpaSpe
 
     List<Booking> findAllByBookingEndDateLessThanEqual(Date dateToday);
 
-    List<Booking> findAllByBookingEndDateLessThanEqualAndBookingStatusNotLike(Date dateToday, String status);
+    List<Booking> findAllByBookingEndDateLessThanEqualAndBookingStatusNotLike(Date dateToday, String bookingStatus);
 
 }
