@@ -28,6 +28,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import com.bigcity.apiweb.dao.IBookingRepository;
 import com.bigcity.apiweb.dto.BookingDTO;
+import com.bigcity.apiweb.entity.Reservation;
+import com.bigcity.apiweb.services.interfaces.IReservationService;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  *
@@ -46,6 +51,9 @@ public class BookingServiceImpl implements IBookingService {
     private IBookService iBookService;
 
     @Autowired
+    private IReservationService iReservationService;
+
+    @Autowired
     private IUserService iUserService;
 
     @Value("${bookingDurationInDay}")
@@ -53,6 +61,31 @@ public class BookingServiceImpl implements IBookingService {
 
     @Value("${bookingCounterExtension}")
     private String counterExtension;
+
+    @Override
+    public Booking ManagementOfBookReturns(Long bookingId) throws EntityNotFoundException, EntityAlreadyExistsException, BookingNotPossibleException {
+
+        Booking booking = this.bookIsBack(bookingId);
+
+        Collection<Reservation> collReservations = booking.getBook().getReservations();
+
+        if (!collReservations.isEmpty()) {
+
+            List<Reservation> reservations = new ArrayList(collReservations);
+
+            Collections.sort(reservations, Reservation.ComparatorReservationId);
+
+            Reservation reservation = reservations.get(0);
+
+            System.out.println("RRRRRRRRRRRRRRRRRRRRRRESERVATIONS trié : " + reservation.toString());
+
+            Reservation r = iReservationService.activateReservation(reservation.getReservationId());
+            System.out.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTT : " + r.toString());
+        }
+
+        return booking;
+
+    }
 
     @Override
     public Booking register(BookingDTO bookingDto) throws EntityAlreadyExistsException, BookingNotPossibleException, EntityNotFoundException {
@@ -65,9 +98,9 @@ public class BookingServiceImpl implements IBookingService {
 
         if (bookingFind.isPresent()) {
 
-            log.error("La réservation existe déjà !");
+            log.error("Le prêt existe déjà !");
 
-            throw new EntityAlreadyExistsException("la réservation existe déjà !");
+            throw new EntityAlreadyExistsException("Le prêt existe déjà !");
 
         }
 
@@ -105,9 +138,9 @@ public class BookingServiceImpl implements IBookingService {
 
         if (!bookingFind.isPresent()) {
 
-            log.error("La réservation n'existe pas dans la base.");
+            log.error("Le prêt n'existe pas dans la base.");
 
-            throw new EntityNotFoundException("La réservation n'existe pas !");
+            throw new EntityNotFoundException("Le prêt n'existe pas !");
 
         }
 
@@ -117,7 +150,7 @@ public class BookingServiceImpl implements IBookingService {
         int copiesAvailable = bookingFind.get().getBook().getCopiesAvailable();
         bookingFind.get().getBook().setCopiesAvailable(++copiesAvailable);
 
-        return bookingFind.get();
+        return bookingRepository.saveAndFlush(bookingFind.get());
 
     }
 
@@ -132,7 +165,7 @@ public class BookingServiceImpl implements IBookingService {
 
         if (email.isEmpty()) {
 
-            throw new EntityNotFoundException("Il n'y a pas de réservations pour cet usager.");
+            throw new EntityNotFoundException("Il n'y a pas de prêt pour cet usager.");
         }
 
         Optional<User> userFind = iUserService.getUserByEmail(email);
@@ -150,9 +183,9 @@ public class BookingServiceImpl implements IBookingService {
 
         if (!bookingFind.isPresent()) {
 
-            log.error("La réservation n'existe pas.");
+            log.error("Le prêt n'existe pas.");
 
-            throw new EntityNotFoundException("la réservation n'existe pas !");
+            throw new EntityNotFoundException("Le prêt n'existe pas !");
 
         }
 
@@ -206,6 +239,99 @@ public class BookingServiceImpl implements IBookingService {
     public List<Booking> getAllBookingByOutdated(LocalDate dateBookingOut) {
 
         return bookingRepository.findAllByBookingEndDateLessThanEqualAndBookingStatusNotLike(java.sql.Date.valueOf(dateBookingOut), BookingStatus.TERMINE.getValue());
+
+    }
+
+    @Override
+    public Booking registerBookingForReservation(Booking booking) throws EntityAlreadyExistsException, BookingNotPossibleException, EntityNotFoundException {
+
+        Book book = iBookService.getBookByIsbn(booking.getBook().getIsbn());
+
+        Optional<User> bookingUser = iUserService.getUserByEmail(booking.getBookingUser().getEmail());
+
+        Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUserAndBookingStatusNotLike(book, bookingUser.get(), BookingStatus.TERMINE.getValue());
+
+        if (bookingFind.isPresent()) {
+
+            log.error("Le prêt existe déjà !");
+
+            throw new EntityAlreadyExistsException("Le prêt existe déjà !");
+
+        }
+
+        int copiesAvailable = book.getCopiesAvailable();
+
+        if (copiesAvailable == 0) {
+
+            log.error("Il n'y a plus d'exemplaire disponible !");
+
+            throw new BookingNotPossibleException("Il n'y a plus d'exemplaire disponible !");
+
+        }
+
+        book.setCopiesAvailable(--copiesAvailable);
+
+        Date bookingEndDate = java.sql.Date.valueOf(LocalDate.now(ZoneId.systemDefault()).plusDays(Long.valueOf(bookingDuration) + 1));
+
+        booking.setBook(book);
+        booking.setBookingDurationDay(bookingDuration);
+        booking.setBookingStartDate(new Date());
+        booking.setBookingEndDate(bookingEndDate);
+        booking.setBookingStatus(BookingStatus.RESERVE.getValue());
+        booking.setBookingUser(bookingUser.get());
+        booking.setCounterExtension("0");
+
+        return bookingRepository.save(booking);
+    }
+
+    @Override
+    public void cancelBookingForReservation(Long bookingId) throws EntityNotFoundException {
+
+        Optional<Booking> bookingFind = bookingRepository.findById(bookingId); // plus status ?
+
+        if (!bookingFind.isPresent()) {
+
+            log.error("Le prêt n'existe pas dans la base.");
+
+            throw new EntityNotFoundException("Le prêt n'existe pas !");
+
+        }
+
+        iBookService.updateBook(bookingFind.get().getBook());
+
+        bookingRepository.deleteById(bookingFind.get().getBookingId());
+
+    }
+
+    @Override
+    public Optional<Booking> getBookingByBookAndUserAndBookingStatus(Book book, User reservationUser, String bookingStatus) {
+
+        return bookingRepository.findByBookAndBookingUserAndBookingStatus(book, reservationUser, bookingStatus);
+
+    }
+
+    @Override
+    public Booking updateBooking(Booking get) throws EntityNotFoundException, BookingNotPossibleException {
+
+        Optional<Booking> bookingFind = bookingRepository.findById(get.getBookingId());
+
+        if (!bookingFind.isPresent()) {
+
+            log.error("Le prêt n'existe pas.");
+
+            throw new EntityNotFoundException("Le prêt n'existe pas !");
+
+        }
+
+        if (bookingFind.get().getBookingStatus().equals(BookingStatus.TERMINE.getValue())) {
+
+            log.error("Le prêt est terminé !");
+
+            throw new BookingNotPossibleException("Le prêt est terminé ! Vous ne pouvez plus le prolonger");
+
+        }
+
+        return bookingRepository.saveAndFlush(bookingFind.get());
 
     }
 
