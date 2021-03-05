@@ -5,7 +5,6 @@
  */
 package com.bigcity.apiweb.entity;
 
-import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,29 +24,20 @@ public class Reservation {
 
     @Id
     @GeneratedValue
-    @ApiModelProperty(notes = "reservation id")
     private Long reservationId;
 
     @Column(nullable = false)
-    @ApiModelProperty(notes = "date of reservation")
     private Date reservationDate;
 
     @Column(nullable = false)
-    @ApiModelProperty(notes = "date of validate reservation")
-    private Date validateReservationDate;
-
-    @Column(nullable = false)
-    @ApiModelProperty(notes = "reservation status")
     private String reservationStatus;
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    @ApiModelProperty(notes = "reservation owner")
     private User reservationUser;
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    @ApiModelProperty(notes = "reserved book")
     private Book book;
 
     public Reservation() {
@@ -67,14 +57,6 @@ public class Reservation {
 
     public void setReservationDate(Date reservationDate) {
         this.reservationDate = reservationDate;
-    }
-
-    public Date getValidateReservationDate() {
-        return validateReservationDate;
-    }
-
-    public void setValidateReservationDate(Date validateReservationDate) {
-        this.validateReservationDate = validateReservationDate;
     }
 
     public String getReservationStatus() {
@@ -103,15 +85,11 @@ public class Reservation {
 
     @Override
     public String toString() {
-        return "Reservation{" + "reservationId=" 
-                + reservationId + ", reservationDate=" 
-                + reservationDate + ", validateReservationDate=" 
-                + validateReservationDate + ", reservationStatus=" 
-                + reservationStatus + ", reservationUser=" 
-                + reservationUser + ", book=" 
-                + book + '}';
+        return "Reservation{" + "reservationId=" + reservationId + ","
+                + " reservationDate=" + reservationDate + ","
+                + " reservationStatus=" + reservationStatus + ","
+                + " reservationUser=" + reservationUser + ","
+                + " book=" + book + '}';
     }
-
-
 
 }

@@ -11,7 +11,7 @@ package com.bigcity.apiweb.entity;
  */
 public enum ReservationStatus {
 
-    ENCOURS("ENCOURS"), ATTENTE("ATTENTE"), TERMINE("TERMINE");
+    ENCOURS("ENCOURS"), PROLONGE("PROLONGE"), TERMINE("TERMINE");
 
     private String value;
 

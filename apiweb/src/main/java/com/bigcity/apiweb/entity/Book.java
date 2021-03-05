@@ -1,7 +1,6 @@
 package com.bigcity.apiweb.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Column;
@@ -16,46 +15,42 @@ import javax.persistence.OneToMany;
 /**
  *
  * @author nicolasdotnet
- * 
- *  Book is the registration entity of a book.
- * 
+ *
+ * Book is the registration entity of a book.
+ *
  */
 @Entity
 public class Book implements Serializable {
 
     @Id
     @GeneratedValue
-    @ApiModelProperty(notes = "book id")
     private Long bookId;
 
     @Column(length = 100, nullable = false)
-    @ApiModelProperty(notes = "the international Standard Book Number")
     private String isbn;
 
     @Column(length = 100, nullable = false)
-    @ApiModelProperty(notes = "book author")
     private String author;
 
     @Column(length = 100, nullable = false)
-    @ApiModelProperty(notes = "book title")
     private String title;
-    
+
     @Column(length = 800, nullable = false)
-    @ApiModelProperty(notes = "summary of book")
     private String summary;
 
-    @ApiModelProperty(notes = "number book copies available : no booked")
     private int copiesAvailable;
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    @ApiModelProperty(notes = "book category")
     private BookCategory bookCategory;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
-    @ApiModelProperty(notes = "book booking list")
     @JsonIgnore
     private Collection<Booking> bookings;
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Collection<Reservation> reservations;
 
     public Book() {
     }
@@ -124,13 +119,17 @@ public class Book implements Serializable {
         this.bookings = bookings;
     }
 
+    public Collection<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(Collection<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+    
     @Override
     public String toString() {
         return "Book{" + "bookId=" + bookId + ", isbn=" + isbn + ", author=" + author + ", title=" + title + ", summary=" + summary + ", copiesAvailable=" + copiesAvailable + ", bookCategory=" + bookCategory + '}';
     }
-
-
-
-
 
 }
