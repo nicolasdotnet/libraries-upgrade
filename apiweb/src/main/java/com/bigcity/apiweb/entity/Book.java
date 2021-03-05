@@ -40,6 +40,8 @@ public class Book implements Serializable {
 
     private int copiesAvailable;
 
+    private int reservationsAvailable;
+
     @ManyToOne
     @JoinColumn(nullable = false)
     private BookCategory bookCategory;
@@ -103,6 +105,14 @@ public class Book implements Serializable {
         this.copiesAvailable = copiesAvailable;
     }
 
+    public int getReservationsAvailable() {
+        return reservationsAvailable;
+    }
+
+    public void setReservationsAvailable(int reservationsAvailable) {
+        this.reservationsAvailable = reservationsAvailable;
+    }
+
     public BookCategory getBookCategory() {
         return bookCategory;
     }
@@ -126,7 +136,7 @@ public class Book implements Serializable {
     public void setReservations(Collection<Reservation> reservations) {
         this.reservations = reservations;
     }
-    
+
     @Override
     public String toString() {
         return "Book{" + "bookId=" + bookId + ", isbn=" + isbn + ", author=" + author + ", title=" + title + ", summary=" + summary + ", copiesAvailable=" + copiesAvailable + ", bookCategory=" + bookCategory + '}';

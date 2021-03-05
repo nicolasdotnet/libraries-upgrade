@@ -7,11 +7,11 @@ package com.bigcity.apiweb.entity;
 
 /**
  *
- * @author pi
+ * @author nicolasdotnet
  */
 public enum ReservationStatus {
 
-    ENCOURS("ENCOURS"), PROLONGE("PROLONGE"), TERMINE("TERMINE");
+    ENCOURS("ENCOURS"), ATTENTE("ATTENTE"), TERMINE("TERMINE");
 
     private String value;
 

@@ -9,7 +9,7 @@ package com.bigcity.apiweb.entity;
  */
 public enum BookingStatus {
 
-    ENCOURS("ENCOURS"), PROLONGE("PROLONGE"), TERMINE("TERMINE");
+    ENCOURS("ENCOURS"), PROLONGE("PROLONGE"), TERMINE("TERMINE"), RESERVE("RESERVE");
 
     private String value;
 

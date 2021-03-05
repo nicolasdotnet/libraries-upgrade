@@ -5,6 +5,7 @@
  */
 package com.bigcity.apiweb.entity;
 
+import java.util.Comparator;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +16,7 @@ import javax.persistence.ManyToOne;
 
 /**
  *
- * @author pi
+ * @author nicolasdotnet
  *
  * Reservation is the registration entity of a book.
  */
@@ -28,6 +29,9 @@ public class Reservation {
 
     @Column(nullable = false)
     private Date reservationDate;
+
+    @Column(nullable = false)
+    private Date validateReservationDate;
 
     @Column(nullable = false)
     private String reservationStatus;
@@ -59,6 +63,14 @@ public class Reservation {
         this.reservationDate = reservationDate;
     }
 
+    public Date getValidateReservationDate() {
+        return validateReservationDate;
+    }
+
+    public void setValidateReservationDate(Date validateReservationDate) {
+        this.validateReservationDate = validateReservationDate;
+    }
+
     public String getReservationStatus() {
         return reservationStatus;
     }
@@ -85,11 +97,23 @@ public class Reservation {
 
     @Override
     public String toString() {
-        return "Reservation{" + "reservationId=" + reservationId + ","
-                + " reservationDate=" + reservationDate + ","
-                + " reservationStatus=" + reservationStatus + ","
-                + " reservationUser=" + reservationUser + ","
-                + " book=" + book + '}';
+        return "Reservation{" + "reservationId="
+                + reservationId + ", reservationDate="
+                + reservationDate + ", validateReservationDate="
+                + validateReservationDate + ", reservationStatus="
+                + reservationStatus + ", reservationUser="
+                + reservationUser + ", book="
+                + book + '}';
     }
+
+    public static Comparator<Reservation> ComparatorReservationId = new Comparator<Reservation>() {
+
+        @Override
+        public int compare(Reservation r1, Reservation r2) {
+            return (int) (r1.getReservationId() - r2.getReservationId());
+        }
+
+    };
+
 
 }
