@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 
 /**
  *
- * @author pi
+ * @author nicolasdotnet
  */
 public class ReservationDTO {
 
