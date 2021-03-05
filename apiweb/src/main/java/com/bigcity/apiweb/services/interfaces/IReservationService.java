@@ -103,5 +103,13 @@ public interface IReservationService {
      */
     Reservation activateReservation (Long idresa)throws EntityNotFoundException,
             EntityAlreadyExistsException, BookingNotPossibleException ;
+    
+    /**
+     * methode to get a bboking by reservation
+     * @param idresa
+     * @return
+     * @throws EntityNotFoundException
+     */
+    Booking getBookingByReservation(Long idresa) throws EntityNotFoundException;
 
 }
