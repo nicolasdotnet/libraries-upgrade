@@ -48,8 +48,6 @@ public class BookServiceImpl implements IBookService {
 
         }
 
-        System.out.println("bc = " + bookDTO.getBookCategoryLabel());
-
         BookCategory bookCategoryFind = iBookCategoryService.getBookCategoryByLabel(bookDTO.getBookCategoryLabel());
 
         if (bookCategoryFind == null) {
@@ -60,6 +58,10 @@ public class BookServiceImpl implements IBookService {
         }
 
         Book book = dtoToEntity(bookDTO, bookCategoryFind);
+        
+        int reservationsAvailable = book.getCopiesAvailable() * 2;
+        
+        book.setReservationsAvailable(reservationsAvailable);
 
         return bookRepository.save(book);
     }
@@ -156,5 +158,24 @@ public class BookServiceImpl implements IBookService {
 
         return book;
 
+    }
+
+    @Override
+    public Book updateBook(Book book) throws EntityNotFoundException {
+        
+        Optional<Book> bookFind = bookRepository.findByIsbn(book.getIsbn());
+
+        if (!bookFind.isPresent()) {
+
+            log.error("Modification Impossible ! le livre n'existe pas dans la base.");
+
+            throw new EntityNotFoundException("Le livre n'existe pas !");
+
+        }
+        
+        int copiesAvailable = bookFind.get().getCopiesAvailable();
+        bookFind.get().setCopiesAvailable(++copiesAvailable);
+        
+        return bookRepository.saveAndFlush(bookFind.get());
     }
 }

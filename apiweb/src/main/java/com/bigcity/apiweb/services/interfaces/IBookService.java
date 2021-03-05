@@ -38,7 +38,7 @@ public interface IBookService {
      * @return book object find
      * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
      */
-    Book getBook(Long id)throws EntityNotFoundException;
+    Book getBook(Long id) throws EntityNotFoundException;
 
     /**
      * method to get a book by isbn
@@ -61,5 +61,14 @@ public interface IBookService {
      * @return the pages books
      */
     Page<Book> getAllBooksByCriteria(String isbn, String author, String bookTitle, String categoryName, int page, int size);
+
+    /**
+     * method to update a book
+     *
+     * @param book
+     * @return the book update
+     * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
+     */
+    Book updateBook(Book book) throws EntityNotFoundException;
 
 }
