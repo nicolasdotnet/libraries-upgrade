@@ -24,5 +24,7 @@ public interface IBookingRepository extends JpaRepository<Booking, Long>, JpaSpe
     List<Booking> findAllByBookingEndDateLessThanEqual(Date dateToday);
 
     List<Booking> findAllByBookingEndDateLessThanEqualAndBookingStatusNotLike(Date dateToday, String bookingStatus);
+    
+    Optional<Booking> findByBookAndBookingUserAndBookingStatus(Book book, User reservationUser, String bookingStatus);
 
 }

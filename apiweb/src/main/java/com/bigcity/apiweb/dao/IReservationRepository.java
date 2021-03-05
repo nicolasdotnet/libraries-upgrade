@@ -24,10 +24,8 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
 
     List<Reservation> findAllByReservationUser(User userFind);
 
-    List<Reservation> findAllByReservationEndDate(Date dateToday);
+    List<Reservation> findAllByValidateReservationDateLessThanEqualAndReservationStatus(Date validateReservationDate, String reservationStatus);
 
-    List<Reservation> findAllByReservationDateLessThanEqual(Date dateToday);
-
-    List<Reservation> findAllByValidateReservationDateLessThanEqualAndReservationStatusNotLike(Date dateToday, String reservationStatus);
+    List<Reservation> findAllByValidateReservationDateAndReservationStatus(Date validateReservationDate, String reservationStatus);
 
 }
