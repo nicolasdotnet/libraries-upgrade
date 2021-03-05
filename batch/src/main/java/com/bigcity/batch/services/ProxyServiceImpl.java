@@ -6,6 +6,7 @@
 package com.bigcity.batch.services;
 
 import com.bigcity.batch.bean.Booking;
+import com.bigcity.batch.bean.Reservation;
 import com.bigcity.batch.services.interfaces.IProxyService;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -78,6 +79,41 @@ public class ProxyServiceImpl implements IProxyService {
         } else {
 
             log.info("il y a " + result.getBody().size() + " relances");
+        }
+
+        return result.getBody();
+    }
+
+    @Override
+    public List<Reservation> getAllReservationsByValidateDate(LocalDate dateValidate) throws RestClientException {
+        
+                
+        log.debug("getAllReservationsByValidateDate()");
+
+        URI uri = null;
+
+        try {
+            uri = new URI(baseUrl + serverPort + "/api/user/ReservationsValidate?dateValidate=" + dateValidate);
+        } catch (URISyntaxException ex) {
+            log.error("erreur de endpoint !");
+        }
+
+        headers.setBasicAuth(login, password);
+
+        HttpEntity requestEntity = new HttpEntity(headers);
+
+        ResponseEntity<List<Reservation>> result = null;
+
+        result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, new ParameterizedTypeReference<List<Reservation>>() {
+        });
+
+        if (result.getBody().isEmpty()) {
+
+            log.info("il n'y a pas de réservations ");
+
+        } else {
+
+            log.info("il y a " + result.getBody().size() + " réservations");
         }
 
         return result.getBody();

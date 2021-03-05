@@ -6,6 +6,7 @@
 package com.bigcity.batch.services;
 
 import com.bigcity.batch.bean.Booking;
+import com.bigcity.batch.bean.Reservation;
 import com.bigcity.batch.services.interfaces.IEmailService;
 import com.bigcity.batch.services.interfaces.IProxyService;
 import com.bigcity.batch.services.interfaces.IScheduledTasks;
@@ -13,8 +14,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,21 +52,41 @@ public class ScheduledTasksImpl implements IScheduledTasks {
     private String days;
 
     @Scheduled(cron = "${cron.expression}")
+    public void ManagerSchedule() {
+
+        try {
+            this.scheduleBookingReminder();
+        } catch (RestClientException ex) {
+            log.error("erreur dans la réponse de l'api ! " + ex.getMessage());
+
+        } catch (MessagingException ex) {
+            log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
+
+        } finally {
+
+            try {
+                this.scheduleReservationInform();
+            } catch (RestClientException ex) {
+                log.error("erreur dans la réponse de l'api ! " + ex.getMessage());
+            } catch (MessagingException ex) {
+                log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
+            }
+
+        }
+
+    }
+
     @Override
-    public void scheduleBookingReminder() {
+    public void scheduleBookingReminder() throws RestClientException, MessagingException {
 
         log.debug("scheduleBookingReminder()");
 
         List<Booking> bookings = null;
 
+        // rappel régle de gestion : §§§§§§
         LocalDate dateBookingOut = LocalDate.now().plusDays((Long.valueOf(days)));
 
-        try {
-            bookings = iProxyService.getAllBookingByOutdated(dateBookingOut);
-
-        } catch (RestClientException ex) {
-            log.error("erreur dans la réponse de l'api ! " + ex.getMessage());
-        }
+        bookings = iProxyService.getAllBookingByOutdated(dateBookingOut);
 
         for (Booking booking : bookings) {
 
@@ -82,14 +101,37 @@ public class ScheduledTasksImpl implements IScheduledTasks {
 
             String htmlBody = thymeleafTemplateEngine.process("template-thymeleaf.html", thymeleafContext);
 
-            try {
-                iEmailService.sendHtmlMessage(booking.getBookingUser().getEmail(), reminderSubject, htmlBody);
-            } catch (MessagingException ex) {
-
-                Logger.getLogger(ScheduledTasksImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            iEmailService.sendHtmlMessage(booking.getBookingUser().getEmail(), reminderSubject, htmlBody);
 
         }
 
+    }
+
+    public void scheduleReservationInform() throws RestClientException, MessagingException {
+
+        log.debug("scheduleReservationInform()");
+
+        List<Reservation> reservations = null;
+
+        // rappel régle de gestion : §§§§§§
+        LocalDate dateValidate = LocalDate.now().plusDays((Long.valueOf(days)));
+
+        reservations = iProxyService.getAllReservationsByValidateDate(dateValidate);
+
+        for (Reservation reservation : reservations) {
+
+            Map<String, Object> templateModel = new HashMap<>();
+            templateModel.put("userName", reservation.getReservationUser().getFirstname());
+            templateModel.put("title", reservation.getBook().getTitle());
+            templateModel.put("senderName", senderName);
+
+            Context thymeleafContext = new Context();
+            thymeleafContext.setVariables(templateModel);
+
+            String htmlBody = thymeleafTemplateEngine.process("template-thymeleaf.html", thymeleafContext);
+
+            iEmailService.sendHtmlMessage(reservation.getReservationUser().getEmail(), reminderSubject, htmlBody);
+
+        }
     }
 }
