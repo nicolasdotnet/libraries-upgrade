@@ -39,6 +39,8 @@ public class Book implements Serializable {
     private String summary;
 
     private int copiesAvailable;
+    
+    // champ de d'explaire total ;
 
     private int reservationsAvailable;
 

@@ -130,6 +130,8 @@ public class ReservationServiceImpl implements IReservationService {
         }
 
         book.setReservationsAvailable(--reservationsAvailable);
+        
+        // algo va cherché en base le nombre de résa enregistré * 2 ou *3....
 
         Reservation reservation = new Reservation();
 
@@ -140,7 +142,12 @@ public class ReservationServiceImpl implements IReservationService {
 
         try {
             // date = 00/00/00 pas de time car non valide
-            reservation.setValidateReservationDate(new SimpleDateFormat("yyyy-MM-dd").parse("0001-11-21"));
+            
+            Date testDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-21");
+            
+            System.out.println("DATE TEST : "+testDate.toString());
+            
+            reservation.setValidateReservationDate(new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-21"));
         } catch (ParseException ex) {
             log.error(ex.getMessage());
         }

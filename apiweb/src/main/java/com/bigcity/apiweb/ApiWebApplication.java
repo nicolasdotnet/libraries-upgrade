@@ -644,7 +644,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         Reservation resaOk2 = iReservationService.register(rDTO2);
 
         // retour book/booking : 
-        iBookingService.ManagementOfBookReturns(r.getBookingId());
+//        iBookingService.ManagementOfBookReturns(r.getBookingId());
 
         // validation de la résa par le usagé
         // iReservationService.validateReservation(resaOk.getReservationId());
@@ -654,21 +654,21 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         
         
         // no reponsa du user
-        LocalDate localdate = LocalDate.now().plusDays(2L);
-        
-        Date date = java.sql.Date.valueOf(localdate);
-
-        List<Reservation> xx = iReservationService.ManagementOfReservations(date);
-        
-        if (xx.isEmpty()) {
-            
-            System.out.println("HHHHHHHHHHHHHHHHELLO");
-        }
-        
-        for (Reservation reservation : xx) {
-            
-            System.out.println("XXXXXXXXXXXXXXXXXXRESERVATION : "+reservation.toString());
-        }
-
-    }
+//        LocalDate localdate = LocalDate.now().plusDays(2L);
+//        
+//        Date date = java.sql.Date.valueOf(localdate);
+//
+//        List<Reservation> xx = iReservationService.ManagementOfReservations(date);
+//        
+//        if (xx.isEmpty()) {
+//            
+//            System.out.println("HHHHHHHHHHHHHHHHELLO");
+//        }
+//        
+//        for (Reservation reservation : xx) {
+//            
+//            System.out.println("XXXXXXXXXXXXXXXXXXRESERVATION : "+reservation.toString());
+//        }
+//
+   }
 }
