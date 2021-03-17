@@ -16,7 +16,7 @@ public class ReservationDTO {
 
     @NotEmpty(message = "la réference usagé n'est pas renseigné")
     @ApiModelProperty(notes = "booking user email")
-    private String bookingUserEmail;
+    private String reservationUserEmail;
 
     @NotEmpty(message = "la réference livre n'est pas renseigné")
     @ApiModelProperty(notes = "book Isbn")
@@ -25,12 +25,12 @@ public class ReservationDTO {
     public ReservationDTO() {
     }
 
-    public String getBookingUserEmail() {
-        return bookingUserEmail;
+    public String getReservationUserEmail() {
+        return reservationUserEmail;
     }
 
-    public void setBookingUserEmail(String bookingUserEmail) {
-        this.bookingUserEmail = bookingUserEmail;
+    public void setReservationUserEmail(String reservationUserEmail) {
+        this.reservationUserEmail = reservationUserEmail;
     }
 
     public String getBookIsbn() {
@@ -44,7 +44,7 @@ public class ReservationDTO {
     @Override
     public String toString() {
         return "ReservationDTO{" + "bookingUserEmail=" 
-                + bookingUserEmail + ", bookIsbn=" 
+                + reservationUserEmail + ", bookIsbn=" 
                 + bookIsbn + '}';
     }
 }

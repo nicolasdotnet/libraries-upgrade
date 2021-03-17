@@ -40,9 +40,9 @@ public class Book implements Serializable {
 
     private int copiesAvailable;
     
-    // champ de d'explaire total ;
+    private int numberOfCopies;
 
-    private int reservationsAvailable;
+//    private int reservationsAvailable;
 
     @ManyToOne
     @JoinColumn(nullable = false)
@@ -107,13 +107,21 @@ public class Book implements Serializable {
         this.copiesAvailable = copiesAvailable;
     }
 
-    public int getReservationsAvailable() {
-        return reservationsAvailable;
+    public int getNumberOfCopies() {
+        return numberOfCopies;
     }
 
-    public void setReservationsAvailable(int reservationsAvailable) {
-        this.reservationsAvailable = reservationsAvailable;
+    public void setNumberOfCopies(int numberOfCopies) {
+        this.numberOfCopies = numberOfCopies;
     }
+    
+//    public int getReservationsAvailable() {
+//        return reservationsAvailable;
+//    }
+//
+//    public void setReservationsAvailable(int reservationsAvailable) {
+//        this.reservationsAvailable = reservationsAvailable;
+//    }
 
     public BookCategory getBookCategory() {
         return bookCategory;
@@ -141,7 +149,14 @@ public class Book implements Serializable {
 
     @Override
     public String toString() {
-        return "Book{" + "bookId=" + bookId + ", isbn=" + isbn + ", author=" + author + ", title=" + title + ", summary=" + summary + ", copiesAvailable=" + copiesAvailable + ", bookCategory=" + bookCategory + '}';
+        return "Book{" + "bookId=" + bookId + 
+                ", isbn=" + isbn + 
+                ", author=" + author + 
+                ", title=" + title + 
+                ", summary=" + summary + 
+                ", copiesAvailable=" + copiesAvailable + 
+                ", numberOfCopies=" + numberOfCopies +
+                ", bookCategory=" + bookCategory + '}';
     }
 
 }

@@ -16,16 +16,20 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  *
- * @author pi
+ * @author nicolasdotnet
  */
 public interface IReservationRepository extends JpaRepository<Reservation, Long>, JpaSpecificationExecutor<Reservation> {
-
-    Optional<Reservation> findByBookAndReservationUserAndReservationStatusNotLike(Book book, User bookingUser, String reservationStatus);
 
     List<Reservation> findAllByReservationUser(User userFind);
 
     List<Reservation> findAllByValidateReservationDateLessThanEqualAndReservationStatus(Date validateReservationDate, String reservationStatus);
 
     List<Reservation> findAllByValidateReservationDateAndReservationStatus(Date validateReservationDate, String reservationStatus);
+    
+    List<Reservation> findAllByBook(Book bookFind);
+
+    Optional<Reservation> findByBookAndReservationUser(Book book, User user);
+
+    List<Reservation> findAllByValidateReservationDateLessThanAndReservationStatus(Date dateFormat, String value);
 
 }

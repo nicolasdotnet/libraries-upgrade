@@ -58,10 +58,6 @@ public class BookServiceImpl implements IBookService {
         }
 
         Book book = dtoToEntity(bookDTO, bookCategoryFind);
-        
-        int reservationsAvailable = book.getCopiesAvailable() * 2;
-        
-        book.setReservationsAvailable(reservationsAvailable);
 
         return bookRepository.save(book);
     }
@@ -153,6 +149,7 @@ public class BookServiceImpl implements IBookService {
         book.setAuthor(bookDTO.getAuthor());
         book.setTitle(bookDTO.getBookTitle());
         book.setCopiesAvailable(bookDTO.getCopiesAvailable());
+        book.setNumberOfCopies(bookDTO.getNumberOfCopies());
         book.setBookCategory(bookCategoryFind);
         book.setSummary(bookDTO.getSummary());
 

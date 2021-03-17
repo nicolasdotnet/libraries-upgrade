@@ -197,6 +197,14 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
+        if (bookingFind.get().getBookingStatus().equals(BookingStatus.RESERVE.getValue())) {
+
+            log.error("Le prêt n'est pas validé !");
+
+            throw new BookingNotPossibleException("Le prêt n'est pas validé ! Vous ne pouvez pas le prolonger");
+
+        }
+
         if (bookingFind.get().getCounterExtension().equals(counterExtension)) {
 
             log.error("Une prolongation du prêt a déjà été réalisée !");
@@ -297,7 +305,9 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
-        iBookService.updateBook(bookingFind.get().getBook());
+        Book b = iBookService.updateBook(bookingFind.get().getBook());
+
+        System.out.println("00000000000000000000000000000000000BBBBBBOK -> " + b.toString());
 
         bookingRepository.deleteById(bookingFind.get().getBookingId());
 
@@ -307,6 +317,12 @@ public class BookingServiceImpl implements IBookingService {
     public Optional<Booking> getBookingByBookAndUserAndBookingStatus(Book book, User reservationUser, String bookingStatus) {
 
         return bookingRepository.findByBookAndBookingUserAndBookingStatus(book, reservationUser, bookingStatus);
+
+    }
+
+    public Optional<Booking> getBookingByBookAndUserAndBookingStatus2(Book book, User reservationUser, String bookingStatus) {
+
+        return bookingRepository.findByBookAndBookingUserAndBookingStatusNotLike(book, reservationUser, bookingStatus);
 
     }
 
@@ -333,6 +349,19 @@ public class BookingServiceImpl implements IBookingService {
 
         return bookingRepository.saveAndFlush(bookingFind.get());
 
+    }
+
+    @Override
+    public List<Booking> getAllBookingByIsbn(String isbn) throws EntityNotFoundException {
+
+        Book bookFind = iBookService.getBookByIsbn(isbn);
+
+        if (bookFind == null) {
+
+            throw new EntityNotFoundException("Il n'y a pas de livre pour cette référence isbn.");
+        }
+
+        return bookingRepository.findAllByBook(bookFind);
     }
 
 }

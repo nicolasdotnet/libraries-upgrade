@@ -200,6 +200,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
             bookDTO.setAuthor(author);
             bookDTO.setBookTitle(bookTitle);
             bookDTO.setCopiesAvailable(copiesAvailable);
+            bookDTO.setNumberOfCopies(5);
             bookDTO.setBookCategoryLabel(bcLabel);
             bookDTO.setSummary(resume);
 
@@ -243,6 +244,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         bookDTO2.setAuthor(author);
         bookDTO2.setBookTitle(bookTitle);
         bookDTO2.setCopiesAvailable(copiesAvailable);
+        bookDTO2.setNumberOfCopies(5);
         bookDTO2.setSummary(resume);
 
         try {
@@ -272,6 +274,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         bookDTO3.setAuthor(author);
         bookDTO3.setBookTitle(bookTitle);
         bookDTO3.setCopiesAvailable(copiesAvailable);
+        bookDTO3.setNumberOfCopies(5);
         bookDTO3.setBookCategoryLabel(bcLabel);
         bookDTO3.setSummary(resume);
 
@@ -306,6 +309,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         bookDTO4.setAuthor(author);
         bookDTO4.setBookTitle(bookTitle);
         bookDTO4.setCopiesAvailable(copiesAvailable);
+        bookDTO4.setNumberOfCopies(5);
         bookDTO4.setBookCategoryLabel(bcLabel);
         bookDTO4.setSummary(resume);
 
@@ -340,6 +344,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         bookDTO5.setAuthor(author);
         bookDTO5.setBookTitle(bookTitle);
         bookDTO5.setCopiesAvailable(copiesAvailable);
+        bookDTO5.setNumberOfCopies(5);
         bookDTO5.setBookCategoryLabel(bcLabel);
         bookDTO5.setSummary(resume);
 
@@ -570,7 +575,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         isbn = "56135289";
         author = "Nicole Thebest";
         bookTitle = "Histoire du Java";
-        copiesAvailable = 5;
+        copiesAvailable = 2;
         bcLabel = "Histoire";
         resume = "Vol : Le dev ninja délivre ses conseils pour savoir repérer les beaux codes du XXIe siècle : "
                 + "script contemporains, hi-fi d'antan, nouvelles matières comme le Formica ou luminaires, modèles iconiques.";
@@ -581,6 +586,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         bookDTO.setAuthor(author);
         bookDTO.setBookTitle(bookTitle);
         bookDTO.setCopiesAvailable(copiesAvailable);
+        bookDTO.setNumberOfCopies(2);
         bookDTO.setBookCategoryLabel(bcLabel);
         bookDTO.setSummary(resume);
 
@@ -633,42 +639,171 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         ReservationDTO rDTO = new ReservationDTO();
 
         rDTO.setBookIsbn("56135289");
-        rDTO.setBookingUserEmail("usager2@mail.com");
+        rDTO.setReservationUserEmail("usager2@mail.com");
         Reservation resaOk = iReservationService.register(rDTO);
 
         // création réservation 2
         ReservationDTO rDTO2 = new ReservationDTO();
 
         rDTO2.setBookIsbn("56135289");
-        rDTO2.setBookingUserEmail("usager3@mail.com");
+        rDTO2.setReservationUserEmail("usager3@mail.com");
         Reservation resaOk2 = iReservationService.register(rDTO2);
 
         // retour book/booking : 
-//        iBookingService.ManagementOfBookReturns(r.getBookingId());
+        iBookingService.ManagementOfBookReturns(r.getBookingId());
 
-        // validation de la résa par le usagé
-        // iReservationService.validateReservation(resaOk.getReservationId());
+        // simul autre réservation => error
+        // création réservation 3 
+        ReservationDTO rDTO3 = new ReservationDTO();
+
+        rDTO3.setBookIsbn("56135289");
+        rDTO3.setReservationUserEmail("usager@mail.com");
+        try {
+            Reservation resaOk3 = iReservationService.register(rDTO3);
+        } catch (Exception e) {
+            System.out.println("ERROR RESERVATION : " + e.getMessage());
+        }
+
         
         // cancel résa par le client
-        // iReservationService.cancelReservation(resaOk.getReservationId());
+         iReservationService.cancelReservation(resaOk.getReservationId());
+        
+
+            // no reponsa du user
+        LocalDate localdate = LocalDate.now().plusDays(2L);
+        
+        Date date = java.sql.Date.valueOf(localdate);
+
+        List<Reservation> xx = iReservationService.ManagementOfReservations(date);
+        
+        if (xx.isEmpty()) {
+            
+            System.out.println("HHHHHHHHHHHHHHHHELLO");
+        }
+        
+        for (Reservation reservation : xx) {
+            
+            System.out.println("XXXXXXXXXXXXXXXXXXRESERVATION : "+reservation.toString());
+        }
+        
+                // validation de la résa par le usagé
+         iReservationService.validateReservation(xx.get(0).getReservationId());
+         
+        // register new booking pour test IHM
+        
+                // register new User / Client
+        firstname = "sam";
+        lastname = "desdevises";
+        password = "123";
+        email = "usager4@mail.com";
+
+        UserDTO uV5 = new UserDTO();
+
+        uV5.setFirstname(firstname);
+        uV5.setLastname(lastname);
+        uV5.setPassword(password);
+        uV5.setEmail(email);
+
+        User u5 = iUserService.registerByDefault(uV5);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+
+        System.out.println("\n register usagé : " + u5.toString() + "\n");
+        
+                        // register new User / Client
+        firstname = "daniel";
+        lastname = "desdevises";
+        password = "123";
+        email = "usager5@mail.com";
+
+        UserDTO uV6 = new UserDTO();
+
+        uV6.setFirstname(firstname);
+        uV6.setLastname(lastname);
+        uV6.setPassword(password);
+        uV6.setEmail(email);
+
+        User u6 = iUserService.registerByDefault(uV6);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+
+        System.out.println("\n register usagé : " + u6.toString() + "\n");
+        
+                                // register new User / Client
+        firstname = "fred";
+        lastname = "desdevises";
+        password = "123";
+        email = "usager6@mail.com";
+
+        UserDTO uV7 = new UserDTO();
+
+        uV7.setFirstname(firstname);
+        uV7.setLastname(lastname);
+        uV7.setPassword(password);
+        uV7.setEmail(email);
+
+        User u7 = iUserService.registerByDefault(uV7);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+
+        System.out.println("\n register usagé : " + u7.toString() + "\n");
         
         
-        // no reponsa du user
-//        LocalDate localdate = LocalDate.now().plusDays(2L);
-//        
-//        Date date = java.sql.Date.valueOf(localdate);
-//
-//        List<Reservation> xx = iReservationService.ManagementOfReservations(date);
-//        
-//        if (xx.isEmpty()) {
-//            
-//            System.out.println("HHHHHHHHHHHHHHHHELLO");
-//        }
-//        
-//        for (Reservation reservation : xx) {
-//            
-//            System.out.println("XXXXXXXXXXXXXXXXXXRESERVATION : "+reservation.toString());
-//        }
-//
-   }
+        // avoir un exemplaire pour le booking
+        bReservation = iBookService.getBook(21L);
+
+        bReservation.setCopiesAvailable(1);
+
+        iBookRepository.saveAndFlush(bReservation);
+        
+        
+        librarianEmail = u.getEmail();
+        bookingEmail = u5.getEmail();
+        bookIsbn = b.getIsbn();
+
+        bookingDTO = new BookingDTO();
+
+        bookingDTO.setLibrarianEmail(librarianEmail);
+        bookingDTO.setBookingUserEmail(bookingEmail);
+        bookingDTO.setBookIsbn(bookIsbn);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+        System.out.println(">>>>>>>>>>>>>>>Copie du Book avant booking -> : " + b.getCopiesAvailable());
+
+        r = iBookingService.register(bookingDTO);
+        
+        
+                // création 3 réservation
+        rDTO = new ReservationDTO();
+
+        rDTO.setBookIsbn("56135289");
+        rDTO.setReservationUserEmail("usager2@mail.com");
+        resaOk = iReservationService.register(rDTO);
+
+        // création réservation 2
+        rDTO2 = new ReservationDTO();
+
+        rDTO2.setBookIsbn("56135289");
+        rDTO2.setReservationUserEmail("usager3@mail.com");
+        resaOk2 = iReservationService.register(rDTO2);
+        
+                // création réservation 3
+        rDTO3 = new ReservationDTO();
+
+        rDTO3.setBookIsbn("56135289");
+        rDTO3.setReservationUserEmail("usager6@mail.com");
+        Reservation resaOk3 = iReservationService.register(rDTO3);
+        
+        // création réservation 4
+        ReservationDTO rDTO4 = new ReservationDTO();
+
+        rDTO4.setBookIsbn("56135289");
+        rDTO4.setReservationUserEmail("usager5@mail.com");
+        Reservation resaOk4 = iReservationService.register(rDTO4);
+        
+        
+                // retour book/booking : 
+        iBookingService.ManagementOfBookReturns(r.getBookingId());
+
+    }
 }

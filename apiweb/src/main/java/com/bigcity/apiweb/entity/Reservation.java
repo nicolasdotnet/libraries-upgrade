@@ -30,7 +30,7 @@ public class Reservation {
     @Column(nullable = false)
     private Date reservationDate;
 
-    @Column(nullable = false)
+    @Column()
     private Date validateReservationDate;
 
     @Column(nullable = false)

@@ -27,4 +27,6 @@ public interface IBookingRepository extends JpaRepository<Booking, Long>, JpaSpe
     
     Optional<Booking> findByBookAndBookingUserAndBookingStatus(Book book, User reservationUser, String bookingStatus);
 
+    List<Booking> findAllByBook(Book bookFind);
+
 }

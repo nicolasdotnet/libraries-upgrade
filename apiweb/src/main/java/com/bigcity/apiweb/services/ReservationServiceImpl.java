@@ -41,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author pi
+ * @author nicolasdotnet
  */
 @Service
 @Transactional
@@ -87,7 +87,7 @@ public class ReservationServiceImpl implements IReservationService {
     public Reservation register(ReservationDTO reservationDto) throws EntityAlreadyExistsException, ReservationNotPossibleException, EntityNotFoundException {
 
         Book book = iBookService.getBookByIsbn(reservationDto.getBookIsbn());
-        Optional<User> reservationUser = iUserService.getUserByEmail(reservationDto.getBookingUserEmail());
+        Optional<User> reservationUser = iUserService.getUserByEmail(reservationDto.getReservationUserEmail());
 
         int copiesAvailable = book.getCopiesAvailable();
 
@@ -99,7 +99,7 @@ public class ReservationServiceImpl implements IReservationService {
 
         }
 
-        Optional<Booking> bookingFind = iBookingservice.getBookingByBookAndUserAndBookingStatus(book, reservationUser.get(), BookingStatus.TERMINE.getValue());
+        Optional<Booking> bookingFind = iBookingservice.getBookingByBookAndUserAndBookingStatus2(book, reservationUser.get(), BookingStatus.TERMINE.getValue());
 
         if (bookingFind.isPresent()) {
 
@@ -109,7 +109,7 @@ public class ReservationServiceImpl implements IReservationService {
 
         }
 
-        Optional<Reservation> reservationFind = iReservationRepository.findByBookAndReservationUserAndReservationStatusNotLike(book, reservationUser.get(), ReservationStatus.TERMINE.getValue());
+        Optional<Reservation> reservationFind = iReservationRepository.findByBookAndReservationUser(book, reservationUser.get());
 
         if (reservationFind.isPresent()) {
 
@@ -119,19 +119,14 @@ public class ReservationServiceImpl implements IReservationService {
 
         }
 
-        int reservationsAvailable = book.getReservationsAvailable();
-
-        if (reservationsAvailable == 0) {
+        // algo va cherché en base les résa enregistré puis compare avec le nombre de copie * 2 ou *3....
+        if (iReservationRepository.findAllByBook(book).size() >= (book.getNumberOfCopies() * 2)) {
 
             log.error("Il n'y a plus de réservation disponible pour réserver ce livre !");
 
             throw new ReservationNotPossibleException("Il n'y a plus de réservation disponible pour réserver ce livre !");
 
         }
-
-        book.setReservationsAvailable(--reservationsAvailable);
-        
-        // algo va cherché en base le nombre de résa enregistré * 2 ou *3....
 
         Reservation reservation = new Reservation();
 
@@ -140,18 +135,18 @@ public class ReservationServiceImpl implements IReservationService {
         reservation.setReservationUser(reservationUser.get());
         reservation.setReservationDate(new Date());
 
-        try {
-            // date = 00/00/00 pas de time car non valide
-            
-            Date testDate = new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-21");
-            
-            System.out.println("DATE TEST : "+testDate.toString());
-            
-            reservation.setValidateReservationDate(new SimpleDateFormat("yyyy-MM-dd").parse("2020-11-21"));
-        } catch (ParseException ex) {
-            log.error(ex.getMessage());
-        }
-
+//        try {
+//            // date = 00/00/00 pas de time car non valide
+//
+//            Date testDate = new SimpleDateFormat("yyyy-MM-dd").parse("0000-00-00");
+//
+//            System.out.println("DATE TEST : " + testDate.toString());
+//
+//            reservation.setValidateReservationDate(new SimpleDateFormat("yyyy-MM-dd").parse("0000-00-00"));
+//
+//        } catch (ParseException ex) {
+//            log.error(ex.getMessage());
+//        }
         return iReservationRepository.save(reservation);
     }
 
@@ -162,8 +157,9 @@ public class ReservationServiceImpl implements IReservationService {
 
         System.out.println("DDDDDDDDDDDDDDATE : " + dateFormat);
 
-        return iReservationRepository.findAllByValidateReservationDateLessThanEqualAndReservationStatus
-        (dateFormat, ReservationStatus.ATTENTE.getValue());
+        //return iReservationRepository.findAllByValidateReservationDateLessThanEqualAndReservationStatus(dateFormat, ReservationStatus.ATTENTE.getValue());
+        return iReservationRepository.findAllByValidateReservationDateLessThanAndReservationStatus(dateFormat, ReservationStatus.ATTENTE.getValue());
+
     }
 
     @Override
@@ -173,8 +169,7 @@ public class ReservationServiceImpl implements IReservationService {
 
         System.out.println("DDDDDDDDDDDDDDATE : " + dateFormat);
 
-        return iReservationRepository.findAllByValidateReservationDateAndReservationStatus
-        (dateFormat, ReservationStatus.ATTENTE.getValue());
+        return iReservationRepository.findAllByValidateReservationDateAndReservationStatus(dateFormat, ReservationStatus.ATTENTE.getValue());
     }
 
     @Override
@@ -202,7 +197,7 @@ public class ReservationServiceImpl implements IReservationService {
     }
 
     @Override
-    public void cancelReservation(Long idresa) throws EntityNotFoundException {
+    public void cancelReservation(Long idresa) throws EntityNotFoundException, EntityAlreadyExistsException, BookingNotPossibleException {
 
         Optional<Reservation> reservationFind = iReservationRepository.findById(idresa);
 
@@ -217,16 +212,26 @@ public class ReservationServiceImpl implements IReservationService {
         Optional<Booking> bookingOptional = iBookingservice.getBookingByBookAndUserAndBookingStatus(reservationFind.get().getBook(),
                 reservationFind.get().getReservationUser(), BookingStatus.RESERVE.getValue());
 
-        if (!bookingOptional.isPresent()) {
+        if (bookingOptional.isPresent()) {
 
-            log.error("Le prêt n'existe pas !");
+            iBookingservice.cancelBookingForReservation(bookingOptional.get().getBookingId());
 
-            throw new EntityNotFoundException("Le prêt n'existe pas !" + " " + reservationFind.get().getBook().getBookId() + " "
-                    + reservationFind.get().getReservationUser().getUserId() + " " + BookingStatus.RESERVE.getValue());
+            Collection<Reservation> collReservations = reservationFind.get().getBook().getReservations();
+
+            int size = collReservations.size();
+
+            if (size > 1) {
+
+                List<Reservation> reservations = new ArrayList(collReservations);
+                Collections.sort(reservations, Reservation.ComparatorReservationId);
+
+                Reservation r = reservations.get(1);
+
+                Reservation r2 = this.activateReservation(r.getReservationId());
+
+            }
 
         }
-
-        iBookingservice.cancelBookingForReservation(bookingOptional.get().getBookingId());
 
         iReservationRepository.delete(reservationFind.get());
     }
@@ -249,10 +254,9 @@ public class ReservationServiceImpl implements IReservationService {
 
         if (!bookingOptional.isPresent()) {
 
-            log.error("Le prêt n'existe pas !");
+            log.error("Vous ne pouvez pas valider ! Aucun exemplaire disponible !");
 
-            throw new EntityNotFoundException("Le prêt n'existe pas !" + " " + reservationFind.get().getBook().getBookId() + " "
-                    + reservationFind.get().getReservationUser().getUserId() + " " + BookingStatus.RESERVE.getValue());
+            throw new EntityNotFoundException("Vous ne pouvez pas valider ! Aucun exemplaire disponible");
 
         }
 
@@ -287,7 +291,7 @@ public class ReservationServiceImpl implements IReservationService {
                 iReservationRepository.delete(reservation);
 
                 reservationsEdit.add(reservation);
-                
+
                 // factoriser avec cancel methode
             }
 
@@ -394,6 +398,40 @@ public class ReservationServiceImpl implements IReservationService {
             log.error(ex.getMessage());
         }
         return dateGoodFormat;
+
+    }
+
+    @Override
+    public List<Reservation> getAllReservationByUser(String email) throws EntityNotFoundException {
+
+        Optional<User> userFind = iUserService.getUserByEmail(email);
+
+        if (!userFind.isPresent()) {
+
+            throw new EntityNotFoundException("Il n'y a pas de prêt pour cet usager.");
+        }
+
+        List<Reservation> reservations = iReservationRepository.findAllByReservationUser(userFind.get());
+
+        return reservations;
+    }
+
+    @Override
+    public Reservation getReservation(Long reservationId) {
+        return iReservationRepository.findById(reservationId).get();
+    }
+
+    @Override
+    public List<Reservation> getAllReservationByIsbn(String isbn) throws EntityNotFoundException {
+
+        Book bookFind = iBookService.getBookByIsbn(isbn);
+
+        if (bookFind == null) {
+
+            throw new EntityNotFoundException("Il n'y a pas de livre pour cette référence isbn.");
+        }
+
+        return iReservationRepository.findAllByBook(bookFind);
 
     }
 }

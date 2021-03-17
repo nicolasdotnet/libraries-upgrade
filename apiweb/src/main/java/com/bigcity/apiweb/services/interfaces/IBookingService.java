@@ -80,6 +80,16 @@ public interface IBookingService {
      * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
      */
     List<Booking> getAllBookingByUser(String email) throws EntityNotFoundException;
+    
+    
+    /**
+     * method to get all bookings by isbn book
+     *
+     * @param isbn
+     * @return
+     * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
+     */
+    List<Booking> getAllBookingByIsbn(String isbn) throws EntityNotFoundException;
 
     /**
      * method to get all bookings by criteria
@@ -130,6 +140,16 @@ public interface IBookingService {
      * @return
      */
     Optional<Booking>getBookingByBookAndUserAndBookingStatus(Book book, User reservationUser, String bookingStatus);
+    
+        /**
+     * method to get all booking by book, user and status booking
+     * 
+     * @param book
+     * @param reservationUser
+     * @param bookingStatus
+     * @return
+     */
+    Optional<Booking>getBookingByBookAndUserAndBookingStatus2(Book book, User reservationUser, String bookingStatus);
 
     /**
      * method to update booking

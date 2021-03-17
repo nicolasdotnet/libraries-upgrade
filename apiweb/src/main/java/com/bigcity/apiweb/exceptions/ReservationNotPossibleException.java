@@ -7,7 +7,7 @@ package com.bigcity.apiweb.exceptions;
 
 /**
  *
- * @author pi
+ * @author nicolasdotnet
  */
 public class ReservationNotPossibleException extends LibraryException {
 
