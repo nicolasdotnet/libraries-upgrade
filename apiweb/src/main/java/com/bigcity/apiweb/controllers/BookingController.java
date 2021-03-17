@@ -138,6 +138,22 @@ public class BookingController {
         return ResponseEntity.ok(iBookingService.getAllBookingByUser(email));
 
     }
+    
+    
+    @ApiOperation("Récupère une liste de prêts de l'isbn d'un livre")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "ok", response = BookingDTO.class),
+        @ApiResponse(code = 400, message = "erreur de saisie dans la demande", response = BookingDTO.class),
+        @ApiResponse(code = 401, message = "une authentification est nécessaire")
+    })
+    @GetMapping("/api/user/bookings/book/{isbn}")
+    public ResponseEntity showAllBookingsByIsbn(@PathVariable("isbn") String isbn) throws EntityNotFoundException {
+
+        log.debug("showAllBookingsByIsbn()", isbn);
+
+        return ResponseEntity.ok(iBookingService.getAllBookingByIsbn(isbn));
+
+    }
 
     @ApiOperation("Enregistrer un retour de livre à la bibliothéque suite à un prêt.")
     @ApiResponses(value = {
