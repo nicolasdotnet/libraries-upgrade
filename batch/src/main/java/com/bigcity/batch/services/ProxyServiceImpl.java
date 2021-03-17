@@ -93,7 +93,7 @@ public class ProxyServiceImpl implements IProxyService {
         URI uri = null;
 
         try {
-            uri = new URI(baseUrl + serverPort + "/api/user/ReservationsValidate?dateValidate=" + dateValidate);
+            uri = new URI(baseUrl + serverPort + "/api/user/reservationsValidate?dateValidate=" + dateValidate);
         } catch (URISyntaxException ex) {
             log.error("erreur de endpoint !");
         }

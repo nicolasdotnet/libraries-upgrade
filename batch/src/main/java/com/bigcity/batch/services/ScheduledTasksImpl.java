@@ -11,6 +11,7 @@ import com.bigcity.batch.services.interfaces.IEmailService;
 import com.bigcity.batch.services.interfaces.IProxyService;
 import com.bigcity.batch.services.interfaces.IScheduledTasks;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,10 @@ public class ScheduledTasksImpl implements IScheduledTasks {
 
     @Value("${reminderSubject}")
     private String reminderSubject;
-
+    
+    @Value("${reservationSubject}")
+    private String reservationSubject;
+    
     @Value("${personalizeReminderDay}")
     private String days;
 
@@ -57,7 +61,7 @@ public class ScheduledTasksImpl implements IScheduledTasks {
         try {
             this.scheduleBookingReminder();
         } catch (RestClientException ex) {
-            log.error("erreur dans la réponse de l'api ! " + ex.getMessage());
+            log.error("erreur dans la réponse de l'api booking ! " + ex.getMessage());
 
         } catch (MessagingException ex) {
             log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
@@ -67,7 +71,7 @@ public class ScheduledTasksImpl implements IScheduledTasks {
             try {
                 this.scheduleReservationInform();
             } catch (RestClientException ex) {
-                log.error("erreur dans la réponse de l'api ! " + ex.getMessage());
+                log.error("erreur dans la réponse de l'api réservation ! " + ex.getMessage());
             } catch (MessagingException ex) {
                 log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
             }
@@ -99,7 +103,7 @@ public class ScheduledTasksImpl implements IScheduledTasks {
             Context thymeleafContext = new Context();
             thymeleafContext.setVariables(templateModel);
 
-            String htmlBody = thymeleafTemplateEngine.process("template-thymeleaf.html", thymeleafContext);
+            String htmlBody = thymeleafTemplateEngine.process("booking-template-thymeleaf.html", thymeleafContext);
 
             iEmailService.sendHtmlMessage(booking.getBookingUser().getEmail(), reminderSubject, htmlBody);
 
@@ -114,23 +118,33 @@ public class ScheduledTasksImpl implements IScheduledTasks {
         List<Reservation> reservations = null;
 
         // rappel régle de gestion : §§§§§§
-        LocalDate dateValidate = LocalDate.now().plusDays((Long.valueOf(days)));
+       // LocalDate dateValidate = LocalDate.now().plusDays((Long.valueOf(days)));
+       
+       LocalDate dateValidate = LocalDate.now().plusDays((Long.valueOf(2)));
 
         reservations = iProxyService.getAllReservationsByValidateDate(dateValidate);
+
+        Calendar validateReservationDate = Calendar.getInstance();
 
         for (Reservation reservation : reservations) {
 
             Map<String, Object> templateModel = new HashMap<>();
+
+            validateReservationDate.setTime(reservation.getValidateReservationDate());
+            validateReservationDate.add(Calendar.DATE, 2);
+
             templateModel.put("userName", reservation.getReservationUser().getFirstname());
             templateModel.put("title", reservation.getBook().getTitle());
+            templateModel.put("reservationDate", reservation.getReservationDate());
+            templateModel.put("validateReservationDate", validateReservationDate.getTime());
             templateModel.put("senderName", senderName);
 
             Context thymeleafContext = new Context();
             thymeleafContext.setVariables(templateModel);
 
-            String htmlBody = thymeleafTemplateEngine.process("template-thymeleaf.html", thymeleafContext);
+            String htmlBody = thymeleafTemplateEngine.process("reservation-template-thymeleaf.html", thymeleafContext);
 
-            iEmailService.sendHtmlMessage(reservation.getReservationUser().getEmail(), reminderSubject, htmlBody);
+            iEmailService.sendHtmlMessage(reservation.getReservationUser().getEmail(), reservationSubject, htmlBody);
 
         }
     }
