@@ -60,4 +60,14 @@ public interface IBookingService {
      */
     List<Booking> getAllBookingByUser(Authentication authentication)throws URISyntaxException, RestClientException;
     
+    /**
+     * method to get all current bookings by book
+     * 
+     * @param authentication
+     * @throws java.net.URISyntaxException
+     */
+    List<Booking> getAllCurrentBookingByBook(String isbn, Authentication authentication)throws URISyntaxException, RestClientException;
+
+    List<Booking> getAllBooking(Authentication authentication) throws URISyntaxException, RestClientException;
+    
 }

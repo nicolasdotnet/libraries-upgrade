@@ -42,8 +42,6 @@ public class Book implements Serializable {
     
     private int numberOfCopies;
 
-//    private int reservationsAvailable;
-
     @ManyToOne
     @JoinColumn(nullable = false)
     private BookCategory bookCategory;

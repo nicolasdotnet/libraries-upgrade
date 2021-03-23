@@ -364,4 +364,9 @@ public class BookingServiceImpl implements IBookingService {
         return bookingRepository.findAllByBook(bookFind);
     }
 
+    @Override
+    public List<Booking> getAllBookings() throws EntityNotFoundException {
+       return bookingRepository.findAll();
+    }
+
 }

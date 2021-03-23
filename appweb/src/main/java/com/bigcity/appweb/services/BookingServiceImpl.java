@@ -133,4 +133,39 @@ public class BookingServiceImpl implements IBookingService {
 
     }
 
+    @Override
+    public List<Booking> getAllCurrentBookingByBook(String isbn, Authentication authentication) throws URISyntaxException, RestClientException {
+                
+        URI uri = new URI(baseUrl + serverPort + "/api/user/bookings/book/" + isbn);
+
+        headers.setBasicAuth(authentication.getName(), authentication.getCredentials().toString());
+
+        HttpEntity requestEntity = new HttpEntity(headers);
+
+        ResponseEntity<List<Booking>> result = null;
+
+        result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, new ParameterizedTypeReference<List<Booking>>() {
+        });
+
+        return result.getBody();
+    }
+
+    @Override
+    public List<Booking> getAllBooking(Authentication authentication) throws URISyntaxException, RestClientException {
+        
+                URI uri = new URI(baseUrl + serverPort + "/api/librarian/allbookings");
+
+        headers.setBasicAuth(authentication.getName(), authentication.getCredentials().toString());
+
+        HttpEntity requestEntity = new HttpEntity(headers);
+
+        ResponseEntity<List<Booking>> result = null;
+
+        result = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, new ParameterizedTypeReference<List<Booking>>() {
+        });
+
+        return result.getBody();
+        
+    }
+
 }

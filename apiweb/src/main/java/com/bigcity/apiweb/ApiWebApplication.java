@@ -72,7 +72,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         // insert first data
         // register Role
-        String label = "bibliothécaire";
+        String label = "bibliothecaire";
 
         Role uc1 = new Role();
 
@@ -773,7 +773,7 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         r = iBookingService.register(bookingDTO);
         
         
-                // création 3 réservation
+        // création 3 réservation
         rDTO = new ReservationDTO();
 
         rDTO.setBookIsbn("56135289");
@@ -804,6 +804,59 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         
                 // retour book/booking : 
         iBookingService.ManagementOfBookReturns(r.getBookingId());
+        
+       // register new book for demo
+        isbn = "56135200";
+        author = "Nicole Thebest";
+        bookTitle = "Histoire du development";
+        copiesAvailable = 1;
+        bcLabel = "Histoire";
+        resume = "histoire contemporaine du developement depuis d'après guerre.";
+
+        BookDTO bookDTo = new BookDTO();
+
+        bookDTo.setIsbn(isbn);
+        bookDTo.setAuthor(author);
+        bookDTo.setBookTitle(bookTitle);
+        bookDTo.setCopiesAvailable(copiesAvailable);
+        bookDTo.setNumberOfCopies(1);
+        bookDTo.setBookCategoryLabel(bcLabel);
+        bookDTo.setSummary(resume);
+
+        Book vb = iBookService.register(bookDTo);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><");
+
+        System.out.println("\n register book : " + vb.toString() + "\n");
+        
+        /////// booking
+        
+        librarianEmail = u.getEmail();
+        bookingEmail = u4.getEmail();
+        bookIsbn = vb.getIsbn();
+
+        BookingDTO xbookingDTO = new BookingDTO();
+
+        xbookingDTO.setLibrarianEmail(librarianEmail);
+        xbookingDTO.setBookingUserEmail(bookingEmail);
+        xbookingDTO.setBookIsbn(bookIsbn);
+
+        iBookingService.register(xbookingDTO);
+        
+        // création réservation for new book
+        ReservationDTO vrDTO = new ReservationDTO();
+
+        vrDTO.setBookIsbn("56135200");
+        vrDTO.setReservationUserEmail("usager2@mail.com");
+        Reservation vresaOk = iReservationService.register(vrDTO);
+        
+        ReservationDTO xrDTO = new ReservationDTO();
+
+        xrDTO.setBookIsbn("56135200");
+        xrDTO.setReservationUserEmail("usager@mail.com");
+        Reservation xresaOk = iReservationService.register(xrDTO);
+
+        
 
     }
 }

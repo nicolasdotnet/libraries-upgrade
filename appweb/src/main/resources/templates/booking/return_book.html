@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="/common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="/common/header.html::header"></span>
+
+    <main>
+        <div class="container mt-3">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item active">Les prêts</li>
+                </ol>
+            </nav>
+
+            <div class="row container">
+
+                <span th:text="${error}"></span>
+
+            </div>
+
+
+            <table class="table table-striped mt-10">
+                <tr>
+                    <th>N° du prêt</th>
+                    <th>Livre</th>
+                    <th>Statut</th>
+                    <th>Retour</th>
+                </tr>
+
+                <tr th:each="b:${bookings}">
+                    <!--<tr th:each="b:${pageBooks.content}">-->
+
+                    <td th:text="${b.bookingId}"></td>
+                    <td th:text="${b.book.title}"></td>
+                    <td th:text="${b.bookingStatus}"></td>
+                    <td>
+                        <form th:action="@{/librarian/bookings/}+${b.bookingId}+@{/return}">
+                            <button class="btn btn-primary x"
+                                    onclick="return confirm('Êtes-vous sûr ?')">Signaler un retour</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </main>
+
+    <span th:insert="/common/footer.html"></span>
+</body>
+</html>

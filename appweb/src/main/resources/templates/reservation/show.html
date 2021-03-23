@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="common/header.html::header"></span>
+
+    <main>
+        <div class="container mt-3">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item"><a href="/user/reservations">Mes réservations</a></li>
+                </ol>
+            </nav>
+
+            <div><span th:text="${error}"></span></div>
+
+            <h2>Réservation n°<span th:text=${reservationFind.reservationId}></span></h2>
+
+            <div class="row container mt-4 pr-0 pl-0">
+                <div  class="col-sm-8 d-none d-sm-block"><h3>Informations</h3></div>
+
+                <div class="col-sm-4 d-none d-sm-block align-self-center">
+                    <form th:action="@{/user/reservations/}+${reservationFind.reservationId}+@{/cancel}">
+                        <button class="btn btn-primary x float-right"
+                                onclick="return confirm('Êtes-vous sûr ?')">Annuler</button>
+                    </form>
+
+                    <form th:action="@{/user/reservations/}+${reservationFind.reservationId}+@{/validate}">
+                        <button class="btn btn-primary x float-right"
+                                onclick="return confirm('Êtes-vous sûr ?')">Valider</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="panel panel-default t">
+                <div class="panel-body">
+                    <div>
+                        <label>Titre du livre :</label>
+                        <span th:text="${reservationFind.book.title}"></span>
+                    </div>
+                    <div>
+                        <label>Statut de la réservation doc pas validable : </label>
+                        <span th:text="${reservationFind.reservationStatus}"></span>
+                    </div>
+                    <div>
+                        <label>Date de la réservation :</label>
+                        <span th:text="${#dates.format(reservationFind.reservationDate,'dd MMM yyyy')}"></span>
+                    </div>
+
+                    <div>
+                        <label>Demandeur :</label>
+                        <span th:text="${reservationFind.reservationUser.firstname}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-3 d-block d-sm-none">
+                <form th:action="@{/user/reservations/}+${reservationFind.reservationId}+@{/cancel}">
+                    <button class="btn btn-primary x float-right"
+                            onclick="return confirm('Êtes-vous sûr ?')">Annuler</button>
+                </form>
+
+                <form th:action="@{/user/reservations/}+${reservationFind.reservationId}+@{/validate}">
+                    <button class="btn btn-primary x float-right"
+                            onclick="return confirm('Êtes-vous sûr ?')">Valider</button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+    <span th:insert="common/footer.html"></span>
+</body>
+</html>

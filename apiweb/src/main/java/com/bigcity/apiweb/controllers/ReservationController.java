@@ -102,7 +102,8 @@ public class ReservationController {
         @ApiResponse(code = 500, message = "erreur dans la requéte")
     })
     @PostMapping("/api/user/reservations")
-    public ResponseEntity saveReservation(@Valid @RequestBody ReservationDTO reservationDto) throws ReservationNotPossibleException, EntityAlreadyExistsException, EntityNotFoundException {
+    public ResponseEntity saveReservation(@Valid @RequestBody ReservationDTO reservationDto) throws
+            ReservationNotPossibleException, EntityAlreadyExistsException, EntityNotFoundException {
 
         log.debug("saveReservation()");
 

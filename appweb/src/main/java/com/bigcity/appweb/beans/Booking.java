@@ -1,35 +1,36 @@
 package com.bigcity.appweb.beans;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Date;
 import org.springframework.stereotype.Component;
 
 /**
  *
  * @author nicolasdotnet
- * 
+ *
  * Booking is the registration bean of a booking.
- * 
+ *
  */
 @Component
 public class Booking implements Serializable {
 
     private Long bookingId;
-    
+
     private Date bookingStartDate;
-    
+
     private String BookingDurationDay;
-    
+
     private Date bookingEndDate;
-    
+
     private Date backBookDate;
-    
+
     private String counterExtension;
-    
+
     private BookingStatus bookingStatus;
-    
+
     private User bookingUser;
-    
+
     private Book book;
 
     public Booking() {
@@ -109,12 +110,19 @@ public class Booking implements Serializable {
 
     @Override
     public String toString() {
-        return "Booking{" + "bookingId=" + bookingId + ", bookingStartDate=" + bookingStartDate +
-                ", BookingDurationWeek=" + BookingDurationDay + ", bookingEndDate=" + bookingEndDate + ", backBookDate="
-                + backBookDate + ", counterExtension=" + counterExtension + ", bookingStatus=" +
-                bookingStatus + ", bookingUser=" + bookingUser + ", book=" + book + '}';
+        return "Booking{" + "bookingId=" + bookingId + ", bookingStartDate=" + bookingStartDate
+                + ", BookingDurationWeek=" + BookingDurationDay + ", bookingEndDate=" + bookingEndDate + ", backBookDate="
+                + backBookDate + ", counterExtension=" + counterExtension + ", bookingStatus="
+                + bookingStatus + ", bookingUser=" + bookingUser + ", book=" + book + '}';
     }
-    
-    
+
+    public static Comparator<Booking> ComparatorBookingEndDate = new Comparator<Booking>() {
+
+        @Override
+        public int compare(Booking b1, Booking b2) {
+            return b1.getBookingEndDate().compareTo(b2.getBookingEndDate());
+        }
+
+    };
 
 }

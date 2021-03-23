@@ -9,6 +9,7 @@ import com.bigcity.apiweb.entity.ExceptionMessage;
 import com.bigcity.apiweb.exceptions.EntityAlreadyExistsException;
 import com.bigcity.apiweb.exceptions.EntityNotFoundException;
 import com.bigcity.apiweb.exceptions.BookingNotPossibleException;
+import com.bigcity.apiweb.exceptions.ReservationNotPossibleException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -89,6 +90,19 @@ public class ExceptionHandlerControllerAdvice {
                 .build();
 
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(ReservationNotPossibleException.class)
+    public ResponseEntity<ExceptionMessage> handleReservationgNotPossibleException(HttpServletRequest request, ReservationNotPossibleException e) {
+
+        ExceptionMessage message = ExceptionMessage.builder()
+                .date(LocalDateTime.now().format(formatter))
+                .path(request.getRequestURI() + "?" + request.getQueryString())
+                .className(e.getClass().getName())
+                .message(e.getMessage())
+                .build();
+
+        return new ResponseEntity<>(message, HttpStatus.FORBIDDEN);
     }
 
 }

@@ -58,6 +58,27 @@
                 </div>
             </div>
 
+            <div class="panel panel-default" th:if="${bookFind.copiesAvailable == 0}">
+                <div class="panel-body">
+                    <div>
+                        <label>Date de retour du prochain exemplaire :</label>
+                        <span th:text="${#dates.format(bookFind.returnDateBook,'dd MMM yyyy')}"></span>
+                    </div>
+                    <div>
+                        <label>Nombre de réservation en cours :</label>
+                        <span th:text="${bookFind.numberCurrentReservations}"></span>
+                    </div>
+                 
+
+                    <div>
+                        <form th:action="@{/user/book/}+${bookFind.isbn}+@{/reserve}" method="POST">
+                            <button class="btn btn-primary float-right"
+                                    onclick="return confirm('Êtes-vous sûr ?')">Faire une réservation</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-sm-3 d-block d-sm-none">
                 <form th:action="@{/user/book/}+${bookFind.isbn}+@{/booking}" method="POST">
                     <button class="btn btn-primary x float-right"

@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/api/user/login").permitAll();
 
         http.authorizeRequests().antMatchers("/api/librarian/**").hasAuthority("bibliothecaire");
-        http.authorizeRequests().antMatchers("/api/user/**").hasAnyAuthority("bibliothécaire", "usager");
+        http.authorizeRequests().antMatchers("/api/user/**").hasAnyAuthority("bibliothecaire", "usager");
 
         http.authorizeRequests().anyRequest().authenticated();
         http.httpBasic();

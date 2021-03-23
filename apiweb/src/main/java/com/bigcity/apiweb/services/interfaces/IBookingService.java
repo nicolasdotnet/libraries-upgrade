@@ -90,6 +90,14 @@ public interface IBookingService {
      * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
      */
     List<Booking> getAllBookingByIsbn(String isbn) throws EntityNotFoundException;
+    
+    /**
+     * method to get all bookings
+     *
+     * @return
+     * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
+     */
+    List<Booking> getAllBookings() throws EntityNotFoundException;
 
     /**
      * method to get all bookings by criteria

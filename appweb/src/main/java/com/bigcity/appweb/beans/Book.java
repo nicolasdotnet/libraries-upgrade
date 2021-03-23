@@ -2,6 +2,7 @@ package com.bigcity.appweb.beans;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,7 +25,10 @@ public class Book implements Serializable {
     
     private String summary;
 
-
+    private Date returnDateBook;
+    
+    private String numberCurrentReservations;
+    
     private int copiesAvailable;
 
     private BookCategory bookCategory;
@@ -96,6 +100,22 @@ public class Book implements Serializable {
 
     public void setBookings(Collection<Booking> bookings) {
         this.bookings = bookings;
+    }
+
+    public Date getReturnDateBook() {
+        return returnDateBook;
+    }
+
+    public void setReturnDateBook(Date returnDateBook) {
+        this.returnDateBook = returnDateBook;
+    }
+
+    public String getNumberCurrentReservations() {
+        return numberCurrentReservations;
+    }
+
+    public void setNumberCurrentReservations(String numberCurrentReservations) {
+        this.numberCurrentReservations = numberCurrentReservations;
     }
 
     @Override

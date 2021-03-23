@@ -55,7 +55,8 @@ public class BookingController {
         @ApiResponse(code = 500, message = "erreur dans la requéte")
     })
     @PostMapping("/api/user/bookings")
-    public ResponseEntity saveBooking(@Valid @RequestBody BookingDTO bookingDto) throws BookingNotPossibleException, EntityAlreadyExistsException, EntityNotFoundException {
+    public ResponseEntity saveBooking(@Valid @RequestBody BookingDTO bookingDto) throws 
+            BookingNotPossibleException, EntityAlreadyExistsException, EntityNotFoundException {
 
         log.debug("saveBooking()");
 
@@ -138,8 +139,7 @@ public class BookingController {
         return ResponseEntity.ok(iBookingService.getAllBookingByUser(email));
 
     }
-    
-    
+
     @ApiOperation("Récupère une liste de prêts de l'isbn d'un livre")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "ok", response = BookingDTO.class),
@@ -183,6 +183,16 @@ public class BookingController {
         log.debug("getBookingOut() dateBookingOut: {}", dateBookingOut);
 
         return ResponseEntity.ok(iBookingService.getAllBookingByOutdated(dateBookingOut));
+    }
+
+
+    @GetMapping("/api/librarian/allbookings")
+    public ResponseEntity showAllBookings() throws EntityNotFoundException {
+
+        log.debug("showAllBookings");
+
+        return ResponseEntity.ok(iBookingService.getAllBookings());
+
     }
 
 }

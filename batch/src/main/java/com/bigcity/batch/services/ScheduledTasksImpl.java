@@ -15,6 +15,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,49 +50,60 @@ public class ScheduledTasksImpl implements IScheduledTasks {
 
     @Value("${reminderSubject}")
     private String reminderSubject;
-    
+
     @Value("${reservationSubject}")
     private String reservationSubject;
-    
+
     @Value("${personalizeReminderDay}")
-    private String days;
+    private String reminderDays;
 
-    @Scheduled(cron = "${cron.expression}")
-    public void ManagerSchedule() {
+    @Value("${personalizeReservationDay}")
+    private String ReservationDays;
 
-        try {
-            this.scheduleBookingReminder();
-        } catch (RestClientException ex) {
-            log.error("erreur dans la réponse de l'api booking ! " + ex.getMessage());
-
-        } catch (MessagingException ex) {
-            log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
-
-        } finally {
-
-            try {
-                this.scheduleReservationInform();
-            } catch (RestClientException ex) {
-                log.error("erreur dans la réponse de l'api réservation ! " + ex.getMessage());
-            } catch (MessagingException ex) {
-                log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
-            }
-
-        }
-
-    }
-
+//    @Scheduled(cron = "${cron.expression}")
+//    public void ManagerSchedule() {
+//
+//        try {
+//            this.scheduleBookingReminder();
+//        } catch (RestClientException ex) {
+//            log.error("erreur dans la réponse de l'api booking ! " + ex.getMessage());
+//
+//        } catch (MessagingException ex) {
+//            log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
+//
+//        } finally {
+//
+//            try {
+//                this.scheduleReservationInform();
+//            } catch (RestClientException ex) {
+//                log.error("erreur dans la réponse de l'api réservation ! " + ex.getMessage());
+//            } catch (MessagingException ex) {
+//                log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
+//            }
+//
+//        }
+//
+//    }
+    
+    @Scheduled(cron = "${cron.booking}")
     @Override
-    public void scheduleBookingReminder() throws RestClientException, MessagingException {
+    public void scheduleBookingReminder() {
 
         log.debug("scheduleBookingReminder()");
 
         List<Booking> bookings = null;
 
         // rappel régle de gestion : §§§§§§
-        LocalDate dateBookingOut = LocalDate.now().plusDays((Long.valueOf(days)));
+        LocalDate dateBookingOut = LocalDate.now().plusDays((Long.valueOf(reminderDays)));
 
-        bookings = iProxyService.getAllBookingByOutdated(dateBookingOut);
+        try {
+
+            bookings = iProxyService.getAllBookingByOutdated(dateBookingOut);
+
+        } catch (RestClientException ex) {
+
+            log.error("erreur dans la réponse de l'api booking ! " + ex.getMessage());
+        }
 
         for (Booking booking : bookings) {
 
@@ -105,24 +118,38 @@ public class ScheduledTasksImpl implements IScheduledTasks {
 
             String htmlBody = thymeleafTemplateEngine.process("booking-template-thymeleaf.html", thymeleafContext);
 
-            iEmailService.sendHtmlMessage(booking.getBookingUser().getEmail(), reminderSubject, htmlBody);
+            try {
+
+                iEmailService.sendHtmlMessage(booking.getBookingUser().getEmail(), reminderSubject, htmlBody);
+
+            } catch (MessagingException ex) {
+
+                log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
+            }
 
         }
 
     }
 
-    public void scheduleReservationInform() throws RestClientException, MessagingException {
+    @Scheduled(cron = "${cron.reservation}")
+    @Override
+    public void scheduleReservationInform() {
 
         log.debug("scheduleReservationInform()");
 
         List<Reservation> reservations = null;
 
         // rappel régle de gestion : §§§§§§
-       // LocalDate dateValidate = LocalDate.now().plusDays((Long.valueOf(days)));
-       
-       LocalDate dateValidate = LocalDate.now().plusDays((Long.valueOf(2)));
+        LocalDate dateValidate = LocalDate.now().plusDays((Long.valueOf(ReservationDays)));
 
-        reservations = iProxyService.getAllReservationsByValidateDate(dateValidate);
+        try {
+            
+            reservations = iProxyService.getAllReservationsByValidateDate(dateValidate);
+
+        } catch (RestClientException ex) {
+
+            log.error("erreur dans la réponse de l'api reservation ! " + ex.getMessage());
+        }
 
         Calendar validateReservationDate = Calendar.getInstance();
 
@@ -144,7 +171,14 @@ public class ScheduledTasksImpl implements IScheduledTasks {
 
             String htmlBody = thymeleafTemplateEngine.process("reservation-template-thymeleaf.html", thymeleafContext);
 
-            iEmailService.sendHtmlMessage(reservation.getReservationUser().getEmail(), reservationSubject, htmlBody);
+            try {
+
+                iEmailService.sendHtmlMessage(reservation.getReservationUser().getEmail(), reservationSubject, htmlBody);
+
+            } catch (MessagingException ex) {
+
+                log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
+            }
 
         }
     }
