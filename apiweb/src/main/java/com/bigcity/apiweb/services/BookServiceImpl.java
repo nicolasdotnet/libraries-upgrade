@@ -48,8 +48,6 @@ public class BookServiceImpl implements IBookService {
 
         }
 
-        System.out.println("bc = " + bookDTO.getBookCategoryLabel());
-
         BookCategory bookCategoryFind = iBookCategoryService.getBookCategoryByLabel(bookDTO.getBookCategoryLabel());
 
         if (bookCategoryFind == null) {
