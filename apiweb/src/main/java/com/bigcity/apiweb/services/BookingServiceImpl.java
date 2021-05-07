@@ -172,6 +172,14 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
+        if (bookingFind.get().getBookingEndDate().before(new Date())) {
+
+            log.error("La date de fin du prêt est dépassé ! Vous ne pouvez pas le prolonger");
+
+            throw new BookingNotPossibleException("La date de fin du prêt est dépassé ! Vous ne pouvez pas le prolonger");
+
+        }
+
         LocalDate bookingEndDateOld = Instant.ofEpochMilli(bookingFind.get().getBookingEndDate().getTime())
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
