@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.bigcity</groupId>
     <artifactId>Libraries</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.2</version>
     <packaging>pom</packaging>
 
     <name>Libraries</name>
@@ -37,17 +37,17 @@
             <dependency>
                 <groupId>com.bigcity</groupId>
                 <artifactId>apiweb</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>0.0.2</version>
             </dependency>
             <dependency>
                 <groupId>com.bigcity</groupId>
                 <artifactId>appweb</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>0.0.2</version>
             </dependency>
             <dependency>
                 <groupId>com.bigcity</groupId>
                 <artifactId>batch</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>0.0.2</version>
             </dependency>
             <!-- ===== Dépendances communes ===== -->
             <dependency>
