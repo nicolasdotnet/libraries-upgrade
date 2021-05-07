@@ -5,6 +5,7 @@
  */
 package com.bigcity.apiweb.entity;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Date;
 import javax.persistence.Column;
@@ -31,7 +32,7 @@ public class Reservation {
     private Date reservationDate;
 
     @Column()
-    private Date validateReservationDate;
+    private LocalDate validateReservationDate;
 
     @Column(nullable = false)
     private String reservationStatus;
@@ -63,11 +64,11 @@ public class Reservation {
         this.reservationDate = reservationDate;
     }
 
-    public Date getValidateReservationDate() {
+    public LocalDate getValidateReservationDate() {
         return validateReservationDate;
     }
 
-    public void setValidateReservationDate(Date validateReservationDate) {
+    public void setValidateReservationDate(LocalDate validateReservationDate) {
         this.validateReservationDate = validateReservationDate;
     }
 

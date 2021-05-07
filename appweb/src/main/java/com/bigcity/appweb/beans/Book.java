@@ -30,6 +30,8 @@ public class Book implements Serializable {
     private String numberCurrentReservations;
     
     private int copiesAvailable;
+    
+    private int numberOfCopies;
 
     private BookCategory bookCategory;
 
@@ -85,6 +87,16 @@ public class Book implements Serializable {
     public void setCopiesAvailable(int copiesAvailable) {
         this.copiesAvailable = copiesAvailable;
     }
+
+    public int getNumberOfCopies() {
+        return numberOfCopies;
+    }
+
+    public void setNumberOfCopies(int numberOfCopies) {
+        this.numberOfCopies = numberOfCopies;
+    }
+    
+    
 
     public BookCategory getBookCategory() {
         return bookCategory;

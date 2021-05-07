@@ -66,7 +66,7 @@ public class BookingServiceImpl implements IBookingService {
     public Booking ManagementOfBookReturns(Long bookingId) throws EntityNotFoundException, EntityAlreadyExistsException, BookingNotPossibleException {
 
         Booking booking = this.bookIsBack(bookingId);
-
+        
         Collection<Reservation> collReservations = booking.getBook().getReservations();
 
         if (!collReservations.isEmpty()) {
@@ -77,10 +77,7 @@ public class BookingServiceImpl implements IBookingService {
 
             Reservation reservation = reservations.get(0);
 
-            System.out.println("RRRRRRRRRRRRRRRRRRRRRRESERVATIONS trié : " + reservation.toString());
-
-            Reservation r = iReservationService.activateReservation(reservation.getReservationId());
-            System.out.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTT : " + r.toString());
+            iReservationService.activateReservation(reservation.getReservationId());
         }
 
         return booking;
@@ -89,13 +86,12 @@ public class BookingServiceImpl implements IBookingService {
 
     @Override
     public Booking register(BookingDTO bookingDto) throws EntityAlreadyExistsException, BookingNotPossibleException, EntityNotFoundException {
-
-        Book book = iBookService.getBookByIsbn(bookingDto.getBookIsbn());
-
+        
+        Optional<Book> book = iBookService.getBookByIsbn(bookingDto.getBookIsbn());
         Optional<User> bookingUser = iUserService.getUserByEmail(bookingDto.getBookingUserEmail());
-
-        Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUserAndBookingStatusNotLike(book, bookingUser.get(), BookingStatus.TERMINE.getValue());
-
+        Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUserAndBookingStatusNotLike
+        (book.get(), bookingUser.get(), BookingStatus.TERMINE.getValue());
+        
         if (bookingFind.isPresent()) {
 
             log.error("Le prêt existe déjà !");
@@ -104,7 +100,7 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
-        int copiesAvailable = book.getCopiesAvailable();
+        int copiesAvailable = book.get().getCopiesAvailable();
 
         if (copiesAvailable == 0) {
 
@@ -114,13 +110,12 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
-        book.setCopiesAvailable(--copiesAvailable);
+        book.get().setCopiesAvailable(--copiesAvailable);
 
         Date bookingEndDate = java.sql.Date.valueOf(LocalDate.now(ZoneId.systemDefault()).plusDays(Long.valueOf(bookingDuration) + 1));
 
         Booking booking = new Booking();
-
-        booking.setBook(book);
+        booking.setBook(book.get());
         booking.setBookingDurationDay(bookingDuration);
         booking.setBookingStartDate(new Date());
         booking.setBookingEndDate(bookingEndDate);
@@ -155,18 +150,13 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public Booking getBooking(Long bookingId) {
+    public Optional<Booking> getBooking(Long bookingId) {
 
-        return bookingRepository.findById(bookingId).get();
+        return bookingRepository.findById(bookingId);
     }
 
     @Override
     public List<Booking> getAllBookingByUser(String email) throws EntityNotFoundException {
-
-        if (email.isEmpty()) {
-
-            throw new EntityNotFoundException("Il n'y a pas de prêt pour cet usager.");
-        }
 
         Optional<User> userFind = iUserService.getUserByEmail(email);
 
@@ -175,7 +165,7 @@ public class BookingServiceImpl implements IBookingService {
         return bookings;
 
     }
-
+                
     @Override
     public Booking extendBooking(Long bookingId) throws EntityNotFoundException, BookingNotPossibleException {
 
@@ -204,7 +194,7 @@ public class BookingServiceImpl implements IBookingService {
             throw new BookingNotPossibleException("Le prêt n'est pas validé ! Vous ne pouvez pas le prolonger");
 
         }
-
+        
         if (bookingFind.get().getCounterExtension().equals(counterExtension)) {
 
             log.error("Une prolongation du prêt a déjà été réalisée !");
@@ -212,7 +202,7 @@ public class BookingServiceImpl implements IBookingService {
             throw new BookingNotPossibleException("Une prolongation du prêt a déjà été réalisée !");
 
         }
-
+        
         LocalDate bookingEndDateOld = Instant.ofEpochMilli(bookingFind.get().getBookingEndDate().getTime())
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
@@ -220,9 +210,7 @@ public class BookingServiceImpl implements IBookingService {
         LocalDate bookingEndDateNew = bookingEndDateOld.plusDays((Long.valueOf(bookingDuration) + 1));
 
         bookingFind.get().setBookingEndDate(java.sql.Date.valueOf(bookingEndDateNew));
-
         bookingFind.get().setBookingStatus(BookingStatus.PROLONGE.getValue());
-
         bookingFind.get().setCounterExtension("1");
 
         return bookingRepository.saveAndFlush(bookingFind.get());
@@ -234,7 +222,7 @@ public class BookingServiceImpl implements IBookingService {
         BookingCriteria bookingCriteria = new BookingCriteria();
 
         bookingCriteria.setBookTitle("".equals(bookTitle) ? null : bookTitle);
-        bookingCriteria.setBookingId("".equals(bookingId) ? null : Long.parseLong(bookingId));
+        bookingCriteria.setBookingId("".equals(bookingId) ? null : Long.valueOf(bookingId));
         bookingCriteria.setBookingStatus("".equals(bookingStatus) ? null : bookingStatus);
         bookingCriteria.setBookingUserEmail("".equals(bookingUserEmail) ? null : bookingUserEmail);
 
@@ -253,11 +241,10 @@ public class BookingServiceImpl implements IBookingService {
     @Override
     public Booking registerBookingForReservation(Booking booking) throws EntityAlreadyExistsException, BookingNotPossibleException, EntityNotFoundException {
 
-        Book book = iBookService.getBookByIsbn(booking.getBook().getIsbn());
-
+        Optional<Book> book = iBookService.getBookByIsbn(booking.getBook().getIsbn());
         Optional<User> bookingUser = iUserService.getUserByEmail(booking.getBookingUser().getEmail());
-
-        Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUserAndBookingStatusNotLike(book, bookingUser.get(), BookingStatus.TERMINE.getValue());
+        Optional<Booking> bookingFind = bookingRepository.findByBookAndBookingUserAndBookingStatusNotLike
+        (book.get(), bookingUser.get(), BookingStatus.TERMINE.getValue());
 
         if (bookingFind.isPresent()) {
 
@@ -267,7 +254,7 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
-        int copiesAvailable = book.getCopiesAvailable();
+        int copiesAvailable = book.get().getCopiesAvailable();
 
         if (copiesAvailable == 0) {
 
@@ -277,11 +264,11 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
-        book.setCopiesAvailable(--copiesAvailable);
+        book.get().setCopiesAvailable(--copiesAvailable);
 
         Date bookingEndDate = java.sql.Date.valueOf(LocalDate.now(ZoneId.systemDefault()).plusDays(Long.valueOf(bookingDuration) + 1));
 
-        booking.setBook(book);
+        booking.setBook(book.get());
         booking.setBookingDurationDay(bookingDuration);
         booking.setBookingStartDate(new Date());
         booking.setBookingEndDate(bookingEndDate);
@@ -305,9 +292,7 @@ public class BookingServiceImpl implements IBookingService {
 
         }
 
-        Book b = iBookService.updateBook(bookingFind.get().getBook());
-
-        System.out.println("00000000000000000000000000000000000BBBBBBOK -> " + b.toString());
+        iBookService.updateBook(bookingFind.get().getBook());
 
         bookingRepository.deleteById(bookingFind.get().getBookingId());
 
@@ -327,9 +312,9 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public Booking updateBooking(Booking get) throws EntityNotFoundException, BookingNotPossibleException {
+    public Booking updateBookingForReservation(Booking booking) throws EntityNotFoundException, BookingNotPossibleException {
 
-        Optional<Booking> bookingFind = bookingRepository.findById(get.getBookingId());
+        Optional<Booking> bookingFind = bookingRepository.findById(booking.getBookingId());
 
         if (!bookingFind.isPresent()) {
 
@@ -354,14 +339,14 @@ public class BookingServiceImpl implements IBookingService {
     @Override
     public List<Booking> getAllBookingByIsbn(String isbn) throws EntityNotFoundException {
 
-        Book bookFind = iBookService.getBookByIsbn(isbn);
+        Optional<Book> bookFind = iBookService.getBookByIsbn(isbn);
 
-        if (bookFind == null) {
+        if (! bookFind.isPresent()) {
 
             throw new EntityNotFoundException("Il n'y a pas de livre pour cette référence isbn.");
         }
 
-        return bookingRepository.findAllByBook(bookFind);
+        return bookingRepository.findAllByBook(bookFind.get());
     }
 
     @Override

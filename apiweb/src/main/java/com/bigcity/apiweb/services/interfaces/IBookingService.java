@@ -43,7 +43,7 @@ public interface IBookingService {
      * @throws com.bigcity.apiweb.exceptions.EntityAlreadyExistsException
      * @throws com.bigcity.apiweb.exceptions.BookingNotPossibleException
      */
-    Booking ManagementOfBookReturns(Long bookingId) throws EntityNotFoundException, EntityAlreadyExistsException, BookingNotPossibleException ;
+    Booking ManagementOfBookReturns(Long bookingId) throws EntityNotFoundException, EntityAlreadyExistsException, BookingNotPossibleException;
 
     /**
      * method to stop a booking when book is back
@@ -70,7 +70,7 @@ public interface IBookingService {
      * @param bookingId
      * @return
      */
-    Booking getBooking(Long bookingId);
+    Optional<Booking> getBooking(Long bookingId);
 
     /**
      * method to get all bookings by ask user
@@ -80,8 +80,7 @@ public interface IBookingService {
      * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
      */
     List<Booking> getAllBookingByUser(String email) throws EntityNotFoundException;
-    
-    
+
     /**
      * method to get all bookings by isbn book
      *
@@ -90,7 +89,7 @@ public interface IBookingService {
      * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
      */
     List<Booking> getAllBookingByIsbn(String isbn) throws EntityNotFoundException;
-    
+
     /**
      * method to get all bookings
      *
@@ -122,7 +121,7 @@ public interface IBookingService {
 
     /**
      * method to create booking post validate reservation by user
-     * 
+     *
      * @param booking
      * @return booking create
      * @throws EntityAlreadyExistsException
@@ -133,7 +132,7 @@ public interface IBookingService {
 
     /**
      * method to cancel booking post cancel reservation by user
-     * 
+     *
      * @param bookingId
      * @throws EntityNotFoundException
      */
@@ -141,32 +140,32 @@ public interface IBookingService {
 
     /**
      * method to get all booking by book, user and status booking
-     * 
+     *
      * @param book
      * @param reservationUser
      * @param bookingStatus
      * @return
      */
-    Optional<Booking>getBookingByBookAndUserAndBookingStatus(Book book, User reservationUser, String bookingStatus);
-    
-        /**
+    Optional<Booking> getBookingByBookAndUserAndBookingStatus(Book book, User reservationUser, String bookingStatus);
+
+    /**
      * method to get all booking by book, user and status booking
-     * 
+     *
      * @param book
      * @param reservationUser
      * @param bookingStatus
      * @return
      */
-    Optional<Booking>getBookingByBookAndUserAndBookingStatus2(Book book, User reservationUser, String bookingStatus);
+    Optional<Booking> getBookingByBookAndUserAndBookingStatus2(Book book, User reservationUser, String bookingStatus);
 
     /**
      * method to update booking
-     * 
+     *
      * @param get
      * @return booking update
      * @throws EntityNotFoundException
      * @throws BookingNotPossibleException
      */
-    Booking updateBooking(Booking get) throws EntityNotFoundException,BookingNotPossibleException ;
+    Booking updateBookingForReservation(Booking booking) throws EntityNotFoundException, BookingNotPossibleException;
 
 }

@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -466,9 +467,9 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
 
         }
 
-        r = iBookingService.getBooking(r.getBookingId());
+        Optional<Booking> t = iBookingService.getBooking(r.getBookingId());
 
-        System.out.println("PRET -> extension :" + r.getCounterExtension() + " date de fin : " + r.getBookingEndDate());
+        System.out.println("PRET -> extension :" + t.get().getCounterExtension() + " date de fin : " + t.get().getBookingEndDate());
 
         System.out.println("Book après booking -> : " + iBookService.getBook(b.getBookId()).getCopiesAvailable());
 
@@ -670,11 +671,11 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         
 
             // no reponsa du user
-        LocalDate localdate = LocalDate.now().plusDays(2L);
+        LocalDate localdate = LocalDate.now();
         
-        Date date = java.sql.Date.valueOf(localdate);
+//        Date date = java.sql.Date.valueOf(localdate);
 
-        List<Reservation> xx = iReservationService.ManagementOfReservations(date);
+        List<Reservation> xx = iReservationService.ManagementOfReservations(localdate);
         
         if (xx.isEmpty()) {
             
@@ -781,11 +782,11 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
         resaOk = iReservationService.register(rDTO);
 
         // création réservation 2
-        rDTO2 = new ReservationDTO();
-
-        rDTO2.setBookIsbn("56135289");
-        rDTO2.setReservationUserEmail("usager3@mail.com");
-        resaOk2 = iReservationService.register(rDTO2);
+//        rDTO2 = new ReservationDTO();
+//
+//        rDTO2.setBookIsbn("56135289");
+//        rDTO2.setReservationUserEmail("usager3@mail.com");
+//        resaOk2 = iReservationService.register(rDTO2);
         
                 // création réservation 3
         rDTO3 = new ReservationDTO();

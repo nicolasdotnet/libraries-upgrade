@@ -44,7 +44,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User registerByDefault(UserDTO userDTO) throws EntityAlreadyExistsException, EntityNotFoundException {
-
+        
         Optional<User> userFind = userRepository.findByEmail(userDTO.getEmail());
 
         if (userFind.isPresent()) {
@@ -56,8 +56,15 @@ public class UserServiceImpl implements IUserService {
         }
 
         Role role = iRoleService.getRole(2L);
+        // propertie 2L .environnement value
+        
+        
+                        System.out.println("com.bigcity.apiweb.services.UserServiceImpl.registerByDefault()");
 
         User user = dtoToEntity(userDTO);
+        
+        
+        System.out.println("com.bigcity.apiweb.services.UserServiceImpl.registerByDefault()");
 
         user.setRole(role);
         user.setUserDate(new Date());
@@ -155,7 +162,7 @@ public class UserServiceImpl implements IUserService {
         }
 
         userFind.get().setPassword(bCryptPasswordEncoder.encode(passwordNew));
-
+        
         return userRepository.saveAndFlush(userFind.get());
 
     }
@@ -201,14 +208,21 @@ public class UserServiceImpl implements IUserService {
     }
 
     public User dtoToEntity(UserDTO userDTO) {
+        
+        
+        System.out.println("com.bigcity.apiweb.services.UserServiceImpl.dtoToEntity()");
 
         User user = new User();
 
         user.setFirstname(userDTO.getFirstname());
         user.setLastname(userDTO.getLastname());
         user.setEmail(userDTO.getEmail());
+        
+        System.out.println("com.bigcity.apiweb.services.UserServiceImpl.dtoToEntity()");
         user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
 //        user.setRole(userDTO.getRole());
+
+System.out.println("com.bigcity.apiweb.services.UserServiceImpl.dtoToEntity()");
 
         return user;
 

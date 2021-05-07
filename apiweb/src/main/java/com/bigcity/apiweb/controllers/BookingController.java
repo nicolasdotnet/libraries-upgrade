@@ -55,7 +55,7 @@ public class BookingController {
         @ApiResponse(code = 500, message = "erreur dans la requéte")
     })
     @PostMapping("/api/user/bookings")
-    public ResponseEntity saveBooking(@Valid @RequestBody BookingDTO bookingDto) throws 
+    public ResponseEntity saveBooking(@Valid @RequestBody BookingDTO bookingDto) throws
             BookingNotPossibleException, EntityAlreadyExistsException, EntityNotFoundException {
 
         log.debug("saveBooking()");
@@ -113,7 +113,7 @@ public class BookingController {
     })
     @GetMapping("/api/librarian/bookings")
     public Page<Booking> showAllBookingsByCriteria(
-            @RequestParam(name = "bookingId", defaultValue = " ") String bookingId,
+            @RequestParam(name = "bookingId", defaultValue = "") String bookingId,
             @RequestParam(name = "bookingStatus", defaultValue = "") String bookingStatus,
             @RequestParam(name = "bookingUserEmail", defaultValue = "") String bookingUserEmail,
             @RequestParam(name = "bookTitle", defaultValue = "") String bookTitle,
@@ -162,11 +162,12 @@ public class BookingController {
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @PutMapping("/api/user/bookings/{id}/back")
-    public ResponseEntity backFromTheBook(@PathVariable("id") int id) throws EntityNotFoundException {
+    public ResponseEntity backFromTheBook(@PathVariable("id") int id)
+            throws EntityNotFoundException, EntityAlreadyExistsException, BookingNotPossibleException {
 
         log.debug("backFromTheBook() id: {}", id);
 
-        return ResponseEntity.ok(iBookingService.bookIsBack(Long.valueOf(id)));
+        return ResponseEntity.ok(iBookingService.ManagementOfBookReturns(Long.valueOf(id)));
 
     }
 
@@ -184,7 +185,6 @@ public class BookingController {
 
         return ResponseEntity.ok(iBookingService.getAllBookingByOutdated(dateBookingOut));
     }
-
 
     @GetMapping("/api/librarian/allbookings")
     public ResponseEntity showAllBookings() throws EntityNotFoundException {

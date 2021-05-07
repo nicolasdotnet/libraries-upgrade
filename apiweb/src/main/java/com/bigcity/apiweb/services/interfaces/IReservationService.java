@@ -8,9 +8,7 @@ package com.bigcity.apiweb.services.interfaces;
 import com.bigcity.apiweb.dto.ReservationDTO;
 import com.bigcity.apiweb.entity.Booking;
 import com.bigcity.apiweb.entity.Reservation;
-import com.bigcity.apiweb.entity.Reservation;
 import com.bigcity.apiweb.exceptions.BookingNotPossibleException;
-import com.bigcity.apiweb.exceptions.ReservationNotPossibleException;
 import com.bigcity.apiweb.exceptions.EntityAlreadyExistsException;
 import com.bigcity.apiweb.exceptions.EntityNotFoundException;
 import com.bigcity.apiweb.exceptions.ReservationNotPossibleException;
@@ -45,101 +43,65 @@ public interface IReservationService {
      * @throws com.bigcity.apiweb.exceptions.EntityAlreadyExistsException
      * @throws com.bigcity.apiweb.exceptions.BookingNotPossibleException
      */
-    List<Reservation> ManagementOfReservations(Date date) throws EntityNotFoundException,
+    List<Reservation> ManagementOfReservations(LocalDate date) throws EntityNotFoundException,
             EntityAlreadyExistsException, BookingNotPossibleException;
 
     /**
+     * method to cancel reservation by a user
      *
-     * @param dateReservationOut
-     * @return
-     */
-    List<Reservation> getAllReservationsByOutdated(Date dateReservationOut);
-
-    // date de validate du jour et status en cours 
-    /**
-     *
-     * @param validateDate
-     * @return
-     */
-    List<Reservation> getAllReservationsByValidateDate(Date validateDate);
-
-    // statut rservation en plus comme accepter par user . Apres reservation status résa = terminer
-    // check si encore dispo si oui cree pret
-    /**
-     *
-     * @param idresa
-     * @throws EntityNotFoundException
-     * @throws EntityAlreadyExistsException
-     * @throws BookingNotPossibleException
-     */
-    void fronReservationToBooking(Long idresa) throws EntityNotFoundException,
-            EntityAlreadyExistsException, BookingNotPossibleException;
-
-    // status cancel
-    /**
-     *
-     * @param idresa
+     * @param reservationId
      * @throws EntityNotFoundException
      * @throws com.bigcity.apiweb.exceptions.EntityAlreadyExistsException
      * @throws com.bigcity.apiweb.exceptions.BookingNotPossibleException
      */
-    void cancelReservation(Long idresa) throws EntityNotFoundException, EntityAlreadyExistsException, BookingNotPossibleException;
+    void cancelReservation(Long reservationId) throws EntityNotFoundException, EntityAlreadyExistsException, BookingNotPossibleException;
 
     /**
+     * method to validate reservation by a user
      *
-     * @param idresa
-     * @return
+     * @param reservationId
+     * @return the booking create by the validate reservation
      * @throws EntityNotFoundException
      * @throws BookingNotPossibleException
      */
-    Booking validateReservation(Long idresa) throws EntityNotFoundException, BookingNotPossibleException;
+    Booking validateReservation(Long reservationId) throws EntityNotFoundException, BookingNotPossibleException;
 
     /**
+     * method to activate reservation after a book is back
      *
-     * @param idresa
-     * @return
+     * @param reservationId
+     * @return one reservation
      * @throws EntityNotFoundException
      * @throws EntityAlreadyExistsException
      * @throws BookingNotPossibleException
      */
-    Reservation activateReservation(Long idresa) throws EntityNotFoundException,
+    Reservation activateReservation(Long reservationId) throws EntityNotFoundException,
             EntityAlreadyExistsException, BookingNotPossibleException;
-
-    /**
-     * methode to get a booking by reservation
-     *
-     * @param idresa
-     * @return
-     * @throws EntityNotFoundException
-     */
-    Booking getBookingByReservation(Long idresa) throws EntityNotFoundException;
 
     /**
      * method to get all reservations by ask user
      *
      * @param email
-     * @return
+     * @return reservation list
      * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
      */
     List<Reservation> getAllReservationByUser(String email) throws EntityNotFoundException;
 
     /**
-     * method to get a reservation
+     * method to get a reservation by id
      *
      * @param reservationId
-     * @return
+     * @return one reservation
      */
     Reservation getReservation(Long reservationId);
-    
-        /**
+
+    /**
      * method to get all reservations isbn book
      *
      * @param isbn
-     * @return
+     * @return reservation list
      * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
      */
     List<Reservation> getAllReservationByIsbn(String isbn) throws EntityNotFoundException;
-    
-    
 
 }

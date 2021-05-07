@@ -15,8 +15,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,35 +57,13 @@ public class ScheduledTasksImpl implements IScheduledTasks {
 
     @Value("${personalizeReservationDay}")
     private String ReservationDays;
-
-//    @Scheduled(cron = "${cron.expression}")
-//    public void ManagerSchedule() {
-//
-//        try {
-//            this.scheduleBookingReminder();
-//        } catch (RestClientException ex) {
-//            log.error("erreur dans la réponse de l'api booking ! " + ex.getMessage());
-//
-//        } catch (MessagingException ex) {
-//            log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
-//
-//        } finally {
-//
-//            try {
-//                this.scheduleReservationInform();
-//            } catch (RestClientException ex) {
-//                log.error("erreur dans la réponse de l'api réservation ! " + ex.getMessage());
-//            } catch (MessagingException ex) {
-//                log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
-//            }
-//
-//        }
-//
-//    }
     
     @Scheduled(cron = "${cron.booking}")
     @Override
     public void scheduleBookingReminder() {
+        
+        
+        System.out.println("BBBBBBBBBBBBBBBooking");
 
         log.debug("scheduleBookingReminder()");
 
@@ -134,6 +110,9 @@ public class ScheduledTasksImpl implements IScheduledTasks {
     @Scheduled(cron = "${cron.reservation}")
     @Override
     public void scheduleReservationInform() {
+        
+        
+        System.out.println("RRRRRRRRRRRRRESERVATION");
 
         log.debug("scheduleReservationInform()");
 

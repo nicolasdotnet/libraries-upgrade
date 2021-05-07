@@ -63,9 +63,9 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public Book edit(BookDTO bookDTO) throws EntityNotFoundException {
+    public Book edit(BookDTO bookDTO, int bookId) throws EntityNotFoundException {
 
-        Optional<Book> bookFind = bookRepository.findByIsbn(bookDTO.getIsbn());
+        Optional<Book> bookFind = bookRepository.findById(Long.valueOf(bookId));
 
         if (!bookFind.isPresent()) {
 
@@ -111,7 +111,7 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public Book getBookByIsbn(String isbn) throws EntityNotFoundException {
+    public Optional<Book> getBookByIsbn(String isbn) throws EntityNotFoundException {
 
         Optional<Book> bookFind = bookRepository.findByIsbn(isbn);
 
@@ -123,7 +123,7 @@ public class BookServiceImpl implements IBookService {
 
         }
 
-        return bookFind.get();
+        return bookFind;
     }
 
     @Override

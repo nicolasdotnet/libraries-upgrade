@@ -7,7 +7,6 @@ package com.bigcity.apiweb.controllers;
 
 import com.bigcity.apiweb.dto.ReservationDTO;
 import com.bigcity.apiweb.entity.Reservation;
-import com.bigcity.apiweb.entity.Reservation;
 import com.bigcity.apiweb.exceptions.BookingNotPossibleException;
 import com.bigcity.apiweb.exceptions.EntityAlreadyExistsException;
 import com.bigcity.apiweb.exceptions.EntityNotFoundException;
@@ -19,12 +18,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.List;
 import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,15 +52,14 @@ public class ReservationController {
             EntityAlreadyExistsException, BookingNotPossibleException {
 
         log.debug("getReservationsValidates dateToday: {}", dateValidate);
+        
+        
+        System.out.println("CCCCCCCCCCCCCONTROLER");
 
-//        List<Reservation> reponse = iReservationService.ManagementOfReservations(java.sql.Date.valueOf(dateValidate));
-//
-//        System.out.println("REPONSE API RESERVATION : " + reponse.size());
-
-        return ResponseEntity.ok(iReservationService.ManagementOfReservations(java.sql.Date.valueOf(dateValidate)));
+        return ResponseEntity.ok(iReservationService.ManagementOfReservations(dateValidate));
     }
 
-    @ApiOperation("Récupère une liste de réservations a partir de l'email de l'usagé")
+    @ApiOperation("Récupère une liste de réservations à partir de l'email de l'usagé")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "ok", response = ReservationDTO.class),
         @ApiResponse(code = 400, message = "erreur de saisie dans la demande", response = ReservationDTO.class),
@@ -120,10 +116,10 @@ public class ReservationController {
 
     }
 
-    @ApiOperation("Récupère un prêt grâce à son ID à condition que celui-ci soit enregistré !")
+    @ApiOperation("Récupère une réservation grâce à son ID à condition que celui-ci soit enregistré !")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "ok", response = ReservationDTO.class),
-        @ApiResponse(code = 404, message = "le prêt n'existe pas dans la base"),
+        @ApiResponse(code = 404, message = "la réservation n'existe pas dans la base"),
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @GetMapping("/api/user/reservations/{id}")

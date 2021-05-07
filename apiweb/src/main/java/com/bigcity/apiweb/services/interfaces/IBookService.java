@@ -4,6 +4,7 @@ import com.bigcity.apiweb.dto.BookDTO;
 import com.bigcity.apiweb.entity.Book;
 import com.bigcity.apiweb.exceptions.EntityAlreadyExistsException;
 import com.bigcity.apiweb.exceptions.EntityNotFoundException;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 
 /**
@@ -26,10 +27,11 @@ public interface IBookService {
      * method to modify a book
      *
      * @param bookDTO
+     * @param bookId
      * @return book object modified
      * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
      */
-    Book edit(BookDTO bookDTO) throws EntityNotFoundException;
+    Book edit(BookDTO bookDTO, int bookId) throws EntityNotFoundException;
 
     /**
      * method to get a book
@@ -47,7 +49,7 @@ public interface IBookService {
      * @return optional book object find
      * @throws com.bigcity.apiweb.exceptions.EntityNotFoundException
      */
-    Book getBookByIsbn(String isbn) throws EntityNotFoundException;
+    Optional<Book> getBookByIsbn(String isbn) throws EntityNotFoundException;
 
     /**
      * method to get all books by criteria

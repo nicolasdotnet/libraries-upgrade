@@ -8,8 +8,8 @@ package com.bigcity.apiweb.dao;
 import com.bigcity.apiweb.entity.Book;
 import com.bigcity.apiweb.entity.Reservation;
 import com.bigcity.apiweb.entity.User;
-import java.util.Date;
 import java.util.List;
+import java.time.LocalDate;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -22,14 +22,14 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
 
     List<Reservation> findAllByReservationUser(User userFind);
 
-    List<Reservation> findAllByValidateReservationDateLessThanEqualAndReservationStatus(Date validateReservationDate, String reservationStatus);
+////    List<Reservation> findAllByValidateReservationDateLessThanEqualAndReservationStatus(LocalDate validateReservationDate, String reservationStatus);
 
-    List<Reservation> findAllByValidateReservationDateAndReservationStatus(Date validateReservationDate, String reservationStatus);
+    List<Reservation> findAllByValidateReservationDateAndReservationStatus(LocalDate validateReservationDate, String reservationStatus);
     
     List<Reservation> findAllByBook(Book bookFind);
 
     Optional<Reservation> findByBookAndReservationUser(Book book, User user);
 
-    List<Reservation> findAllByValidateReservationDateLessThanAndReservationStatus(Date dateFormat, String value);
+    List<Reservation> findAllByValidateReservationDateBeforeAndReservationStatus(LocalDate dateFormat, String value);
 
 }
