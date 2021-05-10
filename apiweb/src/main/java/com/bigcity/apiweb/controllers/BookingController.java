@@ -55,7 +55,8 @@ public class BookingController {
         @ApiResponse(code = 500, message = "erreur dans la requéte")
     })
     @PostMapping("/api/user/bookings")
-    public ResponseEntity saveBooking(@Valid @RequestBody BookingDTO bookingDto) throws BookingNotPossibleException, EntityAlreadyExistsException, EntityNotFoundException {
+    public ResponseEntity saveBooking(@Valid @RequestBody BookingDTO bookingDto) throws
+            BookingNotPossibleException, EntityAlreadyExistsException, EntityNotFoundException {
 
         log.debug("saveBooking()");
 
@@ -112,7 +113,7 @@ public class BookingController {
     })
     @GetMapping("/api/librarian/bookings")
     public Page<Booking> showAllBookingsByCriteria(
-            @RequestParam(name = "bookingId", defaultValue = " ") String bookingId,
+            @RequestParam(name = "bookingId", defaultValue = "") String bookingId,
             @RequestParam(name = "bookingStatus", defaultValue = "") String bookingStatus,
             @RequestParam(name = "bookingUserEmail", defaultValue = "") String bookingUserEmail,
             @RequestParam(name = "bookTitle", defaultValue = "") String bookTitle,
@@ -139,6 +140,21 @@ public class BookingController {
 
     }
 
+    @ApiOperation("Récupère une liste de prêts de l'isbn d'un livre")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "ok", response = BookingDTO.class),
+        @ApiResponse(code = 400, message = "erreur de saisie dans la demande", response = BookingDTO.class),
+        @ApiResponse(code = 401, message = "une authentification est nécessaire")
+    })
+    @GetMapping("/api/user/bookings/book/{isbn}")
+    public ResponseEntity showAllBookingsByIsbn(@PathVariable("isbn") String isbn) throws EntityNotFoundException {
+
+        log.debug("showAllBookingsByIsbn()", isbn);
+
+        return ResponseEntity.ok(iBookingService.getAllBookingByIsbn(isbn));
+
+    }
+
     @ApiOperation("Enregistrer un retour de livre à la bibliothéque suite à un prêt.")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "retour du livre enregistré", response = BookingDTO.class),
@@ -146,11 +162,12 @@ public class BookingController {
         @ApiResponse(code = 401, message = "une authentification est nécessaire")
     })
     @PutMapping("/api/user/bookings/{id}/back")
-    public ResponseEntity backFromTheBook(@PathVariable("id") int id) throws EntityNotFoundException {
+    public ResponseEntity backFromTheBook(@PathVariable("id") int id)
+            throws EntityNotFoundException, EntityAlreadyExistsException, BookingNotPossibleException {
 
         log.debug("backFromTheBook() id: {}", id);
 
-        return ResponseEntity.ok(iBookingService.bookIsBack(Long.valueOf(id)));
+        return ResponseEntity.ok(iBookingService.ManagementOfBookReturns(Long.valueOf(id)));
 
     }
 
@@ -167,6 +184,15 @@ public class BookingController {
         log.debug("getBookingOut() dateBookingOut: {}", dateBookingOut);
 
         return ResponseEntity.ok(iBookingService.getAllBookingByOutdated(dateBookingOut));
+    }
+
+    @GetMapping("/api/librarian/allbookings")
+    public ResponseEntity showAllBookings() throws EntityNotFoundException {
+
+        log.debug("showAllBookings");
+
+        return ResponseEntity.ok(iBookingService.getAllBookings());
+
     }
 
 }

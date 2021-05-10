@@ -47,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/","/signup","/login", "/img/**", "/styles.css", "/bootstrap/**", "/webjars/**").permitAll();
         
         http.authorizeRequests().antMatchers("/user/**").hasAuthority("usager");
+        http.authorizeRequests().antMatchers("/librarian/**").hasAuthority("bibliothecaire");
 
         // When the user has logged in as XX.
         // But access a page that requires role YY,

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <span th:insert="/common/header.html::head"></span>
+</head>
+<body>
+
+    <span th:insert="/common/header.html::header"></span>
+
+    <main>
+        <div class="container mt-3">
+            <nav aria-label="breadcrumb" class="b">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Acceuil</a></li>
+                    <li class="breadcrumb-item active">Mes réservations</li>
+                </ol>
+            </nav>
+
+            <div class="row container">
+
+                <span th:text="${error}"></span>
+
+            </div>
+
+
+            <table class="table table-striped mt-10">
+                <tr>
+                    <th>N° du prêt</th>
+                    <th>Livre</th>
+                    <th>Prochain retour du livre</th>
+                    <th>Votre position dans la liste</th>
+                </tr>
+
+                <tr th:each="b:${reservations}">
+                    <!--<tr th:each="b:${pageBooks.content}">-->
+
+                    <td><a th:href="@{/user/reservations/}+${b.reservationId}" td th:text="${b.reservationId}"/></td>
+                    <td th:text="${b.book.title}"></td>
+                    <td th:text="${#dates.format(b.returnDateBook,'dd MMM yyyy')}"></td>
+                    <td th:text="${b.queuePosition}"></td>
+                </tr>
+            </table>
+        </div>
+    </main>
+    
+    <span th:insert="/common/footer.html"></span>
+</body>
+</html>

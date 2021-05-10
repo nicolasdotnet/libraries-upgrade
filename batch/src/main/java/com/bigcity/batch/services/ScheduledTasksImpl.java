@@ -6,15 +6,15 @@
 package com.bigcity.batch.services;
 
 import com.bigcity.batch.bean.Booking;
+import com.bigcity.batch.bean.Reservation;
 import com.bigcity.batch.services.interfaces.IEmailService;
 import com.bigcity.batch.services.interfaces.IProxyService;
 import com.bigcity.batch.services.interfaces.IScheduledTasks;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.MessagingException;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +49,16 @@ public class ScheduledTasksImpl implements IScheduledTasks {
     @Value("${reminderSubject}")
     private String reminderSubject;
 
-    @Value("${personalizeReminderDay}")
-    private String days;
+    @Value("${reservationSubject}")
+    private String reservationSubject;
 
-    @Scheduled(cron = "${cron.expression}")
+    @Value("${personalizeReminderDay}")
+    private String reminderDays;
+
+    @Value("${personalizeReservationDay}")
+    private String ReservationDays;
+    
+    @Scheduled(cron = "${cron.booking}")
     @Override
     public void scheduleBookingReminder() {
 
@@ -60,13 +66,16 @@ public class ScheduledTasksImpl implements IScheduledTasks {
 
         List<Booking> bookings = null;
 
-        LocalDate dateBookingOut = LocalDate.now().plusDays((Long.valueOf(days)));
+        // rappel régle de gestion : §§§§§§
+        LocalDate dateBookingOut = LocalDate.now().plusDays((Long.valueOf(reminderDays)));
 
         try {
+
             bookings = iProxyService.getAllBookingByOutdated(dateBookingOut);
 
         } catch (RestClientException ex) {
-            log.error("erreur dans la réponse de l'api ! " + ex.getMessage());
+
+            log.error("erreur dans la réponse de l'api booking ! " + ex.getMessage());
         }
 
         for (Booking booking : bookings) {
@@ -80,16 +89,70 @@ public class ScheduledTasksImpl implements IScheduledTasks {
             Context thymeleafContext = new Context();
             thymeleafContext.setVariables(templateModel);
 
-            String htmlBody = thymeleafTemplateEngine.process("template-thymeleaf.html", thymeleafContext);
+            String htmlBody = thymeleafTemplateEngine.process("booking-template-thymeleaf.html", thymeleafContext);
 
             try {
+
                 iEmailService.sendHtmlMessage(booking.getBookingUser().getEmail(), reminderSubject, htmlBody);
+
             } catch (MessagingException ex) {
 
-                Logger.getLogger(ScheduledTasksImpl.class.getName()).log(Level.SEVERE, null, ex);
+                log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
             }
 
         }
 
+    }
+
+    @Scheduled(cron = "${cron.reservation}")
+    @Override
+    public void scheduleReservationInform() {
+
+        log.debug("scheduleReservationInform()");
+
+        List<Reservation> reservations = null;
+
+        // rappel régle de gestion : §§§§§§
+        LocalDate dateValidate = LocalDate.now().plusDays((Long.valueOf(ReservationDays)));
+
+        try {
+            
+            reservations = iProxyService.getAllReservationsByValidateDate(dateValidate);
+
+        } catch (RestClientException ex) {
+
+            log.error("erreur dans la réponse de l'api reservation ! " + ex.getMessage());
+        }
+
+        Calendar validateReservationDate = Calendar.getInstance();
+
+        for (Reservation reservation : reservations) {
+
+            Map<String, Object> templateModel = new HashMap<>();
+
+            validateReservationDate.setTime(reservation.getValidateReservationDate());
+            validateReservationDate.add(Calendar.DATE, 2);
+
+            templateModel.put("userName", reservation.getReservationUser().getFirstname());
+            templateModel.put("title", reservation.getBook().getTitle());
+            templateModel.put("reservationDate", reservation.getReservationDate());
+            templateModel.put("validateReservationDate", validateReservationDate.getTime());
+            templateModel.put("senderName", senderName);
+
+            Context thymeleafContext = new Context();
+            thymeleafContext.setVariables(templateModel);
+
+            String htmlBody = thymeleafTemplateEngine.process("reservation-template-thymeleaf.html", thymeleafContext);
+
+            try {
+
+                iEmailService.sendHtmlMessage(reservation.getReservationUser().getEmail(), reservationSubject, htmlBody);
+
+            } catch (MessagingException ex) {
+
+                log.error("erreur dans l'envoi de l'email ! " + ex.getMessage());
+            }
+
+        }
     }
 }

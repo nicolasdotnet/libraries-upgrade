@@ -49,11 +49,32 @@
                     <h5>Informations complémentaires</h5>
                     <div>
                         <label>Nombre de copie disponible : </label>
-                        <span th:text="${bookFind.copiesAvailable}"></span>
+                        <span th:text="${bookFind.copiesAvailable+'/'+ bookFind.numberOfCopies}"></span>
                     </div>
                     <div>
                         <label>Catégorie : </label>
                         <span th:text="${bookFind.bookCategory.label}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default" th:if="${bookFind.copiesAvailable == 0}">
+                <div class="panel-body">
+                    <div>
+                        <label>Date de retour du prochain exemplaire :</label>
+                        <span th:text="${#dates.format(bookFind.returnDateBook,'dd MMM yyyy')}"></span>
+                    </div>
+                    <div>
+                        <label>Nombre de réservation en cours :</label>
+                        <span th:text="${bookFind.numberCurrentReservations}"></span>
+                    </div>
+                 
+
+                    <div>
+                        <form th:action="@{/user/book/}+${bookFind.isbn}+@{/reserve}" method="POST">
+                            <button class="btn btn-primary float-right"
+                                    onclick="return confirm('Êtes-vous sûr ?')">Faire une réservation</button>
+                        </form>
                     </div>
                 </div>
             </div>

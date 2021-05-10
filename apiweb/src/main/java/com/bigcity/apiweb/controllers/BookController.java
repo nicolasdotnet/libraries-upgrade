@@ -74,7 +74,7 @@ public class BookController {
 
         log.debug("showBook() isbn: {}", isbn);
 
-        return ResponseEntity.ok(iBookService.getBookByIsbn(isbn));
+        return ResponseEntity.ok(iBookService.getBookByIsbn(isbn).get());
 
     }
 
@@ -91,7 +91,7 @@ public class BookController {
 
         log.debug("updateBook()");
 
-        return ResponseEntity.ok().body(iBookService.edit(bookDTO));
+        return ResponseEntity.ok().body(iBookService.edit(bookDTO, id));
 
     }
 

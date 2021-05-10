@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Biblio Réservation : livre disponible</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <p>Bonjour <span th:text="${userName}"></span>,</p>
+        <p>Le <span th:text="${#dates.format(reservationDate,'dd MM yyyy')}"></span>, vous avez réservé un exemplaire du document :</p> 
+        <p th:text="${title}"></p>
+        <p>Un exemplaire est disponible dès aujourd'hui au sein de biblio.</p>
+        <p>Pour confirmer votre souhait d'emprunter ce document, vous devez le confimer avant :</p>
+        <p>le <span th:text="${#dates.format(validateReservationDate,'dd MM yyyy')}"></span>, dans votre espace personnel.</p>
+        <p>Cordialement.</p>
+        <p th:text="${senderName}"></p>
+        <img src="cid:logo.png" />
+    </body>
+</htm>

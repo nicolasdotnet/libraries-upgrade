@@ -7,6 +7,7 @@ package com.bigcity.batch.services;
 
 import com.bigcity.batch.services.interfaces.IEmailService;
 import java.io.File;
+import java.nio.charset.Charset;
 import javax.mail.MessagingException;
 
 import javax.mail.internet.MimeMessage;
@@ -42,11 +43,13 @@ public class EmailServiceImpl implements IEmailService {
 
         log.debug("sendHtmlMessage() to: subject: htmlBody: {}");
 
+        String formattedSubject = new String(subject.getBytes(), Charset.forName("UTF-8"));
+
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         helper.setFrom(noreplyAddress);
         helper.setTo(to);
-        helper.setSubject(subject);
+        helper.setSubject(formattedSubject);
         helper.setText(htmlBody, true);
         helper.addInline("logo.png", resourceFile);
         emailSender.send(message);
@@ -57,11 +60,13 @@ public class EmailServiceImpl implements IEmailService {
 
         log.debug("sendHtmlMessage() to: subject: htmlBody: pathToAttachment: {}");
         
+        String formattedSubject = new String(subject.getBytes(), Charset.forName("UTF-8"));
+
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         helper.setFrom(noreplyAddress);
         helper.setTo(to);
-        helper.setSubject(subject);
+        helper.setSubject(formattedSubject);
         helper.setText(htmlBody, true);
         helper.addInline("logo.png", resourceFile);
 

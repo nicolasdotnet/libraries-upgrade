@@ -44,7 +44,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User registerByDefault(UserDTO userDTO) throws EntityAlreadyExistsException, EntityNotFoundException {
-
+        
         Optional<User> userFind = userRepository.findByEmail(userDTO.getEmail());
 
         if (userFind.isPresent()) {
@@ -58,7 +58,6 @@ public class UserServiceImpl implements IUserService {
         Role role = iRoleService.getRole(2L);
 
         User user = dtoToEntity(userDTO);
-
         user.setRole(role);
         user.setUserDate(new Date());
 
@@ -155,7 +154,7 @@ public class UserServiceImpl implements IUserService {
         }
 
         userFind.get().setPassword(bCryptPasswordEncoder.encode(passwordNew));
-
+        
         return userRepository.saveAndFlush(userFind.get());
 
     }
@@ -208,7 +207,6 @@ public class UserServiceImpl implements IUserService {
         user.setLastname(userDTO.getLastname());
         user.setEmail(userDTO.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
-//        user.setRole(userDTO.getRole());
 
         return user;
 

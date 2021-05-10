@@ -63,9 +63,9 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public Book edit(BookDTO bookDTO) throws EntityNotFoundException {
+    public Book edit(BookDTO bookDTO, int bookId) throws EntityNotFoundException {
 
-        Optional<Book> bookFind = bookRepository.findByIsbn(bookDTO.getIsbn());
+        Optional<Book> bookFind = bookRepository.findById(Long.valueOf(bookId));
 
         if (!bookFind.isPresent()) {
 
@@ -111,7 +111,7 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    public Book getBookByIsbn(String isbn) throws EntityNotFoundException {
+    public Optional<Book> getBookByIsbn(String isbn) throws EntityNotFoundException {
 
         Optional<Book> bookFind = bookRepository.findByIsbn(isbn);
 
@@ -123,7 +123,7 @@ public class BookServiceImpl implements IBookService {
 
         }
 
-        return bookFind.get();
+        return bookFind;
     }
 
     @Override
@@ -149,10 +149,30 @@ public class BookServiceImpl implements IBookService {
         book.setAuthor(bookDTO.getAuthor());
         book.setTitle(bookDTO.getBookTitle());
         book.setCopiesAvailable(bookDTO.getCopiesAvailable());
+        book.setNumberOfCopies(bookDTO.getNumberOfCopies());
         book.setBookCategory(bookCategoryFind);
         book.setSummary(bookDTO.getSummary());
 
         return book;
 
+    }
+
+    @Override
+    public Book updateBook(Book book) throws EntityNotFoundException {
+        
+        Optional<Book> bookFind = bookRepository.findByIsbn(book.getIsbn());
+
+        if (!bookFind.isPresent()) {
+
+            log.error("Modification Impossible ! le livre n'existe pas dans la base.");
+
+            throw new EntityNotFoundException("Le livre n'existe pas !");
+
+        }
+        
+        int copiesAvailable = bookFind.get().getCopiesAvailable();
+        bookFind.get().setCopiesAvailable(++copiesAvailable);
+        
+        return bookRepository.saveAndFlush(bookFind.get());
     }
 }
