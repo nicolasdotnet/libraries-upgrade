@@ -5,7 +5,6 @@
  */
 package com.bigcity.appweb.services;
 
-import com.bigcity.appweb.beans.Book;
 import com.bigcity.appweb.beans.Booking;
 import com.bigcity.appweb.beans.Reservation;
 import com.bigcity.appweb.dto.ReservationDTO;
@@ -13,7 +12,6 @@ import com.bigcity.appweb.services.interfaces.IBookingService;
 import com.bigcity.appweb.services.interfaces.IReservationService;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;

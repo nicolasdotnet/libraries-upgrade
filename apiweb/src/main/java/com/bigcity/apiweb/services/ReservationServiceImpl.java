@@ -70,9 +70,6 @@ public class ReservationServiceImpl implements IReservationService {
     @Override
     public List<Reservation> ManagementOfReservations(LocalDate date) throws EntityNotFoundException,
             EntityAlreadyExistsException, BookingNotPossibleException {
-        
-        
-        System.out.println("EEEEEEEEEEEEEEEENTER");
 
         List<Reservation> reservationsEdit = this.deleteReservationsOld(date);
 
@@ -81,10 +78,6 @@ public class ReservationServiceImpl implements IReservationService {
             this.activateReservationNext(reservationsEdit);
 
         }
-        
-        // un service => un repo +revoir nom 
-        
-        System.out.println("DDDDDDDDDDATE : "+date.toString());
 
         return iReservationRepository.findAllByValidateReservationDateAndReservationStatus(LocalDate.now(), ReservationStatus.ATTENTE.getValue());
     }
@@ -241,9 +234,6 @@ public class ReservationServiceImpl implements IReservationService {
         booking.setBookingStatus(BookingStatus.RESERVE.getValue());
 
         iBookingservice.registerBookingForReservation(booking);
-        
-        
-         System.out.println("DDDDDDDDDDDDDDDDDDDDDDATE RESERVATION : "+ reservationFind.get().getValidateReservationDate());
 
         return iReservationRepository.saveAndFlush(reservationFind.get());
 
@@ -284,13 +274,8 @@ public class ReservationServiceImpl implements IReservationService {
     }
 
     private List<Reservation> deleteReservationsOld(LocalDate date) throws EntityNotFoundException {
-        
-        
-        System.out.println("DELETE OLD DDDDDDDDDDATE : "+date.toString());
 
         List<Reservation> reservations = iReservationRepository.findAllByValidateReservationDateBeforeAndReservationStatus(date, ReservationStatus.ATTENTE.getValue());
-
-        System.out.println("VVVVVVVVVVVVVVVVVVVVVIDE : "+reservations.isEmpty());
         
         List<Reservation> reservationsEdit = new ArrayList<>();
 
@@ -301,8 +286,6 @@ public class ReservationServiceImpl implements IReservationService {
             while (iterator.hasNext()) {
 
                 Reservation reservation = iterator.next();
-                
-                System.out.println("RRRRRRRRRRRRRRRRRRRRETOUR : "+reservation.toString());
 
                 Booking bookingFind = this.getBookingByReservation(reservation);
 
@@ -320,8 +303,6 @@ public class ReservationServiceImpl implements IReservationService {
     private void activateReservationNext(List<Reservation> reservationsEdit) throws EntityNotFoundException,
             EntityAlreadyExistsException, BookingNotPossibleException {
 
-        
-        System.out.println("AAAAAAAAAAAAAAAAAAAAactivate");
         int size;
 
         for (Reservation reservation : reservationsEdit) {

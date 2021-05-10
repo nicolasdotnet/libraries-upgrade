@@ -13,7 +13,6 @@ import com.bigcity.apiweb.exceptions.EntityAlreadyExistsException;
 import com.bigcity.apiweb.exceptions.EntityNotFoundException;
 import com.bigcity.apiweb.exceptions.ReservationNotPossibleException;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 /**

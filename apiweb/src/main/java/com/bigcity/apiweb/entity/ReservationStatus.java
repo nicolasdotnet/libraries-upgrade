@@ -8,6 +8,9 @@ package com.bigcity.apiweb.entity;
 /**
  *
  * @author nicolasdotnet
+ * 
+ * ReservationStatus is the enum class to which reservation can belong.
+ * 
  */
 public enum ReservationStatus {
 

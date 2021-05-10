@@ -52,9 +52,6 @@ public class ReservationController {
             EntityAlreadyExistsException, BookingNotPossibleException {
 
         log.debug("getReservationsValidates dateToday: {}", dateValidate);
-        
-        
-        System.out.println("CCCCCCCCCCCCCONTROLER");
 
         return ResponseEntity.ok(iReservationService.ManagementOfReservations(dateValidate));
     }

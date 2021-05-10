@@ -21,7 +21,7 @@ public interface IProxyService {
      * method to get all bookings by outdated
      *
      * @param dateBookingOut
-     * @return
+     * @return booking list
      */
     List<Booking> getAllBookingByOutdated(LocalDate dateBookingOut) throws RestClientException;
 
@@ -29,7 +29,7 @@ public interface IProxyService {
      * method to get all reservations by outdated
      * 
      * @param dateValidate
-     * @return
+     * @return reservation list
      * @throws RestClientException
      */
     List<Reservation> getAllReservationsByValidateDate(LocalDate dateValidate) throws RestClientException;

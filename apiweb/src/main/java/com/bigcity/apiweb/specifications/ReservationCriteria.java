@@ -9,7 +9,10 @@ import io.swagger.annotations.ApiModelProperty;
 
 /**
  *
- * @author pi
+ * @author nicolasdotnet
+ * 
+ * This class is used to search Reservationgs specifying the criteria
+ * 
  */
 public class ReservationCriteria {
 

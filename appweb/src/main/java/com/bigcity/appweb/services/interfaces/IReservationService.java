@@ -16,60 +16,62 @@ import org.springframework.web.client.RestClientException;
  * @author nicolasdotnet
  */
 public interface IReservationService {
-    
+
     /**
      * method to register a reservation
-     * 
+     *
      * @param isbn
      * @param authentication
+     * @return reservation objet
      * @throws java.net.URISyntaxException
      */
-    Reservation register (String isbn, Authentication authentication)throws URISyntaxException, RestClientException;
-    
+    Reservation register(String isbn, Authentication authentication) throws URISyntaxException, RestClientException;
+
     /**
      * method to cancel a reservation
-     * 
+     *
      * @param reservationId
      * @param authentication
      * @throws java.net.URISyntaxException
      */
-    void cancel(Long reservationId, Authentication authentication)throws URISyntaxException, RestClientException;
-    
-//    /**
-//     *
-//     * @param reservationId
-//     * @param authentication
-//     * @throws java.net.URISyntaxException
-//     */
-//    Reservation backBook(Long reservationId, Authentication authentication)throws URISyntaxException, RestClientException;
-    
+    void cancel(Long reservationId, Authentication authentication) throws URISyntaxException, RestClientException;
+
     /**
      * method to get a reservation
-     * 
+     *
+     * @param reservationId
+     * @param authentication
+     * @return reservation objet
+     * @throws java.net.URISyntaxException
+     */
+    Reservation getReservation(Long reservationId, Authentication authentication) throws URISyntaxException, RestClientException;
+
+    /**
+     * method to get all reservations by ask user
+     *
+     * @param authentication
+     * @return reservation list
+     * @throws java.net.URISyntaxException
+     */
+    List<Reservation> getAllReservationByUser(Authentication authentication) throws URISyntaxException, RestClientException;
+
+    /**
+     * method to get all current reservations by book
+     *
+     * @param isbn
+     * @param authentication
+     * @return reservation list
+     * @throws java.net.URISyntaxException
+     */
+    List<Reservation> getAllReservationByBook(String isbn, Authentication authentication) throws URISyntaxException, RestClientException;
+
+    /**
+     * method to validate reservation by a user
+     *
      * @param reservationId
      * @param authentication
      * @throws java.net.URISyntaxException
      */
-    Reservation getReservation(Long reservationId, Authentication authentication)throws URISyntaxException, RestClientException;
-    
-    /**
-     * method to get all reservations by ask user
-     * 
-     * @param authentication 
-     * @throws java.net.URISyntaxException
-     */
-    List<Reservation> getAllReservationByUser(Authentication authentication)throws URISyntaxException, RestClientException;
-    
-    /**
-     * method to get all current reservations by book
-     * 
-     * @param isbn
-     * @param authentication
-     * @throws java.net.URISyntaxException
-     */
-    List<Reservation> getAllReservationByBook(String isbn, Authentication authentication)throws URISyntaxException, RestClientException;
+    void validate(Long reservationId, Authentication authentication) throws URISyntaxException, RestClientException;
 
-    void validate(Long reservationId, Authentication authentication)throws URISyntaxException, RestClientException;
-
-    
 }

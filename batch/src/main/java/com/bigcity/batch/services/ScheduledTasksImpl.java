@@ -61,9 +61,6 @@ public class ScheduledTasksImpl implements IScheduledTasks {
     @Scheduled(cron = "${cron.booking}")
     @Override
     public void scheduleBookingReminder() {
-        
-        
-        System.out.println("BBBBBBBBBBBBBBBooking");
 
         log.debug("scheduleBookingReminder()");
 
@@ -110,9 +107,6 @@ public class ScheduledTasksImpl implements IScheduledTasks {
     @Scheduled(cron = "${cron.reservation}")
     @Override
     public void scheduleReservationInform() {
-        
-        
-        System.out.println("RRRRRRRRRRRRRESERVATION");
 
         log.debug("scheduleReservationInform()");
 

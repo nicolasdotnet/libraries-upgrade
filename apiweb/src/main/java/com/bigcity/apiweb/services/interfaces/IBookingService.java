@@ -161,7 +161,7 @@ public interface IBookingService {
     /**
      * method to update booking
      *
-     * @param get
+     * @param booking
      * @return booking update
      * @throws EntityNotFoundException
      * @throws BookingNotPossibleException
