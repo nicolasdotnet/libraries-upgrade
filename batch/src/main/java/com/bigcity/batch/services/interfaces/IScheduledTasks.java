@@ -5,12 +5,27 @@
  */
 package com.bigcity.batch.services.interfaces;
 
+import javax.mail.MessagingException;
+import org.springframework.web.client.RestClientException;
+
 /**
  *
  * @author nicolasdotnet
  */
 public interface IScheduledTasks {
 
-    void scheduleBookingReminder();
+    /**
+     *
+     * @throws RestClientException
+     * @throws MessagingException
+     */
+    void scheduleBookingReminder() throws RestClientException, MessagingException;
+    
+    /**
+     *
+     * @throws RestClientException
+     * @throws MessagingException
+     */
+    void scheduleReservationInform() throws RestClientException, MessagingException;
 
 }

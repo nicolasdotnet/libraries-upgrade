@@ -32,12 +32,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class BookingController {
 
     private final Logger log = LogManager.getLogger(BookingController.class);
-    
+
     @Autowired
     private IBookingService iBookingService;
 
     @PostMapping("/user/book/{isbn}/booking")
-    public String saveBookingBook(@PathVariable("isbn") String isbn, Authentication authentication, final RedirectAttributes redirectAttributes) throws URISyntaxException {
+    public String saveBookingBook(@PathVariable("isbn") String isbn, Authentication authentication,
+            final RedirectAttributes redirectAttributes) throws URISyntaxException {
 
         log.debug("saveBookingBook() isbn: {}", isbn);
 
@@ -46,8 +47,7 @@ public class BookingController {
         try {
             bookingNew = iBookingService.register(isbn, authentication);
 
-        } catch (HttpClientErrorException e ) {
-
+        } catch (HttpClientErrorException e) {
 
             redirectAttributes.addFlashAttribute("error", Tools.messageExtraction(e).getMessage());
 
@@ -108,7 +108,7 @@ public class BookingController {
         return "/booking/list";
 
     }
-    
+
     @GetMapping("/user/bookings/{id}/extend")
     public String extendBooking(@PathVariable("id") int id, Authentication authentication, final RedirectAttributes redirectAttributes) throws URISyntaxException {
 
@@ -118,7 +118,7 @@ public class BookingController {
 
             iBookingService.extend(Long.valueOf(id), authentication);
 
-        } catch (HttpClientErrorException  e) {
+        } catch (HttpClientErrorException e) {
 
             redirectAttributes.addFlashAttribute("error", Tools.messageExtraction(e).getMessage());
             return "redirect:/user/bookings/{id}";
@@ -130,4 +130,49 @@ public class BookingController {
 
     }
 
+    @GetMapping("/librarian/return_book")
+    public String showAllBookings(Model model, Authentication authentication) throws URISyntaxException {
+
+        log.debug("showAllBookings()");
+
+        List<Booking> bookingList = null;
+
+        try {
+
+            bookingList = iBookingService.getAllBooking(authentication);
+
+        } catch (HttpClientErrorException e) {
+
+            model.addAttribute("error", Tools.messageExtraction(e).getMessage());
+
+            return "/booking/return_book";
+
+        }
+
+        model.addAttribute("bookings", bookingList);
+
+        return "/booking/return_book";
+
+    }
+
+    @GetMapping("/librarian/bookings/{id}/return")
+    public String returnBooking(@PathVariable("id") int id, Authentication authentication, final RedirectAttributes redirectAttributes) throws URISyntaxException {
+
+        log.debug("returnBooking() id: {}", id);
+
+        try {
+
+            iBookingService.backBook(Long.valueOf(id), authentication);
+
+        } catch (HttpClientErrorException e) {
+
+            redirectAttributes.addFlashAttribute("error", Tools.messageExtraction(e).getMessage());
+            return "redirect:/librarian/return_book";
+        }
+
+        redirectAttributes.addFlashAttribute("msg", "Réservation terminée !");
+
+        return "redirect:/librarian/return_book";
+
+    }
 }

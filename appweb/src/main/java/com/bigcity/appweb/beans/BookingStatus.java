@@ -9,7 +9,7 @@ package com.bigcity.appweb.beans;
  */
 public enum BookingStatus {
     
-   ENCOURS("ENCOURS"), PROLONGE("PROLONGE"), TERMINE("TERMINE");
+   ENCOURS("ENCOURS"), PROLONGE("PROLONGE"), TERMINE("TERMINE"), RESERVE("RESERVE");
 
    private String value;
 

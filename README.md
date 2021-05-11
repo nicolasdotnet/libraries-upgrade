@@ -25,7 +25,9 @@ le projet est composé de 3 modules :
 
 apiweb : Logique métier accécible à partir d'une Api Rest sécurisée
 appweb : Application web pour les usagers. Client de l'apiweb
-batch : Module batch pour la relance automatique par mails aux usagers n’ayant pas rendu les livres en fin de prêt. Client de l'apiweb également
+batch : Module batch, client de l'apiweb également pour : 
+-> la relance automatique par mails aux usagers n’ayant pas rendu les livres en fin de prêt.
+-> l'envoi des mails d'information, aux usagers ayant effectué une réservation d'un livre, de la disponibilité d'un exemplaire.
 
 ### Déployer ApiWeb : 
 
@@ -40,7 +42,7 @@ Mot de passe : mysql
 Pour une installation personnalisée, vous pouvez modifier les valeurs des clès du fichier ressources/application.properties du projet :  
 
 ```shell
-spring.datasource.url=jdbc:mysql://localhost:3306/NOM_DATABASE?serverTimezone=UTC
+spring.datasource.url=jdbc:mysql://localhost:3306/NOM_DATABASE?serverTimezone=Europe/Paris
 spring.datasource.username=VOTRE_USERNAME
 spring.datasource.password=VOTRE_PASSWORD
 ```
@@ -71,7 +73,8 @@ Par défault, le batch excécute la tâche tous les jours à 23 h 30
 Pour personnaliser l'heure, vous pouvez modifier les valeurs des clès du fichier ressources/application.properties du projet : 
 
 ```shell
-cron.expression:0 Min Heure * * ?
+cron.booking:0 59 23 * * ?
+cron.reservation:0 0/1 * * * ?
 ``` 
 
 ## Lancement de l'application
@@ -92,5 +95,5 @@ Mot de passe : 123
 
 ## Consulter la documentation de ApiWeb : 
 
-- Aller sur un navigateur à l'adresse http://localhost:8080/swagger-ui.html
+- Aller sur un navigateur à l'adresse http://localhost:2222/swagger-ui.html
 

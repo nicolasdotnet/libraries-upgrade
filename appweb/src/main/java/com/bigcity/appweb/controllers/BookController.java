@@ -56,7 +56,7 @@ public class BookController {
 
     @GetMapping("/user/book/all")
     public String showBooks(Model model, Authentication authentication) throws URISyntaxException {
-        
+
         log.debug("showBooks()");
 
         List<Book> bookFind = null;

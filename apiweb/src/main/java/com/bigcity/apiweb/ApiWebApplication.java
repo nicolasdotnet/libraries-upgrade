@@ -17,5 +17,6 @@ public class ApiWebApplication extends SpringBootServletInitializer implements C
     }
 
     public void run(String... args) throws Exception {
+
     }
 }

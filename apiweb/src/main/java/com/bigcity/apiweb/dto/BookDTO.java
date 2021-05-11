@@ -32,10 +32,15 @@ public class BookDTO {
     @ApiModelProperty(notes = "summary of book")
     private String summary;
 
-    @NotNull(message = "le nombre de copie n'est pas renseigné")
-    @Min(value = 1, message = "vous devez disposer d'au moins un exemplaire du livre pour l'enregistrer")
+    @NotNull(message = "le nombre de copie disponible n'est pas renseigné")
+    @Min(value = 1, message = "vous devez disposer d'au moins un exemplaire disponible du livre pour l'enregistrer")
     @ApiModelProperty(notes = "copies available for a book")
     private int copiesAvailable;
+
+    @NotNull(message = "le nombre de copie n'est pas renseigné")
+    @Min(value = 1, message = "vous devez disposer d'au moins un exemplaire du livre pour l'enregistrer")
+    @ApiModelProperty(notes = "number of copies for a book")
+   private int numberOfCopies;
 
     @NotEmpty(message = "la catégorie du livre n'est pas renseigné")
     @ApiModelProperty(notes = "book category")
@@ -84,6 +89,14 @@ public class BookDTO {
         this.copiesAvailable = copiesAvailable;
     }
 
+    public int getNumberOfCopies() {
+        return numberOfCopies;
+    }
+
+    public void setNumberOfCopies(int numberOfCopies) {
+        this.numberOfCopies = numberOfCopies;
+    }
+
     public String getBookCategoryLabel() {
         return BookCategoryLabel;
     }
@@ -94,7 +107,13 @@ public class BookDTO {
 
     @Override
     public String toString() {
-        return "BookDTO{" + "isbn=" + isbn + ", author=" + author + ", bookTitle=" + bookTitle + ", summary=" + summary + ", copiesAvailable=" + copiesAvailable + ", BookCategoryLabel=" + BookCategoryLabel + '}';
+        return "BookDTO{" + "isbn=" + isbn + 
+                ", author=" + author + 
+                ", bookTitle=" + bookTitle + 
+                ", summary=" + summary + 
+                ", copiesAvailable=" + copiesAvailable + 
+                ", numberOfCopies=" + numberOfCopies +
+                ", BookCategoryLabel=" + BookCategoryLabel + '}';
     }
 
 }

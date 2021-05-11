@@ -1,7 +1,6 @@
 package com.bigcity.apiweb.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -26,38 +25,34 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue
-    @ApiModelProperty(notes = "user id")
     private Long userId;
 
     @JoinColumn(nullable = false)
-    @ApiModelProperty(notes = "user registration date")
     private Date userDate;
 
     @Column(length = 100, nullable = false)
-    @ApiModelProperty(notes = "first name from user")
     private String firstname;
 
     @Column(length = 100, nullable = false)
-    @ApiModelProperty(notes = "last name from user")
     private String lastname;
 
     @Column(nullable = false)
-    @ApiModelProperty(notes = "email from user : unique identifier")
     private String email;
 
     @Column(nullable = false)
-    @ApiModelProperty(notes = "password from user")
     private String password;
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    @ApiModelProperty(notes = "role from user")
     private Role role;
 
     @OneToMany(mappedBy = "bookingUser", fetch = FetchType.LAZY)
-    @ApiModelProperty(notes = "booking list from user")
     @JsonIgnore
     private Collection<Booking> bookings;
+
+    @OneToMany(mappedBy = "reservationUser", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Collection<Reservation> reservations;
 
     public User() {
     }
@@ -124,6 +119,14 @@ public class User implements Serializable {
 
     public void setBookings(Collection<Booking> bookings) {
         this.bookings = bookings;
+    }
+
+    public Collection<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(Collection<Reservation> reservations) {
+        this.reservations = reservations;
     }
 
     @Override
