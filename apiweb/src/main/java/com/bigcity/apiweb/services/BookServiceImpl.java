@@ -141,7 +141,7 @@ public class BookServiceImpl implements IBookService {
         return bookRepository.findAll(bookSpecification, PageRequest.of(page, size));
     }
 
-    public Book dtoToEntity(BookDTO bookDTO, BookCategory bookCategoryFind) {
+    private Book dtoToEntity(BookDTO bookDTO, BookCategory bookCategoryFind) {
 
         Book book = new Book();
 

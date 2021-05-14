@@ -111,9 +111,9 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User getUser(Long id) throws EntityNotFoundException {
 
-        User userFind = userRepository.findById(id).get();
+        Optional<User> userFind = userRepository.findById(id);
 
-        if (userFind == null) {
+        if (!userFind.isPresent()) {
 
             log.error("l'utilisateur n'existe pas dans la base.");
 
@@ -121,7 +121,7 @@ public class UserServiceImpl implements IUserService {
 
         }
 
-        return userFind;
+        return userFind.get();
     }
 
     @Override

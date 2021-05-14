@@ -313,6 +313,7 @@ public class BookingServiceImpl implements IBookingService {
 
     }
 
+    @Override
     public Optional<Booking> getBookingByBookAndUserAndBookingStatus2(Book book, User reservationUser, String bookingStatus) {
 
         return bookingRepository.findByBookAndBookingUserAndBookingStatusNotLike(book, reservationUser, bookingStatus);
