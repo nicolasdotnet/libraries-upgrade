@@ -48,7 +48,7 @@ public class BookServiceImpl implements IBookService {
 
         }
 
-        BookCategory bookCategoryFind = iBookCategoryService.getBookCategoryByLabel(bookDTO.getBookCategoryLabel());
+        BookCategory bookCategoryFind = iBookCategoryService.getBookCategoryByLabel(bookDTO.getBookCategoryLabel()).get();
 
         if (bookCategoryFind == null) {
 
@@ -75,7 +75,7 @@ public class BookServiceImpl implements IBookService {
 
         }
 
-        BookCategory bookCategoryFind = iBookCategoryService.getBookCategoryByLabel(bookDTO.getBookCategoryLabel());
+        BookCategory bookCategoryFind = iBookCategoryService.getBookCategoryByLabel(bookDTO.getBookCategoryLabel()).get();
 
         if (bookCategoryFind == null) {
 

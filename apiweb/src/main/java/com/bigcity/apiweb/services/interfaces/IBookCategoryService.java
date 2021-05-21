@@ -3,6 +3,7 @@ package com.bigcity.apiweb.services.interfaces;
 import com.bigcity.apiweb.dto.BookCategoryDTO;
 import com.bigcity.apiweb.entity.BookCategory;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -39,16 +40,16 @@ public interface IBookCategoryService {
      * method to get a bookCategory
      *
      * @param id
-     * @return bookCategory object find
+     * @return bookCategory Optional object find
      */
-    BookCategory getBookCategory(Long id);
+    Optional<BookCategory> getBookCategory(Long id);
 
     /**
      * method to get a bookCategory by label category
      *
      * @param label
-     * @return bookCategory object list find by label
+     * @return bookCategory Optional object find by label
      */
-    BookCategory getBookCategoryByLabel(String label);
+    Optional<BookCategory> getBookCategoryByLabel(String label);
 
 }

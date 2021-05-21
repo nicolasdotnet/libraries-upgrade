@@ -182,7 +182,7 @@ public class BookCategoryServiceImplTest {
 
         doReturn(op).when(iBookCategoryRepository).findById(id);
 
-        BookCategory result = instance.getBookCategory(id);
+        BookCategory result = instance.getBookCategory(id).get();
         assertEquals(expResult.getLabel(), result.getLabel());
 
         Mockito.verify(iBookCategoryRepository).findById(id);
@@ -204,7 +204,7 @@ public class BookCategoryServiceImplTest {
 
         doReturn(op).when(iBookCategoryRepository).findByLabel(label);
 
-        BookCategory result = instance.getBookCategoryByLabel(label);
+        BookCategory result = instance.getBookCategoryByLabel(label).get();
         assertEquals(expResult.getLabel(), result.getLabel());
 
         Mockito.verify(iBookCategoryRepository).findByLabel(label);

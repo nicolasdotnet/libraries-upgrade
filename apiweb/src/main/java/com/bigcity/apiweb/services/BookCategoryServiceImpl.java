@@ -69,15 +69,15 @@ public class BookCategoryServiceImpl implements IBookCategoryService {
     }
 
     @Override
-    public BookCategory getBookCategory(Long id) {
+    public Optional<BookCategory> getBookCategory(Long id) {
 
-        return bookCategoryRepository.findById(id).get();
+        return bookCategoryRepository.findById(id);
     }
 
     @Override
-    public BookCategory getBookCategoryByLabel(String label) {
+    public Optional<BookCategory> getBookCategoryByLabel(String label) {
 
-        return bookCategoryRepository.findByLabel(label).get();
+        return bookCategoryRepository.findByLabel(label);
     }
 
     private BookCategory dtoToEntity(BookCategoryDTO bookCategoryDTO) {
